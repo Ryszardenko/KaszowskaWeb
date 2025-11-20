@@ -57,7 +57,7 @@ fun Footer() {
             Spacer(modifier = Modifier.height(40.dp))
 
             Text(
-                text = "© 2024 Magdalena Kaszowska. All rights reserved.",
+                text = "© 2025 Magdalena Kaszowska. All rights reserved.",
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Light,
                 color = KaszowskaColors.White.copy(alpha = 0.5f),

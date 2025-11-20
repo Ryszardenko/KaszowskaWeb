@@ -95,5 +95,5 @@ Modify colors in `theme/Theme.kt` in the `KaszowskaColors` object.
 
 ## License
 
-© 2024 Magdalena Kaszowska. All rights reserved.
+© 2025 Magdalena Kaszowska. All rights reserved.
 
