@@ -54,7 +54,6 @@ fun ServicesSection() {
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Section Title
             Text(
                 text = "USŁUGI",
                 fontSize = 12.sp,
@@ -75,7 +74,6 @@ fun ServicesSection() {
 
             Spacer(modifier = Modifier.height(80.dp))
 
-            // Services Grid
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -92,7 +90,6 @@ fun ServicesSection() {
 
             Spacer(modifier = Modifier.height(60.dp))
 
-            // Carousel for images/gallery
             Text(
                 text = "GALERIA PRAC",
                 fontSize = 12.sp,
@@ -154,13 +151,12 @@ private fun ServiceCard(
 @Composable
 private fun ImageCarousel() {
     var currentIndex by remember { mutableStateOf(0) }
-    val totalImages = 5 // Placeholder count
+    val totalImages = 5
 
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Carousel container
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -186,7 +182,6 @@ private fun ImageCarousel() {
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        // Navigation dots
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {

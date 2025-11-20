@@ -11,13 +11,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.machmudow.kaszowska.Section
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import kotlinx.browser.window
 
 @Composable
-fun TopNavigation() {
-    var isScrolled by remember { mutableStateOf(false) }
-
+fun TopNavigation(
+    isScrolled: Boolean,
+    onNavigate: (Section) -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -38,7 +40,8 @@ fun TopNavigation() {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Light,
                 color = if (isScrolled) KaszowskaColors.TextDark else KaszowskaColors.White,
-                letterSpacing = 2.sp
+                letterSpacing = 2.sp,
+                modifier = Modifier.clickable { onNavigate(Section.HERO) }
             )
 
             // Navigation Menu
@@ -46,9 +49,15 @@ fun TopNavigation() {
                 horizontalArrangement = Arrangement.spacedBy(32.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                NavItem("O MNIE", isScrolled) { /* TODO: Scroll to section */ }
-                NavItem("USŁUGI", isScrolled) { /* TODO: Scroll to section */ }
-                NavItem("KONTAKT", isScrolled) { /* TODO: Scroll to section */ }
+                NavItem("O MNIE", isScrolled) {
+                    onNavigate(Section.ABOUT)
+                }
+                NavItem("USŁUGI", isScrolled) {
+                    onNavigate(Section.SERVICES)
+                }
+                NavItem("KONTAKT", isScrolled) {
+                    onNavigate(Section.CONTACT)
+                }
                 NavItem("INSTAGRAM", isScrolled) {
                     window.open("https://www.instagram.com/magdalenakaszowska.pmu/", "_blank")
                 }
@@ -56,6 +65,7 @@ fun TopNavigation() {
         }
     }
 }
+
 
 @Composable
 private fun NavItem(text: String, isScrolled: Boolean, onClick: () -> Unit) {

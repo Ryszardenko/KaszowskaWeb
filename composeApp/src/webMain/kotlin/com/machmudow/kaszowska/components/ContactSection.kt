@@ -24,7 +24,6 @@ fun ContactSection() {
     var email by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -36,7 +35,6 @@ fun ContactSection() {
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.Top
         ) {
-            // Left side - Contact info
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -49,9 +47,7 @@ fun ContactSection() {
                     color = KaszowskaColors.Gold,
                     letterSpacing = 3.sp
                 )
-
                 Spacer(modifier = Modifier.height(24.dp))
-
                 Text(
                     text = "Skontaktuj się ze mną",
                     fontSize = 42.sp,
@@ -60,17 +56,13 @@ fun ContactSection() {
                     letterSpacing = 2.sp,
                     lineHeight = 52.sp
                 )
-
                 Spacer(modifier = Modifier.height(40.dp))
-
                 ContactInfoItem("Email", "kontakt@kaszowska.pl")
                 Spacer(modifier = Modifier.height(24.dp))
                 ContactInfoItem("Telefon", "+48 XXX XXX XXX")
                 Spacer(modifier = Modifier.height(24.dp))
                 ContactInfoItem("Adres", "Warszawa, Polska")
-
                 Spacer(modifier = Modifier.height(60.dp))
-
                 Text(
                     text = "SOCIAL MEDIA",
                     fontSize = 12.sp,
@@ -78,9 +70,7 @@ fun ContactSection() {
                     color = KaszowskaColors.Gold,
                     letterSpacing = 3.sp
                 )
-
                 Spacer(modifier = Modifier.height(20.dp))
-
                 Text(
                     text = "Instagram: @magdalenakaszowska.pmu",
                     fontSize = 16.sp,
@@ -88,14 +78,12 @@ fun ContactSection() {
                     color = KaszowskaColors.Gold,
                     letterSpacing = 0.5.sp,
                     modifier = Modifier
-                        .clickable {
+                        .clickable { 
                             window.open("https://www.instagram.com/magdalenakaszowska.pmu/", "_blank")
                         }
                         .padding(vertical = 4.dp)
                 )
             }
-
-            // Right side - Contact form
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -106,25 +94,19 @@ fun ContactSection() {
                     onValueChange = { name = it },
                     label = "Imię i nazwisko"
                 )
-
                 Spacer(modifier = Modifier.height(24.dp))
-
                 ContactTextField(
                     value = email,
                     onValueChange = { email = it },
                     label = "Email"
                 )
-
                 Spacer(modifier = Modifier.height(24.dp))
-
                 ContactTextField(
                     value = phone,
                     onValueChange = { phone = it },
                     label = "Telefon"
                 )
-
                 Spacer(modifier = Modifier.height(24.dp))
-
                 ContactTextField(
                     value = message,
                     onValueChange = { message = it },
@@ -132,11 +114,9 @@ fun ContactSection() {
                     multiline = true,
                     minHeight = 150.dp
                 )
-
                 Spacer(modifier = Modifier.height(32.dp))
-
                 Button(
-                    onClick = { /* TODO: Handle form submission */ },
+                    onClick = {},
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
@@ -156,7 +136,6 @@ fun ContactSection() {
         }
     }
 }
-
 @Composable
 private fun ContactInfoItem(label: String, value: String) {
     Column {
@@ -167,9 +146,7 @@ private fun ContactInfoItem(label: String, value: String) {
             color = KaszowskaColors.TextLight,
             letterSpacing = 2.sp
         )
-
         Spacer(modifier = Modifier.height(8.dp))
-
         Text(
             text = value,
             fontSize = 18.sp,
@@ -179,7 +156,6 @@ private fun ContactInfoItem(label: String, value: String) {
         )
     }
 }
-
 @Composable
 private fun ContactTextField(
     value: String,
@@ -196,9 +172,7 @@ private fun ContactTextField(
             color = KaszowskaColors.TextLight,
             letterSpacing = 1.sp
         )
-
         Spacer(modifier = Modifier.height(8.dp))
-
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
@@ -217,4 +191,3 @@ private fun ContactTextField(
         )
     }
 }
-

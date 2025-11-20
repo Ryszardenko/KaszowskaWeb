@@ -52,7 +52,6 @@ fun Footer() {
                 FooterLink("Instagram") {
                     window.open("https://www.instagram.com/magdalenakaszowska.pmu/", "_blank")
                 }
-                FooterLink("Kontakt") { /* TODO: Scroll to contact */ }
             }
 
             Spacer(modifier = Modifier.height(40.dp))
@@ -70,19 +69,16 @@ fun Footer() {
 }
 
 @Composable
-private fun FooterLink(
-    text: String,
-    onClick: () -> Unit,
-) {
+private fun FooterLink(text: String, onClick: () -> Unit) {
     Text(
-        modifier = Modifier
-            .clickable { onClick() }
-            .padding(vertical = 4.dp, horizontal = 8.dp),
         text = text,
         fontSize = 12.sp,
         fontWeight = FontWeight.Normal,
         color = KaszowskaColors.White.copy(alpha = 0.8f),
         letterSpacing = 1.5.sp,
+        modifier = Modifier
+            .clickable { onClick() }
+            .padding(vertical = 4.dp, horizontal = 8.dp)
     )
 }
 
