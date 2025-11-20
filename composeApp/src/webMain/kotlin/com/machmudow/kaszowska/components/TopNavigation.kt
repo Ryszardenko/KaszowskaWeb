@@ -12,6 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.theme.KaszowskaColors
+import kotlinx.browser.window
 
 @Composable
 fun TopNavigation() {
@@ -45,17 +46,19 @@ fun TopNavigation() {
                 horizontalArrangement = Arrangement.spacedBy(32.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                NavItem("O MNIE", isScrolled)
-                NavItem("USŁUGI", isScrolled)
-                NavItem("KONTAKT", isScrolled)
-                NavItem("INSTAGRAM", isScrolled)
+                NavItem("O MNIE", isScrolled) { /* TODO: Scroll to section */ }
+                NavItem("USŁUGI", isScrolled) { /* TODO: Scroll to section */ }
+                NavItem("KONTAKT", isScrolled) { /* TODO: Scroll to section */ }
+                NavItem("INSTAGRAM", isScrolled) {
+                    window.open("https://www.instagram.com/magdalenakaszowska.pmu/", "_blank")
+                }
             }
         }
     }
 }
 
 @Composable
-private fun NavItem(text: String, isScrolled: Boolean) {
+private fun NavItem(text: String, isScrolled: Boolean, onClick: () -> Unit) {
     Text(
         text = text,
         fontSize = 13.sp,
@@ -63,7 +66,7 @@ private fun NavItem(text: String, isScrolled: Boolean) {
         color = if (isScrolled) KaszowskaColors.TextDark else KaszowskaColors.White,
         letterSpacing = 1.5.sp,
         modifier = Modifier
-            .clickable { /* TODO: Scroll to section */ }
+            .clickable { onClick() }
             .padding(vertical = 8.dp)
     )
 }

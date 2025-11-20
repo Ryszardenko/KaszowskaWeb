@@ -2,6 +2,7 @@ package com.machmudow.kaszowska.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
@@ -15,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.theme.KaszowskaColors
+import kotlinx.browser.window
 
 @Composable
 fun ContactSection() {
@@ -80,11 +82,16 @@ fun ContactSection() {
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Text(
-                    text = "Instagram: @magdalena.kaszowska",
+                    text = "Instagram: @magdalenakaszowska.pmu",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Normal,
-                    color = KaszowskaColors.TextLight,
-                    letterSpacing = 0.5.sp
+                    color = KaszowskaColors.Gold,
+                    letterSpacing = 0.5.sp,
+                    modifier = Modifier
+                        .clickable {
+                            window.open("https://www.instagram.com/magdalenakaszowska.pmu/", "_blank")
+                        }
+                        .padding(vertical = 4.dp)
                 )
             }
 
