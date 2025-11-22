@@ -16,9 +16,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.machmudow.kaszowska.Section
+import com.machmudow.kaszowska.model.Section
 import com.machmudow.kaszowska.theme.KaszowskaColors
-import kotlinx.browser.window
+import com.machmudow.kaszowska.utils.email.openWindow
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -80,7 +80,9 @@ fun TopNavigation(
                 text = "INSTAGRAM",
                 isScrolled = isScrolled,
             ) {
-                window.open("https://www.instagram.com/magdalenakaszowska.pmu/", "_blank")
+                openWindow(
+                    url = "https://www.instagram.com/magdalenakaszowska.pmu/",
+                )
             }
         }
     }
@@ -115,4 +117,3 @@ private fun NavItem(
         letterSpacing = 1.5.sp,
     )
 }
-

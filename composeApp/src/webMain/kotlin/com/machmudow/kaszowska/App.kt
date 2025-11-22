@@ -6,16 +6,9 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.machmudow.kaszowska.components.*
+import com.machmudow.kaszowska.model.Section
 import com.machmudow.kaszowska.theme.KaszowskaTheme
 import kotlinx.coroutines.launch
-
-enum class Section(val index: Int) {
-    HERO(0),
-    ABOUT(1),
-    SERVICES(2),
-    CONTACT(3),
-    FOOTER(4),
-}
 
 @Composable
 fun App() {

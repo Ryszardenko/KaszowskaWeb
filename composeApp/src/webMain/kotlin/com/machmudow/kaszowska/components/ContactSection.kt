@@ -11,19 +11,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.theme.KaszowskaColors
-import kotlinx.browser.window
+import com.machmudow.kaszowska.utils.email.SendEmailController
+import com.machmudow.kaszowska.utils.email.openWindow
 
 @Composable
 fun ContactSection() {
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var phone by remember { mutableStateOf("") }
-    var message by remember { mutableStateOf("") }
+    val controller = remember { SendEmailController() }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -47,7 +47,9 @@ fun ContactSection() {
                     color = KaszowskaColors.Gold,
                     letterSpacing = 3.sp
                 )
+
                 Spacer(modifier = Modifier.height(24.dp))
+
                 Text(
                     text = "Skontaktuj się ze mną",
                     fontSize = 42.sp,
@@ -56,13 +58,17 @@ fun ContactSection() {
                     letterSpacing = 2.sp,
                     lineHeight = 52.sp
                 )
+
                 Spacer(modifier = Modifier.height(40.dp))
+
                 ContactInfoItem("Email", "kontakt@kaszowska.pl")
                 Spacer(modifier = Modifier.height(24.dp))
                 ContactInfoItem("Telefon", "+48 XXX XXX XXX")
                 Spacer(modifier = Modifier.height(24.dp))
                 ContactInfoItem("Adres", "Warszawa, Polska")
+
                 Spacer(modifier = Modifier.height(60.dp))
+
                 Text(
                     text = "SOCIAL MEDIA",
                     fontSize = 12.sp,
@@ -70,7 +76,9 @@ fun ContactSection() {
                     color = KaszowskaColors.Gold,
                     letterSpacing = 3.sp
                 )
+
                 Spacer(modifier = Modifier.height(20.dp))
+
                 Text(
                     text = "Instagram: @magdalenakaszowska.pmu",
                     fontSize = 16.sp,
@@ -78,64 +86,104 @@ fun ContactSection() {
                     color = KaszowskaColors.Gold,
                     letterSpacing = 0.5.sp,
                     modifier = Modifier
-                        .clickable { 
-                            window.open("https://www.instagram.com/magdalenakaszowska.pmu/", "_blank")
+                        .clickable {
+                            openWindow(
+                                "https://www.instagram.com/magdalenakaszowska.pmu/",
+                                "_blank"
+                            )
                         }
                         .padding(vertical = 4.dp)
                 )
             }
+
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 60.dp)
             ) {
                 ContactTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = "Imię i nazwisko"
+                    value = controller.name,
+                    onValueChange = {
+                        controller.name = it
+                        controller.nameError = null
+                    },
+                    label = "Imię i nazwisko",
+                    error = controller.nameError
                 )
+
                 Spacer(modifier = Modifier.height(24.dp))
+
                 ContactTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = "Email"
+                    value = controller.email,
+                    onValueChange = {
+                        controller.email = it
+                        controller.emailError = null
+                    },
+                    label = "Email",
+                    error = controller.emailError
                 )
+
                 Spacer(modifier = Modifier.height(24.dp))
+
                 ContactTextField(
-                    value = phone,
-                    onValueChange = { phone = it },
-                    label = "Telefon"
+                    value = controller.phone,
+                    onValueChange = {
+                        controller.phone = it
+                        controller.phoneError = null
+                    },
+                    label = "Telefon",
+                    error = controller.phoneError
                 )
+
                 Spacer(modifier = Modifier.height(24.dp))
+
                 ContactTextField(
-                    value = message,
-                    onValueChange = { message = it },
+                    value = controller.message,
+                    onValueChange = {
+                        controller.message = it
+                        controller.messageError = null
+                    },
                     label = "Wiadomość",
                     multiline = true,
-                    minHeight = 150.dp
+                    minHeight = 150.dp,
+                    error = controller.messageError
                 )
+
                 Spacer(modifier = Modifier.height(32.dp))
+
                 Button(
-                    onClick = {},
+                    onClick = controller::validateAndSubmit,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = KaszowskaColors.Gold,
                         contentColor = KaszowskaColors.White
-                    )
+                    ),
+                    enabled = !controller.isSubmitting
                 ) {
                     Text(
-                        text = "WYŚLIJ WIADOMOŚĆ",
+                        text = if (controller.isSubmitting) "WYSYŁANIE..." else "WYŚLIJ WIADOMOŚĆ",
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Normal,
                         letterSpacing = 2.sp
+                    )
+                }
+
+                if (controller.submitSuccess) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "✓ Wiadomość została wysłana!",
+                        fontSize = 14.sp,
+                        color = KaszowskaColors.Gold,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
         }
     }
 }
+
 @Composable
 private fun ContactInfoItem(label: String, value: String) {
     Column {
@@ -146,7 +194,9 @@ private fun ContactInfoItem(label: String, value: String) {
             color = KaszowskaColors.TextLight,
             letterSpacing = 2.sp
         )
+
         Spacer(modifier = Modifier.height(8.dp))
+
         Text(
             text = value,
             fontSize = 18.sp,
@@ -156,13 +206,15 @@ private fun ContactInfoItem(label: String, value: String) {
         )
     }
 }
+
 @Composable
 private fun ContactTextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
     multiline: Boolean = false,
-    minHeight: androidx.compose.ui.unit.Dp = 56.dp
+    minHeight: androidx.compose.ui.unit.Dp = 56.dp,
+    error: String? = null
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
@@ -172,7 +224,9 @@ private fun ContactTextField(
             color = KaszowskaColors.TextLight,
             letterSpacing = 1.sp
         )
+
         Spacer(modifier = Modifier.height(8.dp))
+
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
@@ -185,9 +239,22 @@ private fun ContactTextField(
                 .fillMaxWidth()
                 .heightIn(min = minHeight)
                 .background(KaszowskaColors.SoftGray)
-                .border(1.dp, KaszowskaColors.SoftBeige)
+                .border(
+                    width = 1.dp,
+                    color = if (error != null) Color(0xFFD32F2F) else KaszowskaColors.SoftBeige
+                )
                 .padding(16.dp),
             singleLine = !multiline
         )
+
+        if (error != null) {
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = error,
+                fontSize = 12.sp,
+                color = Color(0xFFD32F2F),
+                fontWeight = FontWeight.Normal
+            )
+        }
     }
 }
