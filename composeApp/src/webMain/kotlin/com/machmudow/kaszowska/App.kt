@@ -5,8 +5,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import com.machmudow.kaszowska.components.*
-import com.machmudow.kaszowska.model.Section
+import com.machmudow.kaszowska.sections.AboutSection
+import com.machmudow.kaszowska.sections.ContactSection
+import com.machmudow.kaszowska.sections.Footer
+import com.machmudow.kaszowska.sections.HeroSection
+import com.machmudow.kaszowska.sections.ServicesSection
+import com.machmudow.kaszowska.sections.TopNavigation
+import com.machmudow.kaszowska.sections.model.Section
 import com.machmudow.kaszowska.theme.KaszowskaTheme
 import kotlinx.coroutines.launch
 

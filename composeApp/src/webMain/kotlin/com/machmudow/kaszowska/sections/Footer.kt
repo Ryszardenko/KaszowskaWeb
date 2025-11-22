@@ -1,4 +1,4 @@
-package com.machmudow.kaszowska.components
+package com.machmudow.kaszowska.sections
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,7 +12,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.theme.KaszowskaColors
-import kotlinx.browser.window
+import com.machmudow.kaszowska.utils.email.openWindow
 
 @Composable
 fun Footer() {
@@ -50,7 +50,7 @@ fun Footer() {
                 horizontalArrangement = Arrangement.spacedBy(32.dp)
             ) {
                 FooterLink("Instagram") {
-                    window.open("https://www.instagram.com/magdalenakaszowska.pmu/", "_blank")
+                    openWindow(url = "https://www.instagram.com/magdalenakaszowska.pmu/")
                 }
             }
 

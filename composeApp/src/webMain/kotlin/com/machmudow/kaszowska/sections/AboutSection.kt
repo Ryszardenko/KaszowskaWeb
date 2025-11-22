@@ -1,4 +1,4 @@
-package com.machmudow.kaszowska.components
+package com.machmudow.kaszowska.sections
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

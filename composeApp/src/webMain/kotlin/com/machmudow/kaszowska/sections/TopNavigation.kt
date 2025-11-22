@@ -1,22 +1,20 @@
-package com.machmudow.kaszowska.components
+package com.machmudow.kaszowska.sections
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.input.pointer.onPointerEvent
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.machmudow.kaszowska.model.Section
+import com.machmudow.kaszowska.components.IlluminatedText
+import com.machmudow.kaszowska.sections.model.Section
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.utils.email.openWindow
 
@@ -46,7 +44,7 @@ fun TopNavigation(
             horizontalArrangement = Arrangement.spacedBy(32.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            NavItem(
+            IlluminatedText(
                 text = "MAGDALENA KASZOWSKA",
                 isScrolled = isScrolled,
             ) {
@@ -55,28 +53,28 @@ fun TopNavigation(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            NavItem(
+            IlluminatedText(
                 text = "O MNIE",
                 isScrolled = isScrolled,
             ) {
                 onNavigate(Section.ABOUT)
             }
 
-            NavItem(
+            IlluminatedText(
                 text = "USŁUGI",
                 isScrolled = isScrolled,
             ) {
                 onNavigate(Section.SERVICES)
             }
 
-            NavItem(
+            IlluminatedText(
                 text = "KONTAKT",
                 isScrolled = isScrolled,
             ) {
                 onNavigate(Section.CONTACT)
             }
 
-            NavItem(
+            IlluminatedText(
                 text = "INSTAGRAM",
                 isScrolled = isScrolled,
             ) {
@@ -86,34 +84,4 @@ fun TopNavigation(
             }
         }
     }
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
-@Composable
-private fun NavItem(
-    text: String,
-    fontSize: TextUnit = 13.sp,
-    isScrolled: Boolean, onClick: () -> Unit
-) {
-    var isHovered by remember { mutableStateOf(false) }
-
-    Text(
-        modifier = Modifier
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() }
-            ) { onClick() }
-            .padding(vertical = 8.dp)
-            .onPointerEvent(PointerEventType.Enter) { isHovered = true }
-            .onPointerEvent(PointerEventType.Exit) { isHovered = false },
-        text = text,
-        fontSize = fontSize,
-        fontWeight = FontWeight.Normal,
-        color = when {
-            isHovered -> KaszowskaColors.Gold
-            isScrolled -> KaszowskaColors.TextDark
-            else -> KaszowskaColors.White
-        },
-        letterSpacing = 1.5.sp,
-    )
 }

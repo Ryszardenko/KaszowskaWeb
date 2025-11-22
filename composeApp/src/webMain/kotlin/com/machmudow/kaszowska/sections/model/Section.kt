@@ -1,4 +1,4 @@
-package com.machmudow.kaszowska.model
+package com.machmudow.kaszowska.sections.model
 
 enum class Section(val index: Int) {
     HERO(0),
