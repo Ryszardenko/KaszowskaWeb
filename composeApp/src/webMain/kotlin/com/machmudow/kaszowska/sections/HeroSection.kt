@@ -182,6 +182,15 @@ fun HeroSection() {
             // Pulsing decorative line
             PulsingDecorativeLine(isVisible)
         }
+
+        // Animated scroll indicator at bottom
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 40.dp)
+        ) {
+            ScrollIndicator()
+        }
     }
 }
 
@@ -246,6 +255,65 @@ private fun PulsingDecorativeLine(isVisible: Boolean) {
             .height(2.dp)
             .background(KaszowskaColors.White.copy(alpha = pulseAlpha))
     )
+}
+
+@Composable
+private fun ScrollIndicator() {
+    val infiniteTransition = rememberInfiniteTransition()
+
+    val bounce by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 15f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1500, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
+    val alpha by infiniteTransition.animateFloat(
+        initialValue = 0.3f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1500, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.graphicsLayer {
+            translationY = bounce
+        }
+    ) {
+        Text(
+            text = "SCROLL",
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Light,
+            color = KaszowskaColors.White.copy(alpha = alpha),
+            letterSpacing = 2.sp
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Animated arrow
+        Canvas(
+            modifier = Modifier
+                .size(20.dp, 30.dp)
+                .graphicsLayer { this.alpha = alpha }
+        ) {
+            val path = androidx.compose.ui.graphics.Path().apply {
+                moveTo(size.width / 2, size.height)
+                lineTo(0f, size.height * 0.4f)
+                moveTo(size.width / 2, size.height)
+                lineTo(size.width, size.height * 0.4f)
+            }
+            drawPath(
+                path = path,
+                color = Color.White,
+                style = androidx.compose.ui.graphics.drawscope.Stroke(width = 2f)
+            )
+        }
+    }
 }
 
 // Extension function for viewport height

@@ -2,13 +2,18 @@ package com.machmudow.kaszowska.sections
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -133,6 +138,7 @@ fun ServicesSection() {
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun ServiceCard(
     service: Service,
@@ -153,8 +159,11 @@ private fun ServiceCard(
     )
 
     val elevation by animateFloatAsState(
-        targetValue = if (isHovered) 12f else 0f,
-        animationSpec = tween(300)
+        targetValue = if (isHovered) 16f else 2f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessMedium
+        )
     )
 
     val scale by animateFloatAsState(
@@ -162,6 +171,17 @@ private fun ServiceCard(
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioMediumBouncy,
             stiffness = Spring.StiffnessLow
+        )
+    )
+
+    // Pulsing gold accent on hover
+    val infiniteTransition = rememberInfiniteTransition()
+    val pulseAlpha by infiniteTransition.animateFloat(
+        initialValue = 0.3f,
+        targetValue = 0.8f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1500, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
         )
     )
 
@@ -175,9 +195,36 @@ private fun ServiceCard(
                 shadowElevation = elevation
             }
             .background(KaszowskaColors.White)
+            .border(
+                width = 1.dp,
+                color = if (isHovered) KaszowskaColors.Gold.copy(alpha = pulseAlpha) else KaszowskaColors.SoftGray.copy(alpha = 0.3f)
+            )
+            .onPointerEvent(PointerEventType.Enter) { isHovered = true }
+            .onPointerEvent(PointerEventType.Exit) { isHovered = false }
             .padding(40.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Animated golden dot
+        val dotScale by animateFloatAsState(
+            targetValue = if (isHovered) 1.3f else 1f,
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        )
+
+        Box(
+            modifier = Modifier
+                .size(8.dp)
+                .graphicsLayer {
+                    scaleX = dotScale
+                    scaleY = dotScale
+                }
+                .background(KaszowskaColors.Gold)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         Text(
             text = service.title,
             fontSize = 24.sp,
@@ -200,11 +247,35 @@ private fun ServiceCard(
 
         Spacer(modifier = Modifier.height(32.dp))
 
+        Box(
+            modifier = Modifier
+                .height(1.dp)
+                .fillMaxWidth(0.3f)
+                .background(
+                    if (isHovered)
+                        Brush.horizontalGradient(
+                            colors = listOf(
+                                KaszowskaColors.Gold.copy(alpha = 0f),
+                                KaszowskaColors.Gold,
+                                KaszowskaColors.Gold.copy(alpha = 0f)
+                            )
+                        )
+                    else Brush.horizontalGradient(
+                        colors = listOf(
+                            KaszowskaColors.SoftGray.copy(alpha = 0.3f),
+                            KaszowskaColors.SoftGray.copy(alpha = 0.3f)
+                        )
+                    )
+                )
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
         Text(
             text = service.price,
             fontSize = 18.sp,
             fontWeight = FontWeight.Normal,
-            color = KaszowskaColors.Gold,
+            color = if (isHovered) KaszowskaColors.Gold else KaszowskaColors.TextDark,
             letterSpacing = 1.sp
         )
     }
@@ -223,11 +294,6 @@ private fun ImageCarousel() {
         }
     }
 
-    val imageAlpha by animateFloatAsState(
-        targetValue = 1f,
-        animationSpec = tween(600)
-    )
-
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -239,18 +305,42 @@ private fun ImageCarousel() {
             horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             repeat(3) { index ->
+                val imageIndex = (currentIndex + index) % totalImages
+
+                val imageAlpha by animateFloatAsState(
+                    targetValue = 1f,
+                    animationSpec = tween(600)
+                )
+
+                val scale by animateFloatAsState(
+                    targetValue = if (index == 1) 1.05f else 0.95f,
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessLow
+                    )
+                )
+
                 Box(
                     modifier = Modifier
                         .weight(1f)
                         .height(400.dp)
                         .graphicsLayer {
                             alpha = imageAlpha
+                            scaleX = scale
+                            scaleY = scale
                         }
-                        .background(KaszowskaColors.SoftBeige),
+                        .background(
+                            Brush.linearGradient(
+                                colors = listOf(
+                                    KaszowskaColors.SoftBeige,
+                                    KaszowskaColors.SoftGray.copy(alpha = 0.5f)
+                                )
+                            )
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "[IMAGE ${(currentIndex + index) % totalImages + 1}]",
+                        text = "[IMAGE ${imageIndex + 1}]",
                         color = KaszowskaColors.TextLight,
                         fontSize = 14.sp
                     )
@@ -265,11 +355,16 @@ private fun ImageCarousel() {
         ) {
             repeat(totalImages) { index ->
                 val dotScale by animateFloatAsState(
-                    targetValue = if (index == currentIndex) 1.2f else 1f,
+                    targetValue = if (index == currentIndex) 1.4f else 1f,
                     animationSpec = spring(
                         dampingRatio = Spring.DampingRatioMediumBouncy,
                         stiffness = Spring.StiffnessMedium
                     )
+                )
+
+                val dotAlpha by animateFloatAsState(
+                    targetValue = if (index == currentIndex) 1f else 0.3f,
+                    animationSpec = tween(300)
                 )
 
                 Box(
@@ -278,11 +373,9 @@ private fun ImageCarousel() {
                         .graphicsLayer {
                             scaleX = dotScale
                             scaleY = dotScale
+                            alpha = dotAlpha
                         }
-                        .background(
-                            if (index == currentIndex) KaszowskaColors.Gold
-                            else KaszowskaColors.Gold.copy(alpha = 0.3f)
-                        )
+                        .background(KaszowskaColors.Gold)
                         .clickable { currentIndex = index }
                 )
             }

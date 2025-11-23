@@ -1,5 +1,6 @@
 package com.machmudow.kaszowska.sections
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -10,10 +11,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -57,17 +61,16 @@ fun ContactSection() {
         modifier = Modifier
             .fillMaxWidth()
             .background(KaszowskaColors.White)
-            .padding(vertical = 120.dp, horizontal = 40.dp)
+            .padding(vertical = 120.dp, horizontal = 80.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.Top
+            horizontalArrangement = Arrangement.spacedBy(80.dp)
         ) {
+            // Left side - Contact Info
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(end = 60.dp)
                     .graphicsLayer {
                         alpha = leftAlpha
                         translationX = leftOffset
@@ -94,13 +97,11 @@ fun ContactSection() {
 
                 Spacer(modifier = Modifier.height(40.dp))
 
-                ContactInfoItem("Email", "kontakt@kaszowska.pl")
+                ContactInfoItem("Email", "kontakt@kaszowska.pl", isVisible, 400)
                 Spacer(modifier = Modifier.height(24.dp))
-                ContactInfoItem("Telefon", "+48 XXX XXX XXX")
-                Spacer(modifier = Modifier.height(24.dp))
-                ContactInfoItem("Adres", "Warszawa, Polska")
+                ContactInfoItem("Telefon", "+48 XXX XXX XXX", isVisible, 550)
 
-                Spacer(modifier = Modifier.height(60.dp))
+                Spacer(modifier = Modifier.height(40.dp))
 
                 Text(
                     text = "SOCIAL MEDIA",
@@ -129,10 +130,10 @@ fun ContactSection() {
                 )
             }
 
+            // Right side - Contact Form
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = 60.dp)
                     .graphicsLayer {
                         alpha = rightAlpha
                         translationX = rightOffset
@@ -188,32 +189,26 @@ fun ContactSection() {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                Button(
+                AnimatedButton(
                     onClick = controller::validateAndSubmit,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = KaszowskaColors.Gold,
-                        contentColor = KaszowskaColors.White
-                    ),
-                    enabled = !controller.isSubmitting
-                ) {
-                    Text(
-                        text = if (controller.isSubmitting) "WYSYŁANIE..." else "WYŚLIJ WIADOMOŚĆ",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Normal,
-                        letterSpacing = 2.sp
-                    )
-                }
+                    enabled = !controller.isSubmitting,
+                    text = if (controller.isSubmitting) "WYSYŁANIE..." else "WYŚLIJ WIADOMOŚĆ"
+                )
             }
         }
     }
 }
 
 @Composable
-private fun ContactInfoItem(label: String, value: String) {
-    Column {
+private fun ContactInfoItem(label: String, value: String, isVisible: Boolean, delay: Int) {
+    val itemAlpha by animateFloatAsState(
+        targetValue = if (isVisible) 1f else 0f,
+        animationSpec = tween(600, delayMillis = delay, easing = FastOutSlowInEasing)
+    )
+
+    Column(
+        modifier = Modifier.graphicsLayer { alpha = itemAlpha }
+    ) {
         Text(
             text = label,
             fontSize = 12.sp,
@@ -235,6 +230,49 @@ private fun ContactInfoItem(label: String, value: String) {
 }
 
 @Composable
+private fun AnimatedButton(
+    onClick: () -> Unit,
+    enabled: Boolean,
+    text: String
+) {
+    var isHovered by remember { mutableStateOf(false) }
+
+    val scale by animateFloatAsState(
+        targetValue = if (isHovered && enabled) 1.02f else 1f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessMedium
+        )
+    )
+
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(56.dp)
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = KaszowskaColors.Gold,
+            contentColor = KaszowskaColors.White,
+            disabledContainerColor = KaszowskaColors.SoftGray,
+            disabledContentColor = KaszowskaColors.TextLight
+        ),
+        enabled = enabled
+    ) {
+        Text(
+            text = text,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Normal,
+            letterSpacing = 2.sp
+        )
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
 private fun ContactTextField(
     value: String,
     onValueChange: (String) -> Unit,
@@ -243,12 +281,30 @@ private fun ContactTextField(
     minHeight: Dp = 56.dp,
     error: String? = null
 ) {
+    var isFocused by remember { mutableStateOf(false) }
+    var isHovered by remember { mutableStateOf(false) }
+
+    val borderColor by animateColorAsState(
+        targetValue = when {
+            error != null -> Color(0xFFD32F2F)
+            isFocused -> KaszowskaColors.Gold
+            isHovered -> KaszowskaColors.Gold.copy(alpha = 0.5f)
+            else -> KaszowskaColors.SoftBeige
+        },
+        animationSpec = tween(300)
+    )
+
+    val elevation by animateFloatAsState(
+        targetValue = if (isFocused) 4f else 0f,
+        animationSpec = tween(300)
+    )
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = label,
             fontSize = 12.sp,
             fontWeight = FontWeight.Normal,
-            color = KaszowskaColors.TextLight,
+            color = if (isFocused) KaszowskaColors.Gold else KaszowskaColors.TextLight,
             letterSpacing = 1.sp
         )
 
@@ -265,11 +321,17 @@ private fun ContactTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = minHeight)
-                .background(KaszowskaColors.SoftGray)
+                .graphicsLayer {
+                    shadowElevation = elevation
+                }
+                .background(KaszowskaColors.SoftGray.copy(alpha = 0.3f))
                 .border(
-                    width = 1.dp,
-                    color = if (error != null) Color(0xFFD32F2F) else KaszowskaColors.SoftBeige
+                    width = if (isFocused) 2.dp else 1.dp,
+                    color = borderColor
                 )
+                .onFocusChanged { isFocused = it.isFocused }
+                .onPointerEvent(PointerEventType.Enter) { isHovered = true }
+                .onPointerEvent(PointerEventType.Exit) { isHovered = false }
                 .padding(16.dp),
             singleLine = !multiline
         )
@@ -285,3 +347,4 @@ private fun ContactTextField(
         }
     }
 }
+

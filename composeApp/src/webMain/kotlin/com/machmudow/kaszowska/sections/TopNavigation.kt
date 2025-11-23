@@ -31,7 +31,7 @@ fun TopNavigation(
     val targetColor = if (isScrolled) {
         KaszowskaColors.White.copy(alpha = 0.95f)
     } else {
-        Color.Transparent
+        KaszowskaColors.SoftBeige.copy(alpha = 0.01f)
     }
 
     val backgroundColor by animateColorAsState(
@@ -46,7 +46,7 @@ fun TopNavigation(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-//            .background(backgroundColor)
+            .background(backgroundColor)
             .padding(
                 horizontal = 40.dp,
                 vertical = 20.dp,
