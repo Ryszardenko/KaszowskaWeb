@@ -1,5 +1,6 @@
 package com.machmudow.kaszowska.sections
 
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -12,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -24,6 +26,32 @@ import com.machmudow.kaszowska.utils.email.openWindow
 @Composable
 fun ContactSection() {
     val controller = remember { SendEmailController() }
+
+    var isVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        isVisible = true
+    }
+
+    val leftAlpha by animateFloatAsState(
+        targetValue = if (isVisible) 1f else 0f,
+        animationSpec = tween(1000, easing = FastOutSlowInEasing)
+    )
+
+    val leftOffset by animateFloatAsState(
+        targetValue = if (isVisible) 0f else -100f,
+        animationSpec = tween(1000, easing = FastOutSlowInEasing)
+    )
+
+    val rightAlpha by animateFloatAsState(
+        targetValue = if (isVisible) 1f else 0f,
+        animationSpec = tween(1000, delayMillis = 300, easing = FastOutSlowInEasing)
+    )
+
+    val rightOffset by animateFloatAsState(
+        targetValue = if (isVisible) 0f else 100f,
+        animationSpec = tween(1000, delayMillis = 300, easing = FastOutSlowInEasing)
+    )
 
     Box(
         modifier = Modifier
@@ -40,6 +68,10 @@ fun ContactSection() {
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = 60.dp)
+                    .graphicsLayer {
+                        alpha = leftAlpha
+                        translationX = leftOffset
+                    }
             ) {
                 Text(
                     text = "KONTAKT",
@@ -101,6 +133,10 @@ fun ContactSection() {
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 60.dp)
+                    .graphicsLayer {
+                        alpha = rightAlpha
+                        translationX = rightOffset
+                    }
             ) {
                 ContactTextField(
                     value = controller.name,

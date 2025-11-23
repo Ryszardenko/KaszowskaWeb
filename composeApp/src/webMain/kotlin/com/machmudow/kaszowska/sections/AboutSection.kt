@@ -1,11 +1,13 @@
 package com.machmudow.kaszowska.sections
 
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -13,6 +15,32 @@ import com.machmudow.kaszowska.theme.KaszowskaColors
 
 @Composable
 fun AboutSection() {
+    var isVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        isVisible = true
+    }
+
+    val imageAlpha by animateFloatAsState(
+        targetValue = if (isVisible) 1f else 0f,
+        animationSpec = tween(1200, easing = FastOutSlowInEasing)
+    )
+
+    val imageOffset by animateFloatAsState(
+        targetValue = if (isVisible) 0f else -100f,
+        animationSpec = tween(1200, easing = FastOutSlowInEasing)
+    )
+
+    val contentAlpha by animateFloatAsState(
+        targetValue = if (isVisible) 1f else 0f,
+        animationSpec = tween(1200, delayMillis = 300, easing = FastOutSlowInEasing)
+    )
+
+    val contentOffset by animateFloatAsState(
+        targetValue = if (isVisible) 0f else 100f,
+        animationSpec = tween(1200, delayMillis = 300, easing = FastOutSlowInEasing)
+    )
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -24,12 +52,16 @@ fun AboutSection() {
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.Top
         ) {
-            // Left side - Image placeholder
+            // Left side - Image placeholder with entrance animation
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .height(600.dp)
                     .padding(end = 60.dp)
+                    .graphicsLayer {
+                        alpha = imageAlpha
+                        translationX = imageOffset
+                    }
                     .background(KaszowskaColors.SoftBeige)
             ) {
                 // Placeholder for image
@@ -45,11 +77,15 @@ fun AboutSection() {
                 }
             }
 
-            // Right side - Content
+            // Right side - Content with staggered animations
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = 60.dp),
+                    .padding(start = 60.dp)
+                    .graphicsLayer {
+                        alpha = contentAlpha
+                        translationX = contentOffset
+                    },
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
@@ -96,11 +132,11 @@ fun AboutSection() {
 
                 Spacer(modifier = Modifier.height(40.dp))
 
-                // Credentials or highlights
+                // Credentials or highlights with staggered entrance
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    HighlightItem("Certyfikowany specjalista")
-                    HighlightItem("Ponad X lat doświadczenia")
-                    HighlightItem("Setki zadowolonych klientek")
+                    HighlightItem("Certyfikowany specjalista", isVisible, 0)
+                    HighlightItem("Ponad X lat doświadczenia", isVisible, 150)
+                    HighlightItem("Setki zadowolonych klientek", isVisible, 300)
                 }
             }
         }
@@ -108,14 +144,42 @@ fun AboutSection() {
 }
 
 @Composable
-private fun HighlightItem(text: String) {
+private fun HighlightItem(text: String, isVisible: Boolean = false, delay: Int = 0) {
+    val itemAlpha by animateFloatAsState(
+        targetValue = if (isVisible) 1f else 0f,
+        animationSpec = tween(800, delayMillis = 1200 + delay, easing = FastOutSlowInEasing)
+    )
+
+    val itemOffset by animateFloatAsState(
+        targetValue = if (isVisible) 0f else 30f,
+        animationSpec = tween(800, delayMillis = 1200 + delay, easing = FastOutSlowInEasing)
+    )
+
+    val infiniteTransition = rememberInfiniteTransition()
+    val dotScale by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 1.3f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1500, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier.graphicsLayer {
+            alpha = itemAlpha
+            translationX = itemOffset
+        }
     ) {
         Box(
             modifier = Modifier
                 .size(6.dp)
+                .graphicsLayer {
+                    scaleX = dotScale
+                    scaleY = dotScale
+                }
                 .background(KaszowskaColors.Gold)
         )
 

@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.machmudow.kaszowska.components.IlluminatedText
 import com.machmudow.kaszowska.sections.model.Section
@@ -30,7 +31,7 @@ fun TopNavigation(
     val targetColor = if (isScrolled) {
         KaszowskaColors.White.copy(alpha = 0.95f)
     } else {
-        KaszowskaColors.SoftBeige
+        Color.Transparent
     }
 
     val backgroundColor by animateColorAsState(
@@ -45,7 +46,7 @@ fun TopNavigation(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(backgroundColor)
+//            .background(backgroundColor)
             .padding(
                 horizontal = 40.dp,
                 vertical = 20.dp,
