@@ -170,16 +170,6 @@ fun ContactSection() {
                         letterSpacing = 2.sp
                     )
                 }
-
-                if (controller.submitSuccess) {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = "✓ Wiadomość została wysłana!",
-                        fontSize = 14.sp,
-                        color = KaszowskaColors.Gold,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
             }
         }
     }

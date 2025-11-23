@@ -17,18 +17,12 @@ class SendEmailController {
     var messageError by mutableStateOf<String?>(null)
 
     var isSubmitting by mutableStateOf(false)
-    var submitSuccess by mutableStateOf(false)
-
-    fun updateName(value: String) {
-        name = value
-    }
 
     fun validateAndSubmit() {
         nameError = null
         emailError = null
         phoneError = null
         messageError = null
-        submitSuccess = false
 
         var hasError = false
 
@@ -62,7 +56,6 @@ class SendEmailController {
             isSubmitting = true
             sendEmail(name, email, phone, message) { success ->
                 isSubmitting = false
-                submitSuccess = success
                 if (success) {
                     name = ""
                     email = ""

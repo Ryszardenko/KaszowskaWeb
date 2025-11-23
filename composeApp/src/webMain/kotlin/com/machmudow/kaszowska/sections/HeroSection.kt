@@ -23,12 +23,12 @@ fun HeroSection() {
             .background(KaszowskaColors.SoftBeige),
         contentAlignment = Alignment.Center
     ) {
-        // Placeholder for hero image background
+/*        // Placeholder for hero image background
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFF9B8577).copy(alpha = 0.3f))
-        )
+        )*/
 
         // Hero Content
         Column(
@@ -76,4 +76,3 @@ fun HeroSection() {
 // Extension function for viewport height
 private val Int.vh: Dp
     get() = (this * 10).dp // Approximation for web
-
