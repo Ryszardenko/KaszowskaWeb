@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.theme.KaszowskaColors
+import com.machmudow.kaszowska.utils.Constants
 import com.machmudow.kaszowska.utils.email.openWindow
 
 @Composable
@@ -73,7 +74,7 @@ fun Footer() {
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = "MAGDALENA KASZOWSKA",
+                text = Constants.FULL_NAME.uppercase(),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Light,
                 color = KaszowskaColors.White,
@@ -96,14 +97,14 @@ fun Footer() {
                 horizontalArrangement = Arrangement.spacedBy(32.dp)
             ) {
                 FooterLink("Instagram") {
-                    openWindow(url = "https://www.instagram.com/magdalenakaszowska.pmu/")
+                    openWindow(url = Constants.INSTAGRAM_URL)
                 }
             }
 
             Spacer(modifier = Modifier.height(40.dp))
 
             Text(
-                text = "© 2025 Magdalena Kaszowska. All rights reserved.",
+                text = "© 2025 ${Constants.FULL_NAME}. All rights reserved.",
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Light,
                 color = KaszowskaColors.White.copy(alpha = 0.5f),

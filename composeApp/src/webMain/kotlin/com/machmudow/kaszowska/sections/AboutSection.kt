@@ -13,6 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.theme.KaszowskaColors
+import com.machmudow.kaszowska.utils.Constants
 
 @Composable
 fun AboutSection() {
@@ -80,7 +81,7 @@ fun AboutSection() {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Magdalena\nKaszowska",
+                    text = "${Constants.FIRST_NAME}\n${Constants.LAST_NAME}",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Light,
                     color = KaszowskaColors.TextLight,
@@ -108,7 +109,7 @@ fun AboutSection() {
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Text(
-                    text = "Magdalena Kaszowska",
+                    text = Constants.FULL_NAME,
                     fontSize = 42.sp,
                     fontWeight = FontWeight.Light,
                     color = KaszowskaColors.TextDark,

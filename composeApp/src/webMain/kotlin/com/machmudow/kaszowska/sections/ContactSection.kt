@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.theme.KaszowskaColors
+import com.machmudow.kaszowska.utils.Constants
 import com.machmudow.kaszowska.utils.email.SendEmailController
 import com.machmudow.kaszowska.utils.email.openWindow
 
@@ -97,9 +98,19 @@ fun ContactSection() {
 
                 Spacer(modifier = Modifier.height(40.dp))
 
-                ContactInfoItem("Email", "kontakt@kaszowska.pl", isVisible, 400)
+                ContactInfoItem(
+                    label = "Email",
+                    value = Constants.EMAIL,
+                    isVisible = isVisible,
+                    delay = 400,
+                )
                 Spacer(modifier = Modifier.height(24.dp))
-                ContactInfoItem("Telefon", "+48 XXX XXX XXX", isVisible, 550)
+                ContactInfoItem(
+                    label = "Telefon",
+                    value = Constants.PHONE_NUMBER,
+                    isVisible = isVisible,
+                    delay = 550,
+                )
 
                 Spacer(modifier = Modifier.height(40.dp))
 
@@ -114,7 +125,7 @@ fun ContactSection() {
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Text(
-                    text = "Instagram: @magdalenakaszowska.pmu",
+                    text = "${Constants.INSTAGRAM}: @${Constants.INSTAGRAM_TAG}",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Normal,
                     color = KaszowskaColors.Gold,
@@ -122,7 +133,7 @@ fun ContactSection() {
                     modifier = Modifier
                         .clickable {
                             openWindow(
-                                "https://www.instagram.com/magdalenakaszowska.pmu/",
+                                Constants.INSTAGRAM_URL,
                                 "_blank"
                             )
                         }

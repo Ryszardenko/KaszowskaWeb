@@ -15,11 +15,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.machmudow.kaszowska.components.IlluminatedText
 import com.machmudow.kaszowska.sections.model.Section
 import com.machmudow.kaszowska.theme.KaszowskaColors
+import com.machmudow.kaszowska.utils.Constants
 import com.machmudow.kaszowska.utils.email.openWindow
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -58,7 +58,7 @@ fun TopNavigation(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IlluminatedText(
-                text = "MAGDALENA KASZOWSKA",
+                text = Constants.FULL_NAME.uppercase(),
                 isScrolled = isScrolled,
             ) {
                 onNavigate(Section.HERO)
@@ -92,7 +92,7 @@ fun TopNavigation(
                 isScrolled = isScrolled,
             ) {
                 openWindow(
-                    url = "https://www.instagram.com/magdalenakaszowska.pmu/",
+                    url = Constants.INSTAGRAM_URL,
                 )
             }
         }
