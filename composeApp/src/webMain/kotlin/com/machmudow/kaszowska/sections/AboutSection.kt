@@ -120,35 +120,22 @@ fun AboutSection() {
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Text(
-                    text = "Jestem specjalistką makijażu permanentnego z wieloletnim doświadczeniem. " +
-                            "Moja pasja do perfekcji oraz dbałość o każdy szczegół sprawiają, " +
-                            "że efekty moich zabiegów są naturalne i długotrwałe.",
+                    text = """
+                        Nazywam się Magdalena Kaszowska — jestem linergistką, specjalistką terapii blizn i szkoleniowcem.
+
+                        Tworzę naturalny, dopasowany makijaż permanentny oraz naprawiam i odwracam stare pigmentacje, przywracając moim Klientkom pewność siebie.
+
+                        To, co wyróżnia mój gabinet, to zaawansowana praca z bliznami. Zajmuję się bliznami po operacjach, cięciu cesarskim, zabiegach plastycznych, urazach, oparzeniach i trądziku, prowadząc je ku większej elastyczności i estetyce.
+
+                        Jako szkoleniowiec z wiedzą medyczną, tworzę nowe pokolenie specjalistów - ucząc terapii blizn, usuwania pigmentacji i makijażu permanentnego, opierając pracę na zrozumieniu tkanek i realnych efektach. 
+
+                        Najczęściej słyszę od Klientek jedno zdanie: „żałuję, że trafiłam do Pani tak późno”. To dlatego w samym 2025 roku zaufało mi blisko 1000 Klientek, z czego połowie pomogłam w usuwaniu niechcianej pigmentacji i terapii blizn.
+                    """.trimIndent(),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Normal,
                     color = KaszowskaColors.TextLight,
                     lineHeight = 28.sp
                 )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = "Każdy zabieg traktuję indywidualnie, dostosowując technikę i kształt " +
-                            "do Twoich potrzeb i oczekiwań. Pracuję tylko na najwyższej jakości produktach, " +
-                            "które zapewniają bezpieczeństwo i trwałe efekty.",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = KaszowskaColors.TextLight,
-                    lineHeight = 28.sp
-                )
-
-                Spacer(modifier = Modifier.height(40.dp))
-
-                // Credentials or highlights with staggered entrance
-                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    HighlightItem("Certyfikowany specjalista", isVisible, 600)
-                    HighlightItem("Ponad X lat doświadczenia", isVisible, 750)
-                    HighlightItem("Setki zadowolonych klientek", isVisible, 900)
-                }
             }
         }
     }
