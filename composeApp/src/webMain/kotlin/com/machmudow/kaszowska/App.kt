@@ -39,6 +39,7 @@ fun App() {
 
     val showBackToTop = listState.firstVisibleItemIndex > 1
 
+
     // Initial app fade-in animation
     var isAppVisible by remember { mutableStateOf(false) }
 

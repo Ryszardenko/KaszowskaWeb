@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.machmudow.kaszowska.components.PdfViewerButton
 import com.machmudow.kaszowska.theme.KaszowskaColors
 
 data class Service(
@@ -123,13 +124,13 @@ fun ServicesSection() {
 
             Spacer(modifier = Modifier.height(60.dp))
 
-            Text(
-                text = "GALERIA PRAC",
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Normal,
-                color = KaszowskaColors.Gold,
-                letterSpacing = 3.sp
+            // Price list button
+            PdfViewerButton(
+                pdfUrl = "price_list.pdf",
+                buttonText = "Pokaz cennik",
             )
+
+            Spacer(modifier = Modifier.height(80.dp))
 
             Spacer(modifier = Modifier.height(40.dp))
 

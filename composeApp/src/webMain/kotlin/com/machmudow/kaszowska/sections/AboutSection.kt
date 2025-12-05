@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.machmudow.kaszowska.components.PdfViewerButton
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.utils.Constants
 
@@ -136,59 +137,15 @@ fun AboutSection() {
                     color = KaszowskaColors.TextLight,
                     lineHeight = 28.sp
                 )
+
+                Spacer(modifier = Modifier.height(40.dp))
+
+                PdfViewerButton(
+                    pdfUrl = "price_list.pdf",
+                    buttonText = "Zobacz Cennik"
+                )
             }
         }
-    }
-}
-
-@Composable
-private fun HighlightItem(text: String, isVisible: Boolean, delay: Int) {
-    val itemAlpha by animateFloatAsState(
-        targetValue = if (isVisible) 1f else 0f,
-        animationSpec = tween(600, delayMillis = delay, easing = FastOutSlowInEasing)
-    )
-
-    val itemOffset by animateFloatAsState(
-        targetValue = if (isVisible) 0f else 30f,
-        animationSpec = tween(600, delayMillis = delay, easing = FastOutSlowInEasing)
-    )
-
-    // Pulsing animation for the dot
-    val infiniteTransition = rememberInfiniteTransition()
-    val dotScale by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1.3f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1500, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        )
-    )
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier.graphicsLayer {
-            alpha = itemAlpha
-            translationY = itemOffset
-        }
-    ) {
-        Box(
-            modifier = Modifier
-                .size(6.dp)
-                .graphicsLayer {
-                    scaleX = dotScale
-                    scaleY = dotScale
-                }
-                .background(KaszowskaColors.Gold)
-        )
-
-        Text(
-            text = text,
-            fontSize = 15.sp,
-            fontWeight = FontWeight.Normal,
-            color = KaszowskaColors.TextDark,
-            letterSpacing = 0.5.sp
-        )
     }
 }
 

@@ -11,16 +11,24 @@ This is a Kotlin Multiplatform project targeting Web.
 
 ### Build and Run Web Application
 
+**🚀 Quick Start (Recommended):**
+```shell
+./quick-dev.sh
+```
+This starts the development server with all optimizations enabled.
+
+**Standard Commands:**
+
 To build and run the development version of the web app, use the run configuration from the run widget
 in your IDE's toolbar or run it directly from the terminal:
 - for the Wasm target (faster, modern browsers):
   - on macOS/Linux
     ```shell
-    ./gradlew :composeApp:wasmJsBrowserDevelopmentRun
+    ./gradlew :composeApp:wasmJsBrowserDevelopmentRun --build-cache
     ```
   - on Windows
     ```shell
-    .\gradlew.bat :composeApp:wasmJsBrowserDevelopmentRun
+    .\gradlew.bat :composeApp:wasmJsBrowserDevelopmentRun --build-cache
     ```
 - for the JS target (slower, supports older browsers):
   - on macOS/Linux
@@ -31,6 +39,11 @@ in your IDE's toolbar or run it directly from the terminal:
     ```shell
     .\gradlew.bat :composeApp:jsBrowserDevelopmentRun
     ```
+
+**Performance Tips:**
+- See [BUILD_OPTIMIZATIONS.md](./BUILD_OPTIMIZATIONS.md) for build performance improvements
+- Use `--build-cache` flag for faster incremental builds
+- Use `--continuous` flag for automatic rebuilds on file changes
 
 ---
 
