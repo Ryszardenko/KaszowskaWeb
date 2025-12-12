@@ -25,6 +25,7 @@ import com.machmudow.kaszowska.theme.KaszowskaColors
 @Composable
 fun ReactiveButton(
     buttonText: String,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
     var isHovered by remember { mutableStateOf(false) }
@@ -49,7 +50,7 @@ fun ReactiveButton(
         )
     )
 
-    Box {
+    Box(modifier = modifier) {
         // Glowing background effect
         Box(
             modifier = Modifier

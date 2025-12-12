@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.components.ReactiveButton
 import com.machmudow.kaszowska.theme.KaszowskaColors
+import com.machmudow.kaszowska.utils.image.offerImages
 import com.machmudow.kaszowska.utils.image.priceImages
 import org.jetbrains.compose.resources.DrawableResource
 
@@ -128,10 +129,19 @@ fun ServicesSection(
 
             Spacer(modifier = Modifier.height(60.dp))
 
-            ReactiveButton(
-                buttonText = "Pokaż cennik",
-                onClick = { showModalImages(priceImages) },
-            )
+            Row {
+                ReactiveButton(
+                    buttonText = "Zobacz ofertę",
+                    onClick = { showModalImages(offerImages) },
+                )
+
+                Spacer(modifier = Modifier.width(24.dp))
+
+                ReactiveButton(
+                    buttonText = "Zobacz cennik",
+                    onClick = { showModalImages(priceImages) },
+                )
+            }
 
             Spacer(modifier = Modifier.height(80.dp))
 
