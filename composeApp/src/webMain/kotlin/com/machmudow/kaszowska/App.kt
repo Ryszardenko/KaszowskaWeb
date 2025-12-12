@@ -1,6 +1,9 @@
 package com.machmudow.kaszowska
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,6 +22,7 @@ import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.machmudow.kaszowska.components.imagesmodal.ImagesModal
 import com.machmudow.kaszowska.sections.AboutSection
 import com.machmudow.kaszowska.sections.ContactSection
 import com.machmudow.kaszowska.sections.Footer
@@ -29,6 +33,7 @@ import com.machmudow.kaszowska.sections.model.Section
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.theme.KaszowskaTheme
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.DrawableResource
 
 @Composable
 fun App() {
@@ -39,6 +44,9 @@ fun App() {
 
     val showBackToTop = listState.firstVisibleItemIndex > 1
 
+    // PDF modal state
+    var currentPdfUrl by remember { mutableStateOf<String?>(null) }
+    val modalImages = remember { mutableStateListOf<DrawableResource>() }
 
     // Initial app fade-in animation
     var isAppVisible by remember { mutableStateOf(false) }
@@ -70,7 +78,11 @@ fun App() {
             ) {
                 item { HeroSection() }
                 item { AboutSection() }
-                item { ServicesSection() }
+                item {
+                    ServicesSection(
+                        showModalImages = { modalImages.addAll(it) },
+                    )
+                }
                 item { ContactSection() }
                 item { Footer() }
             }
@@ -88,6 +100,17 @@ fun App() {
                         listState.animateScrollToItem(0)
                     }
                 }
+            }
+
+            AnimatedVisibility(
+                visible = modalImages.isNotEmpty(),
+                enter = fadeIn(animationSpec = tween(300)),
+                exit = fadeOut(animationSpec = tween(300))
+            ) {
+                ImagesModal(
+                    images = modalImages,
+                    onDismiss = { modalImages.clear() },
+                )
             }
         }
     }

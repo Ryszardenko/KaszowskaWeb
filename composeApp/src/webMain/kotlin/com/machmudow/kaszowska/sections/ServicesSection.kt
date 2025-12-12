@@ -18,8 +18,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.machmudow.kaszowska.components.PdfViewerButton
+import com.machmudow.kaszowska.components.ReactiveButton
 import com.machmudow.kaszowska.theme.KaszowskaColors
+import com.machmudow.kaszowska.utils.image.priceImages
+import org.jetbrains.compose.resources.DrawableResource
 
 data class Service(
     val title: String,
@@ -28,7 +30,9 @@ data class Service(
 )
 
 @Composable
-fun ServicesSection() {
+fun ServicesSection(
+    showModalImages: (List<DrawableResource>) -> Unit,
+) {
     val services = listOf(
         Service(
             "Brwi",
@@ -124,10 +128,9 @@ fun ServicesSection() {
 
             Spacer(modifier = Modifier.height(60.dp))
 
-            // Price list button
-            PdfViewerButton(
-                pdfUrl = "price_list.pdf",
-                buttonText = "Pokaz cennik",
+            ReactiveButton(
+                buttonText = "Pokaż cennik",
+                onClick = { showModalImages(priceImages) },
             )
 
             Spacer(modifier = Modifier.height(80.dp))

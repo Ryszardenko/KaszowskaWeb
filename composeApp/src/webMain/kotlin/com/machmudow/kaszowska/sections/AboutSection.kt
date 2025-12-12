@@ -12,7 +12,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.machmudow.kaszowska.components.PdfViewerButton
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.utils.Constants
 
@@ -136,13 +135,6 @@ fun AboutSection() {
                     fontWeight = FontWeight.Normal,
                     color = KaszowskaColors.TextLight,
                     lineHeight = 28.sp
-                )
-
-                Spacer(modifier = Modifier.height(40.dp))
-
-                PdfViewerButton(
-                    pdfUrl = "price_list.pdf",
-                    buttonText = "Zobacz Cennik"
                 )
             }
         }
