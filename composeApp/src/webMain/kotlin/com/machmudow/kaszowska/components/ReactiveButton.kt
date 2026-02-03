@@ -1,6 +1,7 @@
 package com.machmudow.kaszowska.components
 
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,6 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.theme.KaszowskaColors
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -27,6 +30,7 @@ fun ReactiveButton(
     buttonText: String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
+    iconRes: DrawableResource? = null,
 ) {
     var isHovered by remember { mutableStateOf(false) }
 
@@ -106,10 +110,13 @@ fun ReactiveButton(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "📄",
-                    fontSize = 20.sp
-                )
+                if (iconRes != null) {
+                    Image(
+                        painter = painterResource(iconRes),
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
                 Text(
                     text = buttonText,
                     fontSize = 16.sp,

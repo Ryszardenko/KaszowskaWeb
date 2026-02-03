@@ -43,6 +43,9 @@ import com.machmudow.kaszowska.components.ReactiveButton
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.utils.image.offerImages
 import com.machmudow.kaszowska.utils.image.priceImages
+import kaszowska.composeapp.generated.resources.Res
+import kaszowska.composeapp.generated.resources.cart
+import kaszowska.composeapp.generated.resources.price
 import org.jetbrains.compose.resources.DrawableResource
 
 data class Service(
@@ -154,6 +157,7 @@ fun ServicesSection(
                 ReactiveButton(
                     buttonText = "Zobacz ofertę",
                     onClick = { showModalImages(offerImages) },
+                    iconRes = Res.drawable.cart,
                 )
 
                 Spacer(modifier = Modifier.width(24.dp))
@@ -161,10 +165,11 @@ fun ServicesSection(
                 ReactiveButton(
                     buttonText = "Zobacz cennik",
                     onClick = { showModalImages(priceImages) },
+                    iconRes = Res.drawable.price,
                 )
             }
 
-            Spacer(modifier = Modifier.height(80.dp))
+            Spacer(modifier = Modifier.height(40.dp))
         }
     }
 }
