@@ -104,38 +104,20 @@ fun HeroSection() {
                 )
         )
 
-        Column(
+        Image(
             modifier = Modifier
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Image(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .graphicsLayer {
-                        alpha = titleAlpha
-                        scaleX = titleScale
-                        scaleY = titleScale
-                    },
-                painter = painterResource(Res.drawable.logo_main),
-                contentDescription = "Logo",
-                contentScale = ContentScale.Fit,
-                colorFilter = ColorFilter.tint(Color.White)
-            )
+                .fillMaxSize(0.6f)
+                .graphicsLayer {
+                    alpha = titleAlpha
+                    scaleX = titleScale
+                    scaleY = titleScale
+                },
+            painter = painterResource(Res.drawable.logo_main),
+            contentDescription = "Logo",
+            contentScale = ContentScale.Fit,
+            colorFilter = ColorFilter.tint(Color.White)
+        )
 
-            // Pulsing decorative line
-            PulsingDecorativeLine(isVisible)
-        }
-
-        // Animated scroll indicator at bottom
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 40.dp)
-        ) {
-            ScrollIndicator()
-        }
     }
 }
 
@@ -174,32 +156,6 @@ private fun AnimatedBackgroundParticles(animationProgress: Float) {
             )
         }
     }
-}
-
-@Composable
-private fun PulsingDecorativeLine(isVisible: Boolean) {
-    val infiniteTransition = rememberInfiniteTransition()
-
-    val pulseAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.4f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(2000, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        )
-    )
-
-    val width by animateFloatAsState(
-        targetValue = if (isVisible) 100f else 0f,
-        animationSpec = tween(1500, delayMillis = 1200, easing = FastOutSlowInEasing)
-    )
-
-    Box(
-        modifier = Modifier
-            .width(width.dp)
-            .height(2.dp)
-            .background(KaszowskaColors.White.copy(alpha = pulseAlpha))
-    )
 }
 
 @Composable
