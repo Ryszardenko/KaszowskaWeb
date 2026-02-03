@@ -1,6 +1,7 @@
 package com.machmudow.kaszowska.sections
 
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
@@ -9,11 +10,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.utils.Constants
+import kaszowska.composeapp.generated.resources.Res
+import kaszowska.composeapp.generated.resources.magda
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun AboutSection() {
@@ -58,14 +63,16 @@ fun AboutSection() {
             .padding(vertical = 120.dp, horizontal = 80.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min),
             horizontalArrangement = Arrangement.spacedBy(80.dp)
         ) {
-            // Left side - Image placeholder with entrance animation
+            // Left side
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .height(500.dp)
+                    .heightIn(min = 500.dp)
                     .graphicsLayer {
                         alpha = imageAlpha
                         translationX = imageOffset
@@ -80,12 +87,12 @@ fun AboutSection() {
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "${Constants.FIRST_NAME}\n${Constants.LAST_NAME}",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Light,
-                    color = KaszowskaColors.TextLight,
-                    letterSpacing = 2.sp
+                Image(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    painter = painterResource(Res.drawable.magda),
+                    contentDescription = Constants.FULL_NAME,
+                    contentScale = ContentScale.Inside,
                 )
             }
 
@@ -140,4 +147,3 @@ fun AboutSection() {
         }
     }
 }
-
