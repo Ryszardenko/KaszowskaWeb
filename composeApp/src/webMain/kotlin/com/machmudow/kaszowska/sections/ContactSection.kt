@@ -25,12 +25,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.utils.Constants
+import com.machmudow.kaszowska.utils.LocalWindowSize
+import com.machmudow.kaszowska.utils.horizontalPadding
+import com.machmudow.kaszowska.utils.isMobile
+import com.machmudow.kaszowska.utils.verticalSectionPadding
 import com.machmudow.kaszowska.utils.email.SendEmailController
 import com.machmudow.kaszowska.utils.email.openWindow
 
 @Composable
 fun ContactSection() {
     val controller = remember { SendEmailController() }
+    val windowSize = LocalWindowSize.current
 
     var isVisible by remember { mutableStateOf(false) }
 
@@ -62,148 +67,68 @@ fun ContactSection() {
         modifier = Modifier
             .fillMaxWidth()
             .background(KaszowskaColors.White)
-            .padding(vertical = 120.dp, horizontal = 80.dp)
+            .padding(
+                vertical = windowSize.verticalSectionPadding,
+                horizontal = windowSize.horizontalPadding
+            )
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(80.dp)
-        ) {
-            // Left side - Contact Info
+        if (windowSize.isMobile) {
+            // Mobile layout - stacked vertically
             Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .graphicsLayer {
-                        alpha = leftAlpha
-                        translationX = leftOffset
-                    }
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = "KONTAKT",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = KaszowskaColors.Gold,
-                    letterSpacing = 3.sp
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = "Skontaktuj się ze mną",
-                    fontSize = 42.sp,
-                    fontWeight = FontWeight.Light,
-                    color = KaszowskaColors.TextDark,
-                    letterSpacing = 2.sp,
-                    lineHeight = 52.sp
-                )
-
-                Spacer(modifier = Modifier.height(40.dp))
-
-                ContactInfoItem(
-                    label = "Email",
-                    value = Constants.EMAIL,
-                    isVisible = isVisible,
-                    delay = 400,
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                ContactInfoItem(
-                    label = "Telefon",
-                    value = Constants.PHONE_NUMBER,
-                    isVisible = isVisible,
-                    delay = 550,
-                )
-
-                Spacer(modifier = Modifier.height(40.dp))
-
-                Text(
-                    text = "SOCIAL MEDIA",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = KaszowskaColors.Gold,
-                    letterSpacing = 3.sp
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Text(
-                    text = "${Constants.INSTAGRAM}: @${Constants.INSTAGRAM_TAG}",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = KaszowskaColors.Gold,
-                    letterSpacing = 0.5.sp,
+                // Contact Info
+                ContactInfo(
                     modifier = Modifier
-                        .clickable {
-                            openWindow(
-                                Constants.INSTAGRAM_URL,
-                                "_blank"
-                            )
+                        .fillMaxWidth()
+                        .graphicsLayer {
+                            alpha = leftAlpha
+                            translationY = leftOffset
+                        },
+                    isVisible = isVisible,
+                    isMobile = true
+                )
+
+                Spacer(modifier = Modifier.height(48.dp))
+
+                // Contact Form
+                ContactForm(
+                    controller = controller,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .graphicsLayer {
+                            alpha = rightAlpha
+                            translationY = rightOffset
                         }
-                        .padding(vertical = 4.dp)
                 )
             }
-
-            // Right side - Contact Form
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .graphicsLayer {
-                        alpha = rightAlpha
-                        translationX = rightOffset
-                    }
+        } else {
+            // Desktop layout - side by side
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(80.dp)
             ) {
-                ContactTextField(
-                    value = controller.name,
-                    onValueChange = {
-                        controller.name = it
-                        controller.nameError = null
-                    },
-                    label = "Imię i nazwisko",
-                    error = controller.nameError
+                // Left side - Contact Info
+                ContactInfo(
+                    modifier = Modifier
+                        .weight(1f)
+                        .graphicsLayer {
+                            alpha = leftAlpha
+                            translationX = leftOffset
+                        },
+                    isVisible = isVisible,
+                    isMobile = false
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
-
-                ContactTextField(
-                    value = controller.email,
-                    onValueChange = {
-                        controller.email = it
-                        controller.emailError = null
-                    },
-                    label = "Email",
-                    error = controller.emailError
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                ContactTextField(
-                    value = controller.phone,
-                    onValueChange = {
-                        controller.phone = it
-                        controller.phoneError = null
-                    },
-                    label = "Telefon",
-                    error = controller.phoneError
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                ContactTextField(
-                    value = controller.message,
-                    onValueChange = {
-                        controller.message = it
-                        controller.messageError = null
-                    },
-                    label = "Wiadomość",
-                    multiline = true,
-                    minHeight = 150.dp,
-                    error = controller.messageError
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                AnimatedButton(
-                    onClick = controller::validateAndSubmit,
-                    enabled = !controller.isSubmitting,
-                    text = if (controller.isSubmitting) "WYSYŁANIE..." else "WYŚLIJ WIADOMOŚĆ"
+                // Right side - Contact Form
+                ContactForm(
+                    controller = controller,
+                    modifier = Modifier
+                        .weight(1f)
+                        .graphicsLayer {
+                            alpha = rightAlpha
+                            translationX = rightOffset
+                        }
                 )
             }
         }
@@ -211,7 +136,145 @@ fun ContactSection() {
 }
 
 @Composable
-private fun ContactInfoItem(label: String, value: String, isVisible: Boolean, delay: Int) {
+private fun ContactInfo(
+    modifier: Modifier = Modifier,
+    isVisible: Boolean,
+    isMobile: Boolean
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = "KONTAKT",
+            fontSize = if (isMobile) 11.sp else 12.sp,
+            fontWeight = FontWeight.Normal,
+            color = KaszowskaColors.Gold,
+            letterSpacing = 3.sp
+        )
+
+        Spacer(modifier = Modifier.height(if (isMobile) 16.dp else 24.dp))
+
+        Text(
+            text = "Skontaktuj się ze mną",
+            fontSize = if (isMobile) 28.sp else 42.sp,
+            fontWeight = FontWeight.Light,
+            color = KaszowskaColors.TextDark,
+            letterSpacing = 2.sp,
+            lineHeight = if (isMobile) 36.sp else 52.sp
+        )
+
+        Spacer(modifier = Modifier.height(if (isMobile) 24.dp else 40.dp))
+
+        ContactInfoItem(
+            label = "Email",
+            value = Constants.EMAIL,
+            isVisible = isVisible,
+            delay = 400,
+            isMobile = isMobile
+        )
+        Spacer(modifier = Modifier.height(if (isMobile) 16.dp else 24.dp))
+        ContactInfoItem(
+            label = "Telefon",
+            value = Constants.PHONE_NUMBER,
+            isVisible = isVisible,
+            delay = 550,
+            isMobile = isMobile
+        )
+
+        Spacer(modifier = Modifier.height(if (isMobile) 24.dp else 40.dp))
+
+        Text(
+            text = "SOCIAL MEDIA",
+            fontSize = if (isMobile) 11.sp else 12.sp,
+            fontWeight = FontWeight.Normal,
+            color = KaszowskaColors.Gold,
+            letterSpacing = 3.sp
+        )
+
+        Spacer(modifier = Modifier.height(if (isMobile) 12.dp else 20.dp))
+
+        Text(
+            text = "${Constants.INSTAGRAM}: @${Constants.INSTAGRAM_TAG}",
+            fontSize = if (isMobile) 14.sp else 16.sp,
+            fontWeight = FontWeight.Normal,
+            color = KaszowskaColors.Gold,
+            letterSpacing = 0.5.sp,
+            modifier = Modifier
+                .clickable {
+                    openWindow(
+                        Constants.INSTAGRAM_URL,
+                        "_blank"
+                    )
+                }
+                .padding(vertical = 4.dp)
+        )
+    }
+}
+
+@Composable
+private fun ContactForm(
+    controller: SendEmailController,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        ContactTextField(
+            value = controller.name,
+            onValueChange = {
+                controller.name = it
+                controller.nameError = null
+            },
+            label = "Imię i nazwisko",
+            error = controller.nameError
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        ContactTextField(
+            value = controller.email,
+            onValueChange = {
+                controller.email = it
+                controller.emailError = null
+            },
+            label = "Email",
+            error = controller.emailError
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        ContactTextField(
+            value = controller.phone,
+            onValueChange = {
+                controller.phone = it
+                controller.phoneError = null
+            },
+            label = "Telefon",
+            error = controller.phoneError
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        ContactTextField(
+            value = controller.message,
+            onValueChange = {
+                controller.message = it
+                controller.messageError = null
+            },
+            label = "Wiadomość",
+            multiline = true,
+            minHeight = 150.dp,
+            error = controller.messageError
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        AnimatedButton(
+            onClick = controller::validateAndSubmit,
+            enabled = !controller.isSubmitting,
+            text = if (controller.isSubmitting) "WYSYŁANIE..." else "WYŚLIJ WIADOMOŚĆ"
+        )
+    }
+}
+
+@Composable
+private fun ContactInfoItem(label: String, value: String, isVisible: Boolean, delay: Int, isMobile: Boolean = false) {
     val itemAlpha by animateFloatAsState(
         targetValue = if (isVisible) 1f else 0f,
         animationSpec = tween(600, delayMillis = delay, easing = FastOutSlowInEasing)
@@ -222,7 +285,7 @@ private fun ContactInfoItem(label: String, value: String, isVisible: Boolean, de
     ) {
         Text(
             text = label,
-            fontSize = 12.sp,
+            fontSize = if (isMobile) 11.sp else 12.sp,
             fontWeight = FontWeight.Normal,
             color = KaszowskaColors.TextLight,
             letterSpacing = 2.sp
@@ -232,7 +295,7 @@ private fun ContactInfoItem(label: String, value: String, isVisible: Boolean, de
 
         Text(
             text = value,
-            fontSize = 18.sp,
+            fontSize = if (isMobile) 16.sp else 18.sp,
             fontWeight = FontWeight.Normal,
             color = KaszowskaColors.TextDark,
             letterSpacing = 0.5.sp
@@ -358,4 +421,3 @@ private fun ContactTextField(
         }
     }
 }
-

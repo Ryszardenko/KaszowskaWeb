@@ -22,6 +22,9 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.machmudow.kaszowska.utils.LocalWindowSize
+import com.machmudow.kaszowska.utils.horizontalPadding
+import com.machmudow.kaszowska.utils.isMobile
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
@@ -32,6 +35,11 @@ fun ImageCarousel(
     onImageClick: (DrawableResource) -> Unit,
 ) {
     val scrollState = rememberScrollState()
+    val windowSize = LocalWindowSize.current
+
+    val imageHeight = if (windowSize.isMobile) 280.dp else 400.dp
+    val imageWidth = if (windowSize.isMobile) 240.dp else 360.dp
+    val imageSpacing = if (windowSize.isMobile) 12.dp else 20.dp
 
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -47,14 +55,14 @@ fun ImageCarousel(
                         scrollState.dispatchRawDelta(-dragAmount.x)
                     }
                 }
-                .padding(horizontal = 100.dp),
-            horizontalArrangement = Arrangement.spacedBy(20.dp)
+                .padding(horizontal = windowSize.horizontalPadding),
+            horizontalArrangement = Arrangement.spacedBy(imageSpacing)
         ) {
             images.forEach { image ->
                 Image(
                     modifier = Modifier
-                        .height(400.dp)
-                        .width(360.dp)
+                        .height(imageHeight)
+                        .width(imageWidth)
                         .clip(RoundedCornerShape(12.dp))
                         .clickable { onImageClick(image) },
                     painter = painterResource(image),

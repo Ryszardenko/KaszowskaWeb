@@ -19,10 +19,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.utils.Constants
+import com.machmudow.kaszowska.utils.LocalWindowSize
+import com.machmudow.kaszowska.utils.isMobile
+import com.machmudow.kaszowska.utils.navHorizontalPadding
 import com.machmudow.kaszowska.utils.email.openWindow
 
 @Composable
 fun Footer() {
+    val windowSize = LocalWindowSize.current
     var isVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -39,11 +43,13 @@ fun Footer() {
         animationSpec = tween(1200, easing = FastOutSlowInEasing)
     )
 
+    val verticalPadding = if (windowSize.isMobile) 40.dp else 60.dp
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(KaszowskaColors.DarkBrown)
-            .padding(vertical = 60.dp, horizontal = 40.dp)
+            .padding(vertical = verticalPadding, horizontal = windowSize.navHorizontalPadding)
             .graphicsLayer {
                 this.alpha = alpha
                 translationY = offset
@@ -56,8 +62,8 @@ fun Footer() {
             // Pulsing golden line at top
             val infiniteTransition = rememberInfiniteTransition()
             val lineWidth by infiniteTransition.animateFloat(
-                initialValue = 50f,
-                targetValue = 100f,
+                initialValue = if (windowSize.isMobile) 40f else 50f,
+                targetValue = if (windowSize.isMobile) 80f else 100f,
                 animationSpec = infiniteRepeatable(
                     animation = tween(2000, easing = FastOutSlowInEasing),
                     repeatMode = RepeatMode.Reverse
@@ -71,41 +77,41 @@ fun Footer() {
                     .background(KaszowskaColors.Gold.copy(alpha = 0.5f))
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(if (windowSize.isMobile) 24.dp else 32.dp))
 
             Text(
                 text = Constants.FULL_NAME.uppercase(),
-                fontSize = 18.sp,
+                fontSize = if (windowSize.isMobile) 14.sp else 18.sp,
                 fontWeight = FontWeight.Light,
                 color = KaszowskaColors.White,
-                letterSpacing = 3.sp
+                letterSpacing = if (windowSize.isMobile) 2.sp else 3.sp
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(if (windowSize.isMobile) 12.dp else 16.dp))
 
             Text(
                 text = "Permanent Makeup Artist",
-                fontSize = 13.sp,
+                fontSize = if (windowSize.isMobile) 11.sp else 13.sp,
                 fontWeight = FontWeight.Light,
                 color = KaszowskaColors.White.copy(alpha = 0.7f),
                 letterSpacing = 2.sp
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(if (windowSize.isMobile) 24.dp else 32.dp))
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(32.dp)
+                horizontalArrangement = Arrangement.spacedBy(if (windowSize.isMobile) 24.dp else 32.dp)
             ) {
                 FooterLink("Instagram") {
                     openWindow(url = Constants.INSTAGRAM_URL)
                 }
             }
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(if (windowSize.isMobile) 32.dp else 40.dp))
 
             Text(
                 text = "© 2026 ${Constants.FULL_NAME}. All rights reserved.",
-                fontSize = 11.sp,
+                fontSize = if (windowSize.isMobile) 10.sp else 11.sp,
                 fontWeight = FontWeight.Light,
                 color = KaszowskaColors.White.copy(alpha = 0.5f),
                 letterSpacing = 1.sp,

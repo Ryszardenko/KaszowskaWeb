@@ -50,6 +50,10 @@ import com.machmudow.kaszowska.components.ReactiveButton
 import com.machmudow.kaszowska.data.groupedServices
 import com.machmudow.kaszowska.model.Service
 import com.machmudow.kaszowska.theme.KaszowskaColors
+import com.machmudow.kaszowska.utils.LocalWindowSize
+import com.machmudow.kaszowska.utils.horizontalPadding
+import com.machmudow.kaszowska.utils.isMobile
+import com.machmudow.kaszowska.utils.verticalSectionPadding
 import com.machmudow.kaszowska.utils.image.offerImages
 import com.machmudow.kaszowska.utils.image.priceImages
 import kaszowska.composeapp.generated.resources.Res
@@ -61,7 +65,7 @@ import org.jetbrains.compose.resources.DrawableResource
 fun ServicesSection(
     showModalImages: (List<DrawableResource>) -> Unit,
 ) {
-
+    val windowSize = LocalWindowSize.current
 
     var isVisible by remember { mutableStateOf(false) }
 
@@ -81,11 +85,15 @@ fun ServicesSection(
 
     val scrollState = rememberScrollState()
 
+    val horizontalPadding = windowSize.horizontalPadding
+    val cardWidth = if (windowSize.isMobile) 280.dp else 320.dp
+    val cardSpacing = if (windowSize.isMobile) 16.dp else 40.dp
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(KaszowskaColors.SoftGray)
-            .padding(vertical = 120.dp)
+            .padding(vertical = windowSize.verticalSectionPadding)
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -93,7 +101,7 @@ fun ServicesSection(
         ) {
             Text(
                 text = "USŁUGI",
-                fontSize = 12.sp,
+                fontSize = if (windowSize.isMobile) 11.sp else 12.sp,
                 fontWeight = FontWeight.Normal,
                 color = KaszowskaColors.Gold,
                 letterSpacing = 3.sp,
@@ -103,11 +111,11 @@ fun ServicesSection(
                 }
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(if (windowSize.isMobile) 12.dp else 16.dp))
 
             Text(
                 text = "Co oferuję",
-                fontSize = 42.sp,
+                fontSize = if (windowSize.isMobile) 28.sp else 42.sp,
                 fontWeight = FontWeight.Light,
                 color = KaszowskaColors.TextDark,
                 letterSpacing = 2.sp,
@@ -117,7 +125,7 @@ fun ServicesSection(
                 }
             )
 
-            Spacer(modifier = Modifier.height(80.dp))
+            Spacer(modifier = Modifier.height(if (windowSize.isMobile) 40.dp else 80.dp))
 
             Row(
                 modifier = Modifier
@@ -129,29 +137,30 @@ fun ServicesSection(
                             scrollState.dispatchRawDelta(-dragAmount.x)
                         }
                     }
-                    .padding(horizontal = 80.dp),
-                horizontalArrangement = Arrangement.spacedBy(40.dp)
+                    .padding(horizontal = horizontalPadding),
+                horizontalArrangement = Arrangement.spacedBy(cardSpacing)
             ) {
                 groupedServices.forEachIndexed { index, service ->
                     ServiceCard(
                         service = service,
-                        modifier = Modifier.width(320.dp),
+                        modifier = Modifier.width(cardWidth),
                         isVisible = isVisible,
-                        delay = 300 + index * 150
+                        delay = 300 + index * 150,
+                        isMobile = windowSize.isMobile
                     )
                 }
             }
 
             if (scrollState.maxValue > 0) {
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(if (windowSize.isMobile) 16.dp else 24.dp))
 
                 BoxWithConstraints(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 80.dp)
+                        .padding(horizontal = horizontalPadding)
                 ) {
                     val trackWidth = maxWidth
-                    val baseThumbWidth = 120.dp
+                    val baseThumbWidth = if (windowSize.isMobile) 80.dp else 120.dp
                     val thumbWidth = if (trackWidth < baseThumbWidth) trackWidth else baseThumbWidth
                     val scrollFraction = scrollState.value.toFloat() / scrollState.maxValue.toFloat()
                     val maxOffset = (trackWidth - thumbWidth).coerceAtLeast(0.dp)
@@ -174,22 +183,42 @@ fun ServicesSection(
                 }
             }
 
-            Spacer(modifier = Modifier.height(60.dp))
+            Spacer(modifier = Modifier.height(if (windowSize.isMobile) 32.dp else 60.dp))
 
-            Row {
-                ReactiveButton(
-                    buttonText = "Zobacz ofertę",
-                    onClick = { showModalImages(offerImages) },
-                    iconRes = Res.drawable.ic_cart,
-                )
+            if (windowSize.isMobile) {
+                // Stack buttons vertically on mobile
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    ReactiveButton(
+                        buttonText = "Zobacz ofertę",
+                        onClick = { showModalImages(offerImages) },
+                        iconRes = Res.drawable.ic_cart,
+                    )
 
-                Spacer(modifier = Modifier.width(24.dp))
+                    ReactiveButton(
+                        buttonText = "Zobacz cennik",
+                        onClick = { showModalImages(priceImages) },
+                        iconRes = Res.drawable.ic_price,
+                    )
+                }
+            } else {
+                Row {
+                    ReactiveButton(
+                        buttonText = "Zobacz ofertę",
+                        onClick = { showModalImages(offerImages) },
+                        iconRes = Res.drawable.ic_cart,
+                    )
 
-                ReactiveButton(
-                    buttonText = "Zobacz cennik",
-                    onClick = { showModalImages(priceImages) },
-                    iconRes = Res.drawable.ic_price,
-                )
+                    Spacer(modifier = Modifier.width(24.dp))
+
+                    ReactiveButton(
+                        buttonText = "Zobacz cennik",
+                        onClick = { showModalImages(priceImages) },
+                        iconRes = Res.drawable.ic_price,
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -203,7 +232,8 @@ private fun ServiceCard(
     service: Service,
     modifier: Modifier = Modifier,
     isVisible: Boolean = false,
-    delay: Int = 0
+    delay: Int = 0,
+    isMobile: Boolean = false
 ) {
     var isHovered by remember { mutableStateOf(false) }
 
@@ -244,6 +274,8 @@ private fun ServiceCard(
         )
     )
 
+    val cardPadding = if (isMobile) 24.dp else 40.dp
+
     Column(
         modifier = modifier
             .graphicsLayer {
@@ -262,7 +294,7 @@ private fun ServiceCard(
             )
             .onPointerEvent(PointerEventType.Enter) { isHovered = true }
             .onPointerEvent(PointerEventType.Exit) { isHovered = false }
-            .padding(40.dp),
+            .padding(cardPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Animated golden dot
@@ -276,7 +308,7 @@ private fun ServiceCard(
 
         Box(
             modifier = Modifier
-                .size(8.dp)
+                .size(if (isMobile) 6.dp else 8.dp)
                 .graphicsLayer {
                     scaleX = dotScale
                     scaleY = dotScale
@@ -284,29 +316,29 @@ private fun ServiceCard(
                 .background(KaszowskaColors.Gold)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(if (isMobile) 12.dp else 16.dp))
 
         Text(
             text = service.title,
-            fontSize = 24.sp,
+            fontSize = if (isMobile) 20.sp else 24.sp,
             fontWeight = FontWeight.Light,
             color = KaszowskaColors.TextDark,
             letterSpacing = 2.sp,
             textAlign = TextAlign.Center
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(if (isMobile) 16.dp else 24.dp))
 
         Text(
             text = service.description,
-            fontSize = 14.sp,
+            fontSize = if (isMobile) 13.sp else 14.sp,
             fontWeight = FontWeight.Normal,
             color = KaszowskaColors.TextLight,
-            lineHeight = 24.sp,
+            lineHeight = if (isMobile) 20.sp else 24.sp,
             textAlign = TextAlign.Center
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(if (isMobile) 20.dp else 32.dp))
 
         Box(
             modifier = Modifier

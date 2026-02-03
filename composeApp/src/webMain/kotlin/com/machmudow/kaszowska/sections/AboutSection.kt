@@ -18,12 +18,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.utils.Constants
+import com.machmudow.kaszowska.utils.LocalWindowSize
+import com.machmudow.kaszowska.utils.horizontalPadding
+import com.machmudow.kaszowska.utils.isMobile
+import com.machmudow.kaszowska.utils.verticalSectionPadding
 import kaszowska.composeapp.generated.resources.Res
 import kaszowska.composeapp.generated.resources.magda
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun AboutSection() {
+    val windowSize = LocalWindowSize.current
     var isVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -62,91 +67,154 @@ fun AboutSection() {
                     )
                 )
             )
-            .padding(vertical = 120.dp, horizontal = 80.dp)
+            .padding(
+                vertical = windowSize.verticalSectionPadding,
+                horizontal = windowSize.horizontalPadding
+            )
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min),
-            horizontalArrangement = Arrangement.spacedBy(80.dp)
-        ) {
-            // Left side
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .heightIn(min = 500.dp)
-                    .graphicsLayer {
-                        alpha = imageAlpha
-                        translationX = imageOffset
-                    }
-                    .background(
-                        Brush.linearGradient(
-                            colors = listOf(
-                                KaszowskaColors.SoftGray.copy(alpha = 0.3f),
-                                KaszowskaColors.Gold.copy(alpha = 0.1f)
-                            )
-                        )
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(8.dp)),
-                    painter = painterResource(Res.drawable.magda),
-                    contentDescription = Constants.FULL_NAME,
-                    contentScale = ContentScale.Inside,
-                )
-            }
-
-            // Right side - Content with staggered animations
+        if (windowSize.isMobile) {
+            // Mobile layout - stacked vertically
             Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .graphicsLayer {
-                        alpha = contentAlpha
-                        translationX = contentOffset
-                    }
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "O MNIE",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = KaszowskaColors.Gold,
-                    letterSpacing = 3.sp
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = Constants.FULL_NAME,
-                    fontSize = 42.sp,
-                    fontWeight = FontWeight.Light,
-                    color = KaszowskaColors.TextDark,
-                    letterSpacing = 2.sp,
-                    lineHeight = 52.sp
-                )
+                // Image at top
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(350.dp)
+                        .graphicsLayer {
+                            alpha = imageAlpha
+                            translationY = imageOffset
+                        }
+                        .background(
+                            Brush.linearGradient(
+                                colors = listOf(
+                                    KaszowskaColors.SoftGray.copy(alpha = 0.3f),
+                                    KaszowskaColors.Gold.copy(alpha = 0.1f)
+                                )
+                            )
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(8.dp)),
+                        painter = painterResource(Res.drawable.magda),
+                        contentDescription = Constants.FULL_NAME,
+                        contentScale = ContentScale.Crop,
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                Text(
-                    text = """
-                        Nazywam się Magdalena Kaszowska — jestem linergistką, specjalistką terapii blizn i szkoleniowcem.
+                // Content below
+                AboutContent(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .graphicsLayer {
+                            alpha = contentAlpha
+                            translationY = contentOffset
+                        },
+                    isMobile = true
+                )
+            }
+        } else {
+            // Desktop layout - side by side
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min),
+                horizontalArrangement = Arrangement.spacedBy(80.dp)
+            ) {
+                // Left side - Image
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = 500.dp)
+                        .graphicsLayer {
+                            alpha = imageAlpha
+                            translationX = imageOffset
+                        }
+                        .background(
+                            Brush.linearGradient(
+                                colors = listOf(
+                                    KaszowskaColors.SoftGray.copy(alpha = 0.3f),
+                                    KaszowskaColors.Gold.copy(alpha = 0.1f)
+                                )
+                            )
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(8.dp)),
+                        painter = painterResource(Res.drawable.magda),
+                        contentDescription = Constants.FULL_NAME,
+                        contentScale = ContentScale.Inside,
+                    )
+                }
 
-                        Tworzę naturalny, dopasowany makijaż permanentny oraz naprawiam i odwracam stare pigmentacje, przywracając moim Klientkom pewność siebie.
-
-                        To, co wyróżnia mój gabinet, to zaawansowana praca z bliznami. Zajmuję się bliznami po operacjach, cięciu cesarskim, zabiegach plastycznych, urazach, oparzeniach i trądziku, prowadząc je ku większej elastyczności i estetyce.
-
-                        Jako szkoleniowiec z wiedzą medyczną, tworzę nowe pokolenie specjalistów - ucząc terapii blizn, usuwania pigmentacji i makijażu permanentnego, opierając pracę na zrozumieniu tkanek i realnych efektach. 
-
-                        Najczęściej słyszę od Klientek jedno zdanie: „żałuję, że trafiłam do Pani tak późno”. To dlatego w samym 2025 roku zaufało mi blisko 1000 Klientek, z czego połowie pomogłam w usuwaniu niechcianej pigmentacji i terapii blizn.
-                    """.trimIndent(),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = KaszowskaColors.TextLight,
-                    lineHeight = 28.sp
+                // Right side - Content
+                AboutContent(
+                    modifier = Modifier
+                        .weight(1f)
+                        .graphicsLayer {
+                            alpha = contentAlpha
+                            translationX = contentOffset
+                        },
+                    isMobile = false
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun AboutContent(
+    modifier: Modifier = Modifier,
+    isMobile: Boolean
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = "O MNIE",
+            fontSize = if (isMobile) 11.sp else 12.sp,
+            fontWeight = FontWeight.Normal,
+            color = KaszowskaColors.Gold,
+            letterSpacing = 3.sp
+        )
+
+        Spacer(modifier = Modifier.height(if (isMobile) 16.dp else 24.dp))
+
+        Text(
+            text = Constants.FULL_NAME,
+            fontSize = if (isMobile) 28.sp else 42.sp,
+            fontWeight = FontWeight.Light,
+            color = KaszowskaColors.TextDark,
+            letterSpacing = 2.sp,
+            lineHeight = if (isMobile) 36.sp else 52.sp
+        )
+
+        Spacer(modifier = Modifier.height(if (isMobile) 20.dp else 32.dp))
+
+        Text(
+            text = """
+                Nazywam się Magdalena Kaszowska — jestem linergistką, specjalistką terapii blizn i szkoleniowcem.
+
+                Tworzę naturalny, dopasowany makijaż permanentny oraz naprawiam i odwracam stare pigmentacje, przywracając moim Klientkom pewność siebie.
+
+                To, co wyróżnia mój gabinet, to zaawansowana praca z bliznami. Zajmuję się bliznami po operacjach, cięciu cesarskim, zabiegach plastycznych, urazach, oparzeniach i trądziku, prowadząc je ku większej elastyczności i estetyce.
+
+                Jako szkoleniowiec z wiedzą medyczną, tworzę nowe pokolenie specjalistów - ucząc terapii blizn, usuwania pigmentacji i makijażu permanentnego, opierając pracę na zrozumieniu tkanek i realnych efektach. 
+
+                Najczęściej słyszę od Klientek jedno zdanie: „żałuję, że trafiłam do Pani tak późno". To dlatego w samym 2025 roku zaufało mi blisko 1000 Klientek, z czego połowie pomogłam w usuwaniu niechcianej pigmentacji i terapii blizn.
+            """.trimIndent(),
+            fontSize = if (isMobile) 14.sp else 16.sp,
+            fontWeight = FontWeight.Normal,
+            color = KaszowskaColors.TextLight,
+            lineHeight = if (isMobile) 24.sp else 28.sp
+        )
     }
 }

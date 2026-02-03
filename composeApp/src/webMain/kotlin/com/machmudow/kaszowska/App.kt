@@ -35,6 +35,9 @@ import com.machmudow.kaszowska.sections.TopNavigation
 import com.machmudow.kaszowska.sections.model.Section
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.theme.KaszowskaTheme
+import com.machmudow.kaszowska.utils.LocalWindowSize
+import com.machmudow.kaszowska.utils.ResponsiveLayout
+import com.machmudow.kaszowska.utils.isMobile
 import com.machmudow.kaszowska.utils.image.officeImages
 import com.machmudow.kaszowska.utils.image.workImages
 import kaszowska.composeapp.generated.resources.Res
@@ -74,60 +77,64 @@ fun App() {
     }
 
     KaszowskaTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .graphicsLayer { alpha = appAlpha }
-        ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                state = listState
+        ResponsiveLayout(modifier = Modifier.fillMaxSize()) {
+            val windowSize = LocalWindowSize.current
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = appAlpha }
             ) {
-                item { HeroSection() }
-                item { AboutSection() }
-                item {
-                    ServicesSection(
-                        showModalImages = { modalImages.addAll(it) },
-                    )
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    state = listState
+                ) {
+                    item { HeroSection() }
+                    item { AboutSection() }
+                    item {
+                        ServicesSection(
+                            showModalImages = { modalImages.addAll(it) },
+                        )
+                    }
+                    item {
+                        ImageCarousel(
+                            modifier = Modifier.padding(top = if (windowSize.isMobile) 20.dp else 40.dp),
+                            images = officeImages + workImages,
+                            onImageClick = { image ->
+                                modalImages.clear()
+                                modalImages.add(image)
+                            }
+                        )
+                    }
+                    item { ContactSection() }
+                    item { Footer() }
                 }
-                item {
-                    ImageCarousel(
-                        modifier = Modifier.padding(top = 40.dp),
-                        images = officeImages + workImages,
-                        onImageClick = { image ->
-                            modalImages.clear()
-                            modalImages.add(image)
+
+                // Fixed navigation overlay
+                TopNavigation(
+                    isScrolled = isScrolled,
+                    onNavigate = scrollToSection,
+                )
+
+                // Animated Back to Top button
+                if (showBackToTop) {
+                    BackToTopButton {
+                        coroutineScope.launch {
+                            listState.animateScrollToItem(0)
                         }
-                    )
-                }
-                item { ContactSection() }
-                item { Footer() }
-            }
-
-            // Fixed navigation overlay
-            TopNavigation(
-                isScrolled = isScrolled,
-                onNavigate = scrollToSection,
-            )
-
-            // Animated Back to Top button
-            if (showBackToTop) {
-                BackToTopButton {
-                    coroutineScope.launch {
-                        listState.animateScrollToItem(0)
                     }
                 }
-            }
 
-            AnimatedVisibility(
-                visible = modalImages.isNotEmpty(),
-                enter = fadeIn(animationSpec = tween(300)),
-                exit = fadeOut(animationSpec = tween(300))
-            ) {
-                ImagesModal(
-                    images = modalImages,
-                    onDismiss = { modalImages.clear() },
-                )
+                AnimatedVisibility(
+                    visible = modalImages.isNotEmpty(),
+                    enter = fadeIn(animationSpec = tween(300)),
+                    exit = fadeOut(animationSpec = tween(300))
+                ) {
+                    ImagesModal(
+                        images = modalImages,
+                        onDismiss = { modalImages.clear() },
+                    )
+                }
             }
         }
     }
@@ -138,6 +145,7 @@ fun App() {
 private fun BoxScope.BackToTopButton(onClick: () -> Unit) {
     var isHovered by remember { mutableStateOf(false) }
     var isVisible by remember { mutableStateOf(false) }
+    val windowSize = LocalWindowSize.current
 
     LaunchedEffect(Unit) {
         isVisible = true
@@ -167,17 +175,20 @@ private fun BoxScope.BackToTopButton(onClick: () -> Unit) {
         )
     )
 
+    val buttonPadding = if (windowSize.isMobile) 20.dp else 40.dp
+    val buttonSize = if (windowSize.isMobile) 48.dp else 56.dp
+
     Box(
         modifier = Modifier
             .align(Alignment.BottomEnd)
-            .padding(40.dp)
+            .padding(buttonPadding)
             .graphicsLayer {
                 this.alpha = alpha
                 scaleX = scale
                 scaleY = scale
                 translationY = floatingOffset
             }
-            .size(56.dp)
+            .size(buttonSize)
             .clip(CircleShape)
             .background(KaszowskaColors.Gold)
             .onPointerEvent(PointerEventType.Enter) { isHovered = true }

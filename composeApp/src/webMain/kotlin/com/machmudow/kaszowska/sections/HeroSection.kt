@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.theme.KaszowskaColors
+import com.machmudow.kaszowska.utils.LocalWindowSize
+import com.machmudow.kaszowska.utils.isMobile
 import kaszowska.composeapp.generated.resources.Res
 import kaszowska.composeapp.generated.resources.logo_main
 import org.jetbrains.compose.resources.painterResource
@@ -29,6 +31,8 @@ import kotlin.math.PI
 
 @Composable
 fun HeroSection() {
+    val windowSize = LocalWindowSize.current
+
     // Animation states
     val infiniteTransition = rememberInfiniteTransition()
 
@@ -104,9 +108,11 @@ fun HeroSection() {
                 )
         )
 
+        val logoFraction = if (windowSize.isMobile) 0.85f else 0.6f
+
         Image(
             modifier = Modifier
-                .fillMaxSize(0.6f)
+                .fillMaxSize(logoFraction)
                 .graphicsLayer {
                     alpha = titleAlpha
                     scaleX = titleScale
