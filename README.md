@@ -39,6 +39,10 @@ in your IDE's toolbar or run it directly from the terminal:
     ```shell
     .\gradlew.bat :composeApp:jsBrowserDevelopmentRun
     ```
+    
+**Publish production**
+JS: ./gradlew :composeApp:jsBrowserDistribution → composeApp/build/dist/js/productionExecutable/
+WasmJS: ./gradlew :composeApp:wasmJsBrowserDistribution → composeApp/build/dist/wasmJs/productionExecutable/
 
 **Performance Tips:**
 - See [BUILD_OPTIMIZATIONS.md](./BUILD_OPTIMIZATIONS.md) for build performance improvements
