@@ -153,7 +153,7 @@ fun AboutSection() {
                             .clip(RoundedCornerShape(8.dp)),
                         painter = painterResource(Res.drawable.magda),
                         contentDescription = Constants.FULL_NAME,
-                        contentScale = ContentScale.Inside,
+                        contentScale = ContentScale.Crop,
                     )
                 }
 
