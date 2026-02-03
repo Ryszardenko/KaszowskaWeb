@@ -17,8 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.pointer.consumePositionChange
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.DrawableResource
@@ -42,7 +43,7 @@ fun ImageCarousel(
                 .horizontalScroll(scrollState)
                 .pointerInput(Unit) {
                     detectDragGestures { change, dragAmount ->
-                        change.consumePositionChange()
+                        if (change.positionChange() != Offset.Zero) change.consume()
                         scrollState.dispatchRawDelta(-dragAmount.x)
                     }
                 }

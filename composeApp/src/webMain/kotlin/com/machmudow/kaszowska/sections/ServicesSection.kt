@@ -11,16 +11,21 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,12 +39,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.input.pointer.onPointerEvent
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.components.ReactiveButton
+import com.machmudow.kaszowska.data.groupedServices
+import com.machmudow.kaszowska.model.Service
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.utils.image.offerImages
 import com.machmudow.kaszowska.utils.image.priceImages
@@ -48,38 +57,11 @@ import kaszowska.composeapp.generated.resources.cart
 import kaszowska.composeapp.generated.resources.price
 import org.jetbrains.compose.resources.DrawableResource
 
-data class Service(
-    val title: String,
-    val description: String,
-    val price: String
-)
-
 @Composable
 fun ServicesSection(
     showModalImages: (List<DrawableResource>) -> Unit,
 ) {
-    val services = listOf(
-        Service(
-            "Brwi",
-            "Mikropigmentacja brwi metodą włoskową lub cieniowaną. Naturalny efekt dopasowany do kształtu twarzy.",
-            "od 800 PLN"
-        ),
-        Service(
-            "Usta",
-            "Powiększenie i modelowanie ust. Podkreślenie naturalnego koloru lub zmiana odcienia.",
-            "od 900 PLN"
-        ),
-        Service(
-            "Kreski",
-            "Kreska górna lub dolna. Delikatne podkreślenie lub wyrazisty efekt.",
-            "od 700 PLN"
-        ),
-        Service(
-            "Korekcja",
-            "Poprawienie lub odświeżenie istniejącego makijażu permanentnego.",
-            "od 500 PLN"
-        )
-    )
+
 
     var isVisible by remember { mutableStateOf(false) }
 
@@ -96,6 +78,8 @@ fun ServicesSection(
         targetValue = if (isVisible) 0f else 50f,
         animationSpec = tween(1000, easing = FastOutSlowInEasing)
     )
+
+    val scrollState = rememberScrollState()
 
     Box(
         modifier = Modifier
@@ -138,15 +122,54 @@ fun ServicesSection(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .horizontalScroll(scrollState)
+                    .pointerInput(Unit) {
+                        detectDragGestures { change, dragAmount ->
+                            change.consumePositionChange()
+                            scrollState.dispatchRawDelta(-dragAmount.x)
+                        }
+                    }
                     .padding(horizontal = 80.dp),
                 horizontalArrangement = Arrangement.spacedBy(40.dp)
             ) {
-                services.forEachIndexed { index, service ->
+                groupedServices.forEachIndexed { index, service ->
                     ServiceCard(
                         service = service,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.width(320.dp),
                         isVisible = isVisible,
                         delay = 300 + index * 150
+                    )
+                }
+            }
+
+            if (scrollState.maxValue > 0) {
+                Spacer(modifier = Modifier.height(24.dp))
+
+                BoxWithConstraints(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 80.dp)
+                ) {
+                    val trackWidth = maxWidth
+                    val baseThumbWidth = 120.dp
+                    val thumbWidth = if (trackWidth < baseThumbWidth) trackWidth else baseThumbWidth
+                    val scrollFraction = scrollState.value.toFloat() / scrollState.maxValue.toFloat()
+                    val maxOffset = (trackWidth - thumbWidth).coerceAtLeast(0.dp)
+                    val thumbOffset = maxOffset * scrollFraction
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(3.dp)
+                            .background(KaszowskaColors.SoftGray.copy(alpha = 0.6f))
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .offset(x = thumbOffset)
+                            .width(thumbWidth)
+                            .height(3.dp)
+                            .background(KaszowskaColors.Gold)
                     )
                 }
             }
@@ -169,7 +192,7 @@ fun ServicesSection(
                 )
             }
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
@@ -233,7 +256,9 @@ private fun ServiceCard(
             .background(KaszowskaColors.White)
             .border(
                 width = 1.dp,
-                color = if (isHovered) KaszowskaColors.Gold.copy(alpha = pulseAlpha) else KaszowskaColors.SoftGray.copy(alpha = 0.3f)
+                color = if (isHovered) KaszowskaColors.Gold.copy(alpha = pulseAlpha) else KaszowskaColors.SoftGray.copy(
+                    alpha = 0.3f
+                )
             )
             .onPointerEvent(PointerEventType.Enter) { isHovered = true }
             .onPointerEvent(PointerEventType.Exit) { isHovered = false }
