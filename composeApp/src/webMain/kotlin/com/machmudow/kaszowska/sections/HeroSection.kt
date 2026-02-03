@@ -2,6 +2,7 @@ package com.machmudow.kaszowska.sections
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
@@ -11,13 +12,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.theme.KaszowskaColors
+import kaszowska.composeapp.generated.resources.Res
+import kaszowska.composeapp.generated.resources.logo_main
+import org.jetbrains.compose.resources.painterResource
 import kotlin.math.sin
 import kotlin.math.cos
 import kotlin.math.PI
@@ -54,16 +59,6 @@ fun HeroSection() {
     }
 
     // Staggered entrance animations for text elements
-    val subtitleAlpha by animateFloatAsState(
-        targetValue = if (isVisible) 1f else 0f,
-        animationSpec = tween(1000, delayMillis = 200, easing = FastOutSlowInEasing)
-    )
-
-    val subtitleOffset by animateFloatAsState(
-        targetValue = if (isVisible) 0f else 50f,
-        animationSpec = tween(1000, delayMillis = 200, easing = FastOutSlowInEasing)
-    )
-
     val titleAlpha by animateFloatAsState(
         targetValue = if (isVisible) 1f else 0f,
         animationSpec = tween(1200, delayMillis = 500, easing = FastOutSlowInEasing)
@@ -74,15 +69,6 @@ fun HeroSection() {
         animationSpec = tween(1200, delayMillis = 500, easing = FastOutSlowInEasing)
     )
 
-    val descriptionAlpha by animateFloatAsState(
-        targetValue = if (isVisible) 1f else 0f,
-        animationSpec = tween(1000, delayMillis = 1000, easing = FastOutSlowInEasing)
-    )
-
-    val descriptionOffset by animateFloatAsState(
-        targetValue = if (isVisible) 0f else 30f,
-        animationSpec = tween(1000, delayMillis = 1000, easing = FastOutSlowInEasing)
-    )
 
     Box(
         modifier = Modifier
@@ -118,66 +104,25 @@ fun HeroSection() {
                 )
         )
 
-        // Hero Content
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(40.dp),
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Animated subtitle
-            Text(
-                text = "Permanent Makeup",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Light,
-                color = KaszowskaColors.White,
-                letterSpacing = 4.sp,
-                textAlign = TextAlign.Center,
+            Image(
                 modifier = Modifier
-                    .graphicsLayer {
-                        alpha = subtitleAlpha
-                        translationY = subtitleOffset
-                    }
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Animated main title with scale effect
-            Text(
-                text = "MAGDALENA\nKASZOWSKA",
-                fontSize = 64.sp,
-                fontWeight = FontWeight.Light,
-                color = KaszowskaColors.White,
-                letterSpacing = 8.sp,
-                textAlign = TextAlign.Center,
-                lineHeight = 72.sp,
-                modifier = Modifier
+                    .fillMaxSize()
                     .graphicsLayer {
                         alpha = titleAlpha
                         scaleX = titleScale
                         scaleY = titleScale
-                    }
+                    },
+                painter = painterResource(Res.drawable.logo_main),
+                contentDescription = "Logo",
+                contentScale = ContentScale.Fit,
+                colorFilter = ColorFilter.tint(Color.White)
             )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Animated description
-            Text(
-                text = "Profesjonalny makijaż permanentny",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Light,
-                color = KaszowskaColors.White.copy(alpha = 0.9f),
-                letterSpacing = 2.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .graphicsLayer {
-                        alpha = descriptionAlpha
-                        translationY = descriptionOffset
-                    }
-            )
-
-            Spacer(modifier = Modifier.height(40.dp))
 
             // Pulsing decorative line
             PulsingDecorativeLine(isVisible)

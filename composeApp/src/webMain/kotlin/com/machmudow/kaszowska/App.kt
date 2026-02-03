@@ -45,7 +45,6 @@ fun App() {
     val showBackToTop = listState.firstVisibleItemIndex > 1
 
     // PDF modal state
-    var currentPdfUrl by remember { mutableStateOf<String?>(null) }
     val modalImages = remember { mutableStateListOf<DrawableResource>() }
 
     // Initial app fade-in animation
