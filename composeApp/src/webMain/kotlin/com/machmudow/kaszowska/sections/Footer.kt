@@ -104,7 +104,7 @@ fun Footer() {
             Spacer(modifier = Modifier.height(40.dp))
 
             Text(
-                text = "© 2025 ${Constants.FULL_NAME}. All rights reserved.",
+                text = "© 2026 ${Constants.FULL_NAME}. All rights reserved.",
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Light,
                 color = KaszowskaColors.White.copy(alpha = 0.5f),
@@ -134,11 +134,6 @@ private fun FooterLink(text: String, onClick: () -> Unit) {
     )
 
     Text(
-        text = text,
-        fontSize = 12.sp,
-        fontWeight = FontWeight.Normal,
-        color = textColor,
-        letterSpacing = 1.5.sp,
         modifier = Modifier
             .graphicsLayer {
                 scaleX = scale
@@ -147,7 +142,12 @@ private fun FooterLink(text: String, onClick: () -> Unit) {
             .onPointerEvent(PointerEventType.Enter) { isHovered = true }
             .onPointerEvent(PointerEventType.Exit) { isHovered = false }
             .clickable { onClick() }
-            .padding(vertical = 4.dp, horizontal = 8.dp)
+            .padding(vertical = 4.dp, horizontal = 8.dp),
+        text = text,
+        fontSize = 12.sp,
+        fontWeight = FontWeight.Normal,
+        color = textColor,
+        letterSpacing = 1.5.sp,
     )
 }
 

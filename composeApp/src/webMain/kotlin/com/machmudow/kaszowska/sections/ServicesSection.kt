@@ -1,12 +1,33 @@
 package com.machmudow.kaszowska.sections
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -144,10 +165,6 @@ fun ServicesSection(
             }
 
             Spacer(modifier = Modifier.height(80.dp))
-
-            Spacer(modifier = Modifier.height(40.dp))
-
-            ImageCarousel()
         }
     }
 }
@@ -294,106 +311,3 @@ private fun ServiceCard(
         )
     }
 }
-
-@Composable
-private fun ImageCarousel() {
-    var currentIndex by remember { mutableStateOf(0) }
-    val totalImages = 5
-
-    // Auto-rotate carousel
-    LaunchedEffect(Unit) {
-        while (true) {
-            kotlinx.coroutines.delay(4000)
-            currentIndex = (currentIndex + 1) % totalImages
-        }
-    }
-
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 100.dp),
-            horizontalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            repeat(3) { index ->
-                val imageIndex = (currentIndex + index) % totalImages
-
-                val imageAlpha by animateFloatAsState(
-                    targetValue = 1f,
-                    animationSpec = tween(600)
-                )
-
-                val scale by animateFloatAsState(
-                    targetValue = if (index == 1) 1.05f else 0.95f,
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioMediumBouncy,
-                        stiffness = Spring.StiffnessLow
-                    )
-                )
-
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(400.dp)
-                        .graphicsLayer {
-                            alpha = imageAlpha
-                            scaleX = scale
-                            scaleY = scale
-                        }
-                        .background(
-                            Brush.linearGradient(
-                                colors = listOf(
-                                    KaszowskaColors.SoftBeige,
-                                    KaszowskaColors.SoftGray.copy(alpha = 0.5f)
-                                )
-                            )
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "[IMAGE ${imageIndex + 1}]",
-                        color = KaszowskaColors.TextLight,
-                        fontSize = 14.sp
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(40.dp))
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            repeat(totalImages) { index ->
-                val dotScale by animateFloatAsState(
-                    targetValue = if (index == currentIndex) 1.4f else 1f,
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioMediumBouncy,
-                        stiffness = Spring.StiffnessMedium
-                    )
-                )
-
-                val dotAlpha by animateFloatAsState(
-                    targetValue = if (index == currentIndex) 1f else 0.3f,
-                    animationSpec = tween(300)
-                )
-
-                Box(
-                    modifier = Modifier
-                        .size(if (index == currentIndex) 10.dp else 8.dp)
-                        .graphicsLayer {
-                            scaleX = dotScale
-                            scaleY = dotScale
-                            alpha = dotAlpha
-                        }
-                        .background(KaszowskaColors.Gold)
-                        .clickable { currentIndex = index }
-                )
-            }
-        }
-    }
-}
-

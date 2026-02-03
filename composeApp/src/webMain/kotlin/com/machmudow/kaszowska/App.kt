@@ -27,11 +27,14 @@ import com.machmudow.kaszowska.sections.AboutSection
 import com.machmudow.kaszowska.sections.ContactSection
 import com.machmudow.kaszowska.sections.Footer
 import com.machmudow.kaszowska.sections.HeroSection
+import com.machmudow.kaszowska.sections.ImageCarousel
 import com.machmudow.kaszowska.sections.ServicesSection
 import com.machmudow.kaszowska.sections.TopNavigation
 import com.machmudow.kaszowska.sections.model.Section
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.theme.KaszowskaTheme
+import com.machmudow.kaszowska.utils.image.officeImages
+import com.machmudow.kaszowska.utils.image.workImages
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.DrawableResource
 
@@ -80,6 +83,16 @@ fun App() {
                 item {
                     ServicesSection(
                         showModalImages = { modalImages.addAll(it) },
+                    )
+                }
+                item {
+                    ImageCarousel(
+                        modifier = Modifier.padding(top = 40.dp),
+                        images = officeImages + workImages,
+                        onImageClick = { image ->
+                            modalImages.clear()
+                            modalImages.add(image)
+                        }
                     )
                 }
                 item { ContactSection() }
