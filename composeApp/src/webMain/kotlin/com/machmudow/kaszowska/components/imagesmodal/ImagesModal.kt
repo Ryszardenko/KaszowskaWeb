@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import kaszowska.composeapp.generated.resources.Res
 import kaszowska.composeapp.generated.resources.compose_multiplatform
+import kaszowska.composeapp.generated.resources.ic_close
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
@@ -119,7 +120,7 @@ private fun BoxScope.CloseButton(onClick: () -> Unit) {
         onClick = onClick,
     ) {
         Icon(
-            painter = painterResource(Res.drawable.compose_multiplatform), // TODO RYCHU add close icon
+            painter = painterResource(Res.drawable.ic_close),
             contentDescription = null,
             tint = if (isHovered) {
                 KaszowskaColors.Gold
