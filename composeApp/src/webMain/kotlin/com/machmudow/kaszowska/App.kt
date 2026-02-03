@@ -164,14 +164,12 @@ private fun BoxScope.BackToTopButton(onClick: () -> Unit) {
         )
     )
 
-    // Floating animation
-    val infiniteTransition = rememberInfiniteTransition()
-    val floatingOffset by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = -10f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(2000, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
+    // One-time floating entrance animation (from below)
+    val floatingOffset by animateFloatAsState(
+        targetValue = if (isVisible) 0f else 30f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
         )
     )
 

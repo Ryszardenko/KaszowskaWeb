@@ -1,17 +1,12 @@
 package com.machmudow.kaszowska.sections
 
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -24,8 +19,11 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -80,7 +78,7 @@ fun ServicesSection(
         animationSpec = tween(1000, easing = FastOutSlowInEasing)
     )
 
-    val scrollState = rememberScrollState()
+    val lazyListState = rememberLazyListState()
 
     val horizontalPadding = windowSize.horizontalPadding
     val cardWidth = if (windowSize.isMobile) 280.dp else 320.dp
@@ -124,14 +122,14 @@ fun ServicesSection(
 
             Spacer(modifier = Modifier.height(if (windowSize.isMobile) 40.dp else 80.dp))
 
-            Row(
+            LazyRow(
+                state = lazyListState,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .horizontalScroll(scrollState)
                     .padding(horizontal = horizontalPadding),
                 horizontalArrangement = Arrangement.spacedBy(cardSpacing)
             ) {
-                groupedServices.forEachIndexed { index, service ->
+                itemsIndexed(groupedServices) { index, service ->
                     ServiceCard(
                         service = service,
                         modifier = Modifier.width(cardWidth),
@@ -142,7 +140,15 @@ fun ServicesSection(
                 }
             }
 
-            if (scrollState.maxValue > 0) {
+            // Calculate scroll fraction from lazy list state
+            val showScrollIndicator by remember {
+                derivedStateOf {
+                    lazyListState.layoutInfo.totalItemsCount > 0 &&
+                            (lazyListState.canScrollForward || lazyListState.canScrollBackward)
+                }
+            }
+
+            if (showScrollIndicator) {
                 Spacer(modifier = Modifier.height(if (windowSize.isMobile) 16.dp else 24.dp))
 
                 BoxWithConstraints(
@@ -153,7 +159,32 @@ fun ServicesSection(
                     val trackWidth = maxWidth
                     val baseThumbWidth = if (windowSize.isMobile) 80.dp else 120.dp
                     val thumbWidth = if (trackWidth < baseThumbWidth) trackWidth else baseThumbWidth
-                    val scrollFraction = scrollState.value.toFloat() / scrollState.maxValue.toFloat()
+
+                    val scrollFraction by remember {
+                        derivedStateOf {
+                            val layoutInfo = lazyListState.layoutInfo
+                            val totalItemsCount = layoutInfo.totalItemsCount
+                            if (totalItemsCount == 0) return@derivedStateOf 0f
+
+                            val visibleItemsInfo = layoutInfo.visibleItemsInfo
+                            if (visibleItemsInfo.isEmpty()) return@derivedStateOf 0f
+
+                            val firstVisibleItem = visibleItemsInfo.first()
+
+                            // Calculate total scrollable range
+                            val viewportSize = layoutInfo.viewportEndOffset - layoutInfo.viewportStartOffset
+                            val totalContentSize = (totalItemsCount * (firstVisibleItem.size + cardSpacing.value)).toInt()
+                            val maxScrollOffset = (totalContentSize - viewportSize).coerceAtLeast(0)
+
+                            if (maxScrollOffset == 0) return@derivedStateOf 0f
+
+                            // Current scroll position
+                            val currentOffset = firstVisibleItem.index * (firstVisibleItem.size + cardSpacing.value.toInt()) - firstVisibleItem.offset
+
+                            (currentOffset / maxScrollOffset.toFloat()).coerceIn(0f, 1f)
+                        }
+                    }
+
                     val maxOffset = (trackWidth - thumbWidth).coerceAtLeast(0.dp)
                     val thumbOffset = maxOffset * scrollFraction
 
@@ -254,15 +285,10 @@ private fun ServiceCard(
         )
     )
 
-    // Pulsing gold accent on hover
-    val infiniteTransition = rememberInfiniteTransition()
-    val pulseAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.3f,
-        targetValue = 0.8f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1500, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        )
+    // Pulsing gold accent on hover - only animate when hovered to save performance
+    val pulseAlpha by animateFloatAsState(
+        targetValue = if (isHovered) 0.8f else 0.3f,
+        animationSpec = tween(300, easing = FastOutSlowInEasing)
     )
 
     val cardPadding = if (isMobile) 24.dp else 40.dp

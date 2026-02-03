@@ -2,15 +2,14 @@ package com.machmudow.kaszowska.sections
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,7 +29,6 @@ fun ImageCarousel(
     modifier: Modifier = Modifier,
     onImageClick: (DrawableResource) -> Unit,
 ) {
-    val scrollState = rememberScrollState()
     val windowSize = LocalWindowSize.current
 
     val imageHeight = if (windowSize.isMobile) 280.dp else 400.dp
@@ -41,14 +39,13 @@ fun ImageCarousel(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
+        LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
-                .horizontalScroll(scrollState)
                 .padding(horizontal = windowSize.horizontalPadding),
-            horizontalArrangement = Arrangement.spacedBy(imageSpacing)
+            horizontalArrangement = Arrangement.spacedBy(imageSpacing),
         ) {
-            images.forEach { image ->
+            items(images) { image ->
                 Image(
                     modifier = Modifier
                         .height(imageHeight)

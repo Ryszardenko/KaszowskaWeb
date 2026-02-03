@@ -59,15 +59,11 @@ fun Footer() {
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Pulsing golden line at top
-            val infiniteTransition = rememberInfiniteTransition()
-            val lineWidth by infiniteTransition.animateFloat(
-                initialValue = if (windowSize.isMobile) 40f else 50f,
-                targetValue = if (windowSize.isMobile) 80f else 100f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(2000, easing = FastOutSlowInEasing),
-                    repeatMode = RepeatMode.Reverse
-                )
+            // Golden line with one-time entrance animation
+            val targetLineWidth = if (windowSize.isMobile) 80f else 100f
+            val lineWidth by animateFloatAsState(
+                targetValue = if (isVisible) targetLineWidth else 0f,
+                animationSpec = tween(1500, delayMillis = 300, easing = FastOutSlowInEasing)
             )
 
             Box(

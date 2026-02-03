@@ -33,34 +33,24 @@ import kotlin.math.PI
 fun HeroSection() {
     val windowSize = LocalWindowSize.current
 
-    // Animation states
-    val infiniteTransition = rememberInfiniteTransition()
-
-    // Continuous gradient animation
-    val gradientOffset by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1000f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(20000, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
-        )
-    )
-
-    // Floating animation for particles
-    val particleAnimation by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(30000, easing = LinearEasing)
-        )
-    )
-
     // Initial entrance animations
     var isVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         isVisible = true
     }
+
+    // One-time gradient animation (animates from 0 to 500 on load)
+    val gradientOffset by animateFloatAsState(
+        targetValue = if (isVisible) 500f else 0f,
+        animationSpec = tween(2000, easing = FastOutSlowInEasing)
+    )
+
+    // One-time particle animation (animates from 0 to 180 degrees on load)
+    val particleAnimation by animateFloatAsState(
+        targetValue = if (isVisible) 180f else 0f,
+        animationSpec = tween(3000, easing = FastOutSlowInEasing)
+    )
 
     // Staggered entrance animations for text elements
     val titleAlpha by animateFloatAsState(
@@ -91,7 +81,7 @@ fun HeroSection() {
             ),
         contentAlignment = Alignment.Center
     ) {
-        // Animated floating particles/shapes in background
+        // Animated background particles (one-time entrance animation)
         AnimatedBackgroundParticles(particleAnimation)
 
         // Subtle overlay for better text contrast
@@ -133,7 +123,7 @@ private fun AnimatedBackgroundParticles(animationProgress: Float) {
         val centerX = size.width / 2
         val centerY = size.height / 2
 
-        // Draw multiple floating circles with different speeds and sizes
+        // Draw circles that animate into position on load
         for (i in 0..8) {
             val angle = (animationProgress + i * 40f) * (PI / 180f).toFloat()
             val radius = 150f + i * 80f

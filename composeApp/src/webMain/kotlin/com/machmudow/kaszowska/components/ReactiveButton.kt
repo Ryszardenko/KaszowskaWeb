@@ -34,33 +34,54 @@ fun ReactiveButton(
 ) {
     var isHovered by remember { mutableStateOf(false) }
 
-    // Pulsing animation for attention
-    val infiniteTransition = rememberInfiniteTransition()
-    val pulseScale by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1.05f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(2000, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
+    // One-time entrance animation
+    var hasAnimated by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        hasAnimated = true
+    }
+
+    // Entrance pulse animation (plays once)
+    val entranceScale by animateFloatAsState(
+        targetValue = if (hasAnimated) 1f else 0.8f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
         )
     )
 
-    val glowAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.3f,
-        targetValue = 0.7f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(2000, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
+    val entranceAlpha by animateFloatAsState(
+        targetValue = if (hasAnimated) 1f else 0f,
+        animationSpec = tween(600, easing = FastOutSlowInEasing)
+    )
+
+    // Hover-triggered animations
+    val scale by animateFloatAsState(
+        targetValue = if (isHovered) 1.08f else 1f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessMedium
         )
     )
 
-    Box(modifier = modifier) {
+    val glowAlpha by animateFloatAsState(
+        targetValue = if (isHovered) 0.7f else 0.4f,
+        animationSpec = tween(300, easing = FastOutSlowInEasing)
+    )
+
+    Box(
+        modifier = modifier
+            .graphicsLayer {
+                scaleX = entranceScale
+                scaleY = entranceScale
+                alpha = entranceAlpha
+            }
+    ) {
         // Glowing background effect
         Box(
             modifier = Modifier
                 .graphicsLayer {
-                    scaleX = if (isHovered) 1.1f else pulseScale
-                    scaleY = if (isHovered) 1.1f else pulseScale
+                    scaleX = scale
+                    scaleY = scale
                     alpha = glowAlpha
                 }
                 .background(
