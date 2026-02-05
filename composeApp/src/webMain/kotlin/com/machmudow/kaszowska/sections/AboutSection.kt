@@ -201,7 +201,7 @@ private fun AboutContent(
 
         Text(
             text = """
-                Nazywam się Magdalena Kaszowska — jestem linergistką, specjalistką terapii blizn i szkoleniowcem.
+                Nazywam się Magdalena Kaszowska - jestem linergistką, specjalistką terapii blizn i szkoleniowcem.
 
                 Tworzę naturalny, dopasowany makijaż permanentny oraz naprawiam i odwracam stare pigmentacje, przywracając moim Klientkom pewność siebie.
 
