@@ -205,9 +205,9 @@ private fun AboutContent(
 
                 Tworzę naturalny, dopasowany makijaż permanentny oraz naprawiam i odwracam stare pigmentacje, przywracając moim Klientkom pewność siebie.
 
-                To, co wyróżnia mój gabinet, to zaawansowana praca z bliznami. Zajmuję się bliznami po operacjach, cięciu cesarskim, zabiegach plastycznych, urazach, oparzeniach i trądziku, prowadząc je ku większej elastyczności i estetyce.
+                To co wyróżnia mój gabinet, to zaawansowana praca z bliznami. Zajmuję się bliznami po operacjach, cięciu cesarskim, zabiegach plastycznych, urazach, oparzeniach, trądziku i innych, prowadząc je ku większej elastyczności i estetyce.
 
-                Jako szkoleniowiec z wiedzą medyczną, tworzę nowe pokolenie specjalistów - ucząc terapii blizn, usuwania pigmentacji i makijażu permanentnego, opierając pracę na zrozumieniu tkanek i realnych efektach. 
+                Jako szkoleniowiec z wiedzą medyczną, tworzę nowe pokolenie specjalistów - ucząc terapii blizn, usuwania pigmentacji i wykonywania makijażu permanentnego, opierając pracę na zrozumieniu tkanek i realnych efektach. 
 
                 Najczęściej słyszę od Klientek jedno zdanie: „żałuję, że trafiłam do Pani tak późno". To dlatego w samym 2025 roku zaufało mi blisko 1000 Klientek, z czego połowie pomogłam w usuwaniu niechcianej pigmentacji i terapii blizn.
             """.trimIndent(),
