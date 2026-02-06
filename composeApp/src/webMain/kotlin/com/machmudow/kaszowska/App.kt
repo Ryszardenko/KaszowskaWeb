@@ -1,19 +1,32 @@
 package com.machmudow.kaszowska
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -21,15 +34,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.components.imagesmodal.ImagesModal
 import com.machmudow.kaszowska.sections.AboutSection
 import com.machmudow.kaszowska.sections.ContactSection
 import com.machmudow.kaszowska.sections.Footer
 import com.machmudow.kaszowska.sections.HeroSection
 import com.machmudow.kaszowska.sections.ImageCarousel
+import com.machmudow.kaszowska.sections.PricesSection
 import com.machmudow.kaszowska.sections.ServicesSection
 import com.machmudow.kaszowska.sections.TopNavigation
 import com.machmudow.kaszowska.sections.model.Section
@@ -37,9 +49,9 @@ import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.theme.KaszowskaTheme
 import com.machmudow.kaszowska.utils.LocalWindowSize
 import com.machmudow.kaszowska.utils.ResponsiveLayout
-import com.machmudow.kaszowska.utils.isMobile
 import com.machmudow.kaszowska.utils.image.officeImages
 import com.machmudow.kaszowska.utils.image.workImages
+import com.machmudow.kaszowska.utils.isMobile
 import kaszowska.composeapp.generated.resources.Res
 import kaszowska.composeapp.generated.resources.scroll_up
 import kotlinx.coroutines.launch
@@ -96,6 +108,7 @@ fun App() {
                             showModalImages = { modalImages.addAll(it) },
                         )
                     }
+                    item { PricesSection() }
                     item {
                         ImageCarousel(
                             modifier = Modifier.padding(top = if (windowSize.isMobile) 20.dp else 40.dp),

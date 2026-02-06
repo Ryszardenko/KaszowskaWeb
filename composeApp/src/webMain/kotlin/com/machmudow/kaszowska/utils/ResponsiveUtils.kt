@@ -73,8 +73,8 @@ val WindowSize.horizontalPadding: Dp
 val WindowSize.verticalSectionPadding: Dp
     get() = when (sizeClass) {
         WindowSizeClass.Compact -> 60.dp
-        WindowSizeClass.Medium -> 80.dp
-        WindowSizeClass.Expanded -> 120.dp
+        WindowSizeClass.Medium -> 60.dp
+        WindowSizeClass.Expanded -> 80.dp
     }
 
 val WindowSize.navHorizontalPadding: Dp

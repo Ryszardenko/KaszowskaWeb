@@ -66,11 +66,11 @@ fun HeroSection() {
             .height(100.vh),
         contentAlignment = Alignment.Center
     ) {
-        // Split background - left and right sides with different colors
-        Row(modifier = Modifier.fillMaxSize()) {
-            Box(modifier = Modifier.weight(1f).fillMaxHeight().background(Color(0xFF141514)))
-//            Box(modifier = Modifier.weight(1f).fillMaxHeight().background(Color(0xFF202020)))
-        }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFF141514))
+        )
 
         // Background image - Fit on desktop (shows full photo with black sides), Crop on mobile
         Image(
@@ -78,7 +78,7 @@ fun HeroSection() {
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = if (windowSize.isMobile) ContentScale.Crop else ContentScale.Fit,
-            alignment = Alignment.TopEnd
+            alignment = if (windowSize.isMobile) Alignment.Center else Alignment.TopEnd,
         )
 
         // Subtle overlay for better text contrast
