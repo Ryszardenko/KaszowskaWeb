@@ -24,6 +24,7 @@ import com.machmudow.kaszowska.utils.LocalWindowSize
 import com.machmudow.kaszowska.utils.isMobile
 import kaszowska.composeapp.generated.resources.Res
 import kaszowska.composeapp.generated.resources.logo_main
+import kaszowska.composeapp.generated.resources.magda_side
 import org.jetbrains.compose.resources.painterResource
 import kotlin.math.sin
 import kotlin.math.cos
@@ -40,11 +41,6 @@ fun HeroSection() {
         isVisible = true
     }
 
-    // One-time gradient animation (animates from 0 to 500 on load)
-    val gradientOffset by animateFloatAsState(
-        targetValue = if (isVisible) 500f else 0f,
-        animationSpec = tween(2000, easing = FastOutSlowInEasing)
-    )
 
     // One-time particle animation (animates from 0 to 180 degrees on load)
     val particleAnimation by animateFloatAsState(
@@ -67,22 +63,23 @@ fun HeroSection() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(100.vh)
-            .background(
-                Brush.linearGradient(
-                    colors = listOf(
-                        KaszowskaColors.SoftBeige,
-                        Color(0xFFB89F91),
-                        KaszowskaColors.SoftBeige
-                    ),
-                    start = Offset(gradientOffset, gradientOffset),
-                    end = Offset(gradientOffset + 1000f, gradientOffset + 1000f)
-                )
-            ),
+            .height(100.vh),
         contentAlignment = Alignment.Center
     ) {
-        // Animated background particles (one-time entrance animation)
-        AnimatedBackgroundParticles(particleAnimation)
+        // Split background - left and right sides with different colors
+        Row(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier.weight(1f).fillMaxHeight().background(Color(0xFF141514)))
+            Box(modifier = Modifier.weight(1f).fillMaxHeight().background(Color(0xFF202020)))
+        }
+
+        // Background image - Fit on desktop (shows full photo with black sides), Crop on mobile
+        Image(
+            painter = painterResource(Res.drawable.magda_side),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = if (windowSize.isMobile) ContentScale.Crop else ContentScale.Fit,
+            alignment = Alignment.TopCenter
+        )
 
         // Subtle overlay for better text contrast
         Box(
@@ -91,12 +88,15 @@ fun HeroSection() {
                 .background(
                     Brush.radialGradient(
                         colors = listOf(
-                            Color.Black.copy(alpha = 0.1f),
-                            Color.Black.copy(alpha = 0.3f)
+                            Color.Black.copy(alpha = 0.2f),
+                            Color.Black.copy(alpha = 0.5f)
                         )
                     )
                 )
         )
+
+        // Animated background particles (on top of image)
+        AnimatedBackgroundParticles(particleAnimation)
 
         val logoFraction = if (windowSize.isMobile) 0.85f else 0.6f
 
