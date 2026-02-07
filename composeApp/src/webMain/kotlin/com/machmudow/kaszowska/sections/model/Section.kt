@@ -10,5 +10,6 @@ enum class Section(
     OFFICE_OFER(3, "Oferta gabinetowa"),
     TRAINING_OFER(4, "Oferta szkoleniowa"),
     PRICE_LIST(5, "Cennik"),
-    CONTACT(6, "Kontakt"),
+    // 7 are photos, we do not want to include them here
+    CONTACT(7, "Kontakt"),
 }

@@ -45,6 +45,7 @@ import com.machmudow.kaszowska.sections.OfficeOfferSection
 import com.machmudow.kaszowska.sections.PricesSection
 import com.machmudow.kaszowska.sections.ServicesSection
 import com.machmudow.kaszowska.sections.TopNavigation
+import com.machmudow.kaszowska.sections.TrainingOfferSection
 import com.machmudow.kaszowska.sections.model.Section
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.theme.KaszowskaTheme
@@ -110,6 +111,7 @@ fun App() {
                         )
                     }
                     item { OfficeOfferSection() }
+                    item { TrainingOfferSection() }
                     item { PricesSection() }
                     item {
                         ImageCarousel(

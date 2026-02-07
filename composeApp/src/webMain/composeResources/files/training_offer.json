@@ -1,0 +1,104 @@
+{
+  "course_meta": {
+    "title": "Makijaż Permanentny Brwi",
+    "level": "Poziom Podstawowy",
+    "method": "Ombre Brows",
+    "brand": "Magdalena Kaszowska PMU & SCARS"
+  },
+  "hero_section": {
+    "headline": "Know the Skin. Heal with Confidence.",
+    "subheadline": "Rozpocznij karierę w świecie PMU pod okiem eksperta od trudnych przypadków.",
+    "cta_text": "Zapisz się na szkolenie"
+  },
+  "trainer_bio": {
+    "name": "Magdalena Kaszowska",
+    "role": "Linergistka, Szkoleniowiec, Studentka kierunku medycznego",
+    "description": "Specjalistka od ciężkich przypadków, usuwania starych pigmentacji i pracy z bliznami. W latach 2023-2024 zaufało jej ponad 1000 klientek. Łączy wiedzę artystyczną z medycznym podejściem do skóry.",
+    "stats": [
+      "1000+ klientek w 2023/24",
+      "Studentka Akademii Medycznej",
+      "Ekspert usuwania PMU i blizn"
+    ]
+  },
+  "curriculum": {
+    "title": "Czego nauczysz się podczas szkolenia?",
+    "modules": [
+      "Podstawy prowadzenia biznesu w branży linergistyki",
+      "Anatomia twarzy i podstawowe funkcje skóry",
+      "Różnice między makijażem permanentnym a tatuażem",
+      "Wizaż, teoria barw i dobór kolorów",
+      "Pigmentologia i sprzęt (rodzaje igieł, maszyn)",
+      "Dokumentacja, formularze świadomej zgody i aspekty prawne",
+      "Przeciwwskazania, powikłania i ryzyko zabiegowe",
+      "Standardy pracy, procedury, BHP i higiena",
+      "Przygotowanie stanowiska i klienta do zabiegu",
+      "Analiza oczekiwań i potrzeb klientów",
+      "Podstawy rysunku w linergistyce",
+      "Techniki pigmentacji brwi krok po kroku",
+      "Fotografia zabiegowa i aplikacje",
+      "Zalecenia pozabiegowe i pielęgnacja",
+      "Marketing, Social Media i wycena usług",
+      "Ubezpieczenie OC w pracy linergisty"
+    ]
+  },
+  "package_includes": {
+    "title": "Co otrzymasz w pakiecie?",
+    "items": [
+      {
+        "item": "Zestaw startowy",
+        "details": "Maszyna, akcesoria i pigmenty pozwalające na natychmiastowe rozpoczęcie pracy."
+      },
+      {
+        "item": "Workbook szkoleniowy",
+        "details": "Obszerne materiały edukacyjne do wielokrotnego powtarzania wiedzy."
+      },
+      {
+        "item": "Praktyka na modelkach",
+        "details": "Intensywna praca na prawdziwej skórze pod okiem specjalisty."
+      },
+      {
+        "item": "Mentoring i wsparcie",
+        "details": "Opieka poszkoleniowa i możliwość zadawania pytań po kursie."
+      },
+      {
+        "item": "Wsparcie zakupowe",
+        "details": "Pomoc w doborze sprzętu oraz zniżki na niezbędne produkty."
+      }
+    ]
+  },
+  "pricing_options": {
+    "location": "Poznań",
+    "group_size": "1-2 osoby (szkolenie kameralne)",
+    "variants": [
+      {
+        "id": "basic-3-days",
+        "name": "Standard",
+        "duration": "3 Dni",
+        "price_netto": 6500,
+        "currency": "PLN",
+        "features": [
+          "Pełen zakres teorii i praktyki",
+          "Praca na modelkach",
+          "Zestaw startowy",
+          "Certyfikat"
+        ]
+      },
+      {
+        "id": "premium-4-days",
+        "name": "Nowa Formuła (z Dniem Sprawdzającym)",
+        "duration": "4 Dni (3 dni + 1 dzień po 6 tyg.)",
+        "price_netto": 7500,
+        "currency": "PLN",
+        "is_recommended": true,
+        "description": "Zawiera dodatkowy dzień po 6 tygodniach na wykonanie korekty u modelek. Pozwala zobaczyć wygojone prace, omówić proces gojenia i skorygować błędy.",
+        "features": [
+          "Wszystko z pakietu Standard",
+          "Dodatkowy dzień szkoleniowy po 6 tygodniach",
+          "Analiza wygojonych prac",
+          "Wykonanie korekty pod okiem trenera",
+          "Pogłębiona analiza koloru i głębokości pracy"
+        ]
+      }
+    ]
+  }
+}
