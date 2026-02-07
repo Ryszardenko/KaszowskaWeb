@@ -1,0 +1,141 @@
+{
+  "meta": {
+    "title": "Oferta Gabinetowa",
+    "subtitle": "Stworzona z myślą o Tobie",
+    "brand": "Magdalena Kaszowska PMU & SCARS"
+  },
+  "sections": [
+    {
+      "id": "makijaz-permanentny",
+      "title": "Makijaż Permanentny",
+      "intro_text": "Makijaż permanentny to doskonałe rozwiązanie dla osób, które chcą podkreślić swoją urodę i cieszyć się perfekcyjnym wyglądem każdego dnia – bez potrzeby wykonywania codziennego makijażu. Efektem są naturalne, harmonijne i trwałe rezultaty.",
+      "services": [
+        {
+          "name": "Brwi",
+          "description": "Zabieg pozwalający uzyskać perfekcyjny kształt i kolor brwi, dopasowany indywidualnie do rysów twarzy. Dzięki precyzyjnej pigmentacji możliwe jest wyrównanie asymetrii, optyczne zagęszczenie oraz nadanie brwiom naturalnej pełności."
+        },
+        {
+          "name": "Usta",
+          "description": "Makijaż permanentny ust pozwala na podkreślenie ich konturu oraz nadanie im świeżego, zdrowego koloru. To doskonałe rozwiązanie dla osób, których usta z czasem straciły intensywność barwy lub kształt."
+        },
+        {
+          "name": "Powieki",
+          "description": "Delikatna pigmentacja wzdłuż linii rzęs, która podkreśla oko i sprawia, że spojrzenie staje się bardziej wyraziste. Zabieg optycznie zagęszcza rzęsy i nadaje im głębi."
+        },
+        {
+          "name": "Piegi",
+          "description": "Makijaż permanentny piegów to zabieg, który nadaje skórze niepowtarzalnego, słonecznego uroku i lekkości. Uzyskujemy subtelny i naturalny efekt, dopasowany do typu urody."
+        }
+      ]
+    },
+    {
+      "id": "usuwanie-pmu-tatuazu",
+      "title": "Usuwanie Makijażu Permanentnego i Tatuażu",
+      "intro_text": "Nowoczesne terapie usuwania pigmentu pozwalają w bezpieczny i skuteczny sposób przywrócić skórze jej naturalny wygląd. Zabiegi są dobierane indywidualnie, aby zapewnić jak najlepszy efekt przy minimalnym dyskomforcie.",
+      "services": [
+        {
+          "name": "Remover",
+          "description": "Skuteczna metoda usuwania nieudanego makijażu permanentnego bez użycia lasera. Zabieg rozbija pigment, a układ odpornościowy go eliminuje."
+        },
+        {
+          "name": "Laserowe Ocieplanie Makijażu Permanentnego",
+          "description": "Zabieg, który przywraca naturalny odcień makijażu permanentnego, jeśli pigment zmienił kolor na chłodny, siny lub szary."
+        },
+        {
+          "name": "Usuwanie Pigmentu z Blizny",
+          "description": "Specjalistyczny zabieg mający na celu usunięcie pigmentu uwięzionego w bliznowatej tkance. Procedura łączona jest z preparatami inżynierii tkankowej."
+        },
+        {
+          "name": "Laserowe Usuwanie",
+          "description": "Zabieg laserowego usuwania makijażu lub tatuażu. Precyzyjne działanie lasera rozbija barwnik, dzięki czemu zabieg jest bezpieczny dla skóry i pozwala na jej oczyszczanie."
+        }
+      ]
+    },
+    {
+      "id": "inteligentne-odmladzanie",
+      "title": "Inteligentne Odmładzanie",
+      "intro_text": "Nowoczesne podejście do pielęgnacji i regeneracji skóry. Celem jest przywrócenie skórze witalności, równowagi i blasku poprzez pobudzenie jej własnych mechanizmów regeneracyjnych.",
+      "services": [
+        {
+          "name": "Stymulatory Tkankowe",
+          "target_area": "Twarz / Okolica oka / Skóra głowy",
+          "description": "Zabieg poprawiający kondycję skóry i włosów, redukujący oznaki starzenia. Przywraca skórze jędrność, elastyczność i nawilżenie. Wzmacnia również włosy i poprawia ich wygląd."
+        },
+        {
+          "name": "Wygładzanie Zmarszczek",
+          "target_area": "Okolica oka / Nos / Broda / Czoło",
+          "description": "Skoncentrowane usuwanie zmarszczek mimicznych (kurze łapki, linie na czole, wokół ust). Skóra staje się gładka, napięta i odzyskuje młodzieńczy wygląd."
+        }
+      ]
+    },
+    {
+      "id": "terapia-blizn",
+      "title": "Terapia Blizn",
+      "intro_text": "Blizny nie muszą definiować tego, jak wyglądasz. Dzięki nowoczesnym terapiom możliwe jest ich rozjaśnienie, wygładzenie i przywrócenie skórze miękkości. Każdą terapię poprzedza konsultacja i analiza potrzeb.",
+      "services": [
+        {
+          "name": "Mikropunktura i Akupunktura",
+          "description": "Precyzyjna metoda rewitalizacji blizn, wyrównująca ich strukturę i kolor. Igłowanie akupunkturowe stosowane jest głębiej, umożliwiając rozluźnienie zrostów."
+        },
+        {
+          "name": "Zabiegi Autologiczne i Stymulatory Tkankowe",
+          "description": "Wykorzystanie własnego potencjału naprawczego skóry (osocze, fibryna) oraz stymulatorów w celu kompleksowego rozjaśnienia blizn i poprawy elastyczności."
+        },
+        {
+          "name": "Laser Frakcyjny CO2 / Laser Tulowy",
+          "description": "Laseroterapia inicjuje proces intensywnej przebudowy skóry. Laser frakcyjny stosowany jest przy głębszych bliznach, a tulowy przy świeższych zmianach."
+        },
+        {
+          "name": "Tropokolagen",
+          "description": "Zabieg intensywnie stymulujący procesy regeneracyjne i odbudowę tkanek. Skutecznie redukuje widoczność blizn potrądzikowych, pourazowych czy po zabiegach."
+        },
+        {
+          "name": "Blizna po Cesarskim Cięciu",
+          "description": "Precyzyjny zabieg mikronakłuwania rozluźnia tkankę bliznowatą, stymuluje regenerację i wspiera naturalną odbudowę. Efektem jest spłycenie i zmiękczenie blizny oraz poprawa jej estetyki."
+        },
+        {
+          "name": "Blizny Potrądzikowe",
+          "description": "Terapia pobudza procesy regeneracyjne skóry, stymuluje produkcję kolagenu i elastyny. Efektem jest wygładzenie powierzchni skóry, wyrównanie kolorytu i odzyskanie świeżego wyglądu."
+        },
+        {
+          "name": "Blizny po Rozszczepie",
+          "description": "Metody wspierające procesy regeneracyjne skóry w obszarze po rozszczepie. Zabieg zmiękcza i spłyca blizny, poprawia ich kolor oraz ogólną estetykę i funkcje twarzy."
+        },
+        {
+          "name": "Blizny Poparzeniowe",
+          "description": "Terapia polega na rozluźnieniu tkanki bliznowatej i pobudzeniu procesów regeneracyjnych. Poprawia strukturę skóry, jej miękkość, sprężystość oraz zwiększa komfort ruchu."
+        },
+        {
+          "name": "Redukcja Przebarwień",
+          "description": "Terapia działająca na głębsze warstwy skóry, wspierająca jej odnowę i wyrównująca odcień. Efektem jest jaśniejsza, bardziej jednolita i promienna cera."
+        },
+        {
+          "name": "Mikropunktura Rozstępów",
+          "description": "Zabieg mikronakłuwania uruchamia naturalne procesy regeneracyjne i odbudowuje strukturę skóry na brzuchu, udach czy pośladkach. Efektem jest wygładzenie rozstępów i zmniejszenie ich widoczności."
+        }
+      ]
+    },
+    {
+      "id": "terapie-przeciwstarzeniowe",
+      "title": "Delikatne Terapie Przeciwstarzeniowe",
+      "subtitle": "Stymulacja kolagenu i elastyny",
+      "intro_text": "Z biegiem czasu skóra traci jędrność. Rozwiązaniem są zabiegi, które poprzez mikronakłuwanie stymulują naturalne procesy regeneracyjne, dzięki czemu skóra odzyskuje gęstość i sprężystość.",
+      "services": [
+        {
+          "name": "Biolift (Mikropunktura)",
+          "target_area": "Twarz / Szyja / Dekolt",
+          "description": "Zabieg oparty wyłącznie na naturalnych procesach regeneracyjnych. Dzięki precyzyjnym nakłuciom uruchamiana jest produkcja kolagenu i elastyny, co prowadzi do odnowy tkanek od wewnątrz. Efektem jest wygładzenie, poprawa jędrności i redukcja zmarszczek."
+        },
+        {
+          "name": "Mezoterapia Mikroigłowa",
+          "description": "Połączenie mikronakłuć z wprowadzaniem aktywnych składników (indywidualnie dobrana ampułka). Działa podwójnie: stymuluje regenerację i dostarcza substancji odżywczych. Efektem jest rozświetlenie, nawilżenie i wygładzenie cery."
+        },
+        {
+          "name": "Pinezkowanie",
+          "target_area": "Brwi / Usta / Zmarszczki / Blizny",
+          "description": "Punktowe rozmieszczenie cieniutkich igiełek w wybranych obszarach, pobudzające skórę do produkcji nowych włókien.\n• Twarz: ujędrnienie i regeneracja.\n• Brwi: stymulacja porostu włosków.\n• Usta: wzmocnienie czerwieni wargowej, zapobieganie migracji kwasu."
+        }
+      ]
+    }
+  ]
+}
