@@ -1,17 +1,22 @@
 package com.machmudow.kaszowska.sections
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,9 +24,9 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,12 +38,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.model.OfficeOffer
@@ -70,7 +83,9 @@ fun OfficeOfferSection() {
 
     LaunchedEffect(Unit) {
         try {
-            val response = window.fetch("composeResources/kaszowska.composeapp.generated.resources/files/office_offer.json").await<Response>()
+            val response =
+                window.fetch("composeResources/kaszowska.composeapp.generated.resources/files/office_offer.json")
+                    .await<Response>()
             val jsonString = response.text().await<String>()
             officeOffer = json.decodeFromString<OfficeOffer>(jsonString)
         } catch (e: Exception) {
@@ -89,28 +104,84 @@ fun OfficeOfferSection() {
         animationSpec = tween(1000, easing = FastOutSlowInEasing)
     )
 
-    val lazyListState = rememberLazyListState()
+    val scrollState = rememberScrollState()
 
     val horizontalPadding = windowSize.horizontalPadding
-    val cardWidth = if (windowSize.isMobile) 300.dp else 400.dp
-    val cardSpacing = if (windowSize.isMobile) 16.dp else 40.dp
+    // Wider cards
+    val cardWidth = if (windowSize.isMobile) 340.dp else 480.dp
+    val cardSpacing = if (windowSize.isMobile) 20.dp else 32.dp
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(KaszowskaColors.White)
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        KaszowskaColors.White,
+                        KaszowskaColors.SoftGray.copy(alpha = 0.3f),
+                        KaszowskaColors.White
+                    )
+                )
+            )
             .padding(vertical = windowSize.verticalSectionPadding)
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Decorative element above title
+            Row(
+                modifier = Modifier.graphicsLayer {
+                    alpha = titleAlpha
+                    translationY = titleOffset
+                },
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Box(
+                    modifier = Modifier
+                        .width(if (windowSize.isMobile) 30.dp else 50.dp)
+                        .height(1.dp)
+                        .background(
+                            Brush.horizontalGradient(
+                                colors = listOf(
+                                    KaszowskaColors.Gold.copy(alpha = 0f),
+                                    KaszowskaColors.Gold
+                                )
+                            )
+                        )
+                )
+                Spacer(modifier = Modifier.width(if (windowSize.isMobile) 12.dp else 16.dp))
+                Box(
+                    modifier = Modifier
+                        .size(if (windowSize.isMobile) 6.dp else 8.dp)
+                        .clip(CircleShape)
+                        .background(KaszowskaColors.Gold)
+                )
+                Spacer(modifier = Modifier.width(if (windowSize.isMobile) 12.dp else 16.dp))
+                Box(
+                    modifier = Modifier
+                        .width(if (windowSize.isMobile) 30.dp else 50.dp)
+                        .height(1.dp)
+                        .background(
+                            Brush.horizontalGradient(
+                                colors = listOf(
+                                    KaszowskaColors.Gold,
+                                    KaszowskaColors.Gold.copy(alpha = 0f)
+                                )
+                            )
+                        )
+                )
+            }
+
+            Spacer(modifier = Modifier.height(if (windowSize.isMobile) 16.dp else 24.dp))
+
             Text(
                 text = "OFERTA GABINETOWA",
-                fontSize = if (windowSize.isMobile) 11.sp else 12.sp,
-                fontWeight = FontWeight.Normal,
+                fontSize = if (windowSize.isMobile) 10.sp else 11.sp,
+                fontWeight = FontWeight.Medium,
                 color = KaszowskaColors.Gold,
-                letterSpacing = 3.sp,
+                letterSpacing = 4.sp,
                 modifier = Modifier.graphicsLayer {
                     alpha = titleAlpha
                     translationY = titleOffset
@@ -121,10 +192,10 @@ fun OfficeOfferSection() {
 
             Text(
                 text = officeOffer?.meta?.title ?: "Oferta Gabinetowa",
-                fontSize = if (windowSize.isMobile) 28.sp else 42.sp,
+                fontSize = if (windowSize.isMobile) 26.sp else 40.sp,
                 fontWeight = FontWeight.Light,
                 color = KaszowskaColors.TextDark,
-                letterSpacing = 2.sp,
+                letterSpacing = 1.sp,
                 modifier = Modifier.graphicsLayer {
                     alpha = titleAlpha
                     translationY = titleOffset
@@ -135,8 +206,9 @@ fun OfficeOfferSection() {
                 Spacer(modifier = Modifier.height(if (windowSize.isMobile) 8.dp else 12.dp))
                 Text(
                     text = subtitle,
-                    fontSize = if (windowSize.isMobile) 14.sp else 16.sp,
+                    fontSize = if (windowSize.isMobile) 13.sp else 15.sp,
                     fontWeight = FontWeight.Normal,
+                    fontStyle = FontStyle.Italic,
                     color = KaszowskaColors.TextLight,
                     modifier = Modifier.graphicsLayer {
                         alpha = titleAlpha
@@ -145,93 +217,161 @@ fun OfficeOfferSection() {
                 )
             }
 
-            Spacer(modifier = Modifier.height(if (windowSize.isMobile) 40.dp else 80.dp))
+            Spacer(modifier = Modifier.height(if (windowSize.isMobile) 32.dp else 60.dp))
 
             // Horizontally scrollable cards
-            LazyRow(
-                state = lazyListState,
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .graphicsLayer { clip = false },
-                contentPadding = PaddingValues(horizontal = horizontalPadding),
+                    .horizontalScroll(scrollState)
+                    .padding(horizontal = horizontalPadding),
                 horizontalArrangement = Arrangement.spacedBy(cardSpacing)
             ) {
-                officeOffer?.sections?.let { sections ->
-                    itemsIndexed(sections) { index, section ->
-                        OfficeOfferCard(
-                            section = section,
-                            modifier = Modifier.width(cardWidth),
-                            isVisible = isVisible,
-                            delay = 300 + index * 150,
-                            isMobile = windowSize.isMobile
-                        )
-                    }
+                officeOffer?.sections?.forEachIndexed { index, section ->
+                    OfficeOfferCard(
+                        section = section,
+                        modifier = Modifier.width(cardWidth),
+                        isVisible = isVisible,
+                        delay = 200 + index * 100,
+                        isMobile = windowSize.isMobile,
+                        cardIndex = index
+                    )
                 }
             }
+
+            Spacer(modifier = Modifier.height(if (windowSize.isMobile) 24.dp else 40.dp))
 
             // Scroll indicator
             val showScrollIndicator by remember {
                 derivedStateOf {
-                    lazyListState.layoutInfo.totalItemsCount > 0 &&
-                            (lazyListState.canScrollForward || lazyListState.canScrollBackward)
+                    scrollState.maxValue > 0
                 }
             }
 
-            if (showScrollIndicator) {
-                Spacer(modifier = Modifier.height(if (windowSize.isMobile) 16.dp else 24.dp))
+            // Fixed height container for scroll indicator to prevent jumping
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(if (windowSize.isMobile) 60.dp else 80.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                if (showScrollIndicator) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        // Scroll hint with arrow icons
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            // Left arrow icon
+                            Canvas(
+                                modifier = Modifier.size(if (windowSize.isMobile) 12.dp else 14.dp)
+                            ) {
+                                val arrowColor = KaszowskaColors.TextLight.copy(alpha = 0.6f)
+                                val strokeWidth = if (size.width < 40f) 1.5f else 2f
+                                val path = Path().apply {
+                                    // Draw left-pointing chevron
+                                    moveTo(size.width * 0.7f, size.height * 0.2f)
+                                    lineTo(size.width * 0.3f, size.height * 0.5f)
+                                    lineTo(size.width * 0.7f, size.height * 0.8f)
+                                }
+                                drawPath(
+                                    path = path,
+                                    color = arrowColor,
+                                    style = Stroke(
+                                        width = strokeWidth,
+                                        cap = StrokeCap.Round,
+                                        join = StrokeJoin.Round
+                                    )
+                                )
+                            }
 
-                BoxWithConstraints(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = horizontalPadding)
-                ) {
-                    val trackWidth = maxWidth
-                    val baseThumbWidth = if (windowSize.isMobile) 80.dp else 120.dp
-                    val thumbWidth = if (trackWidth < baseThumbWidth) trackWidth else baseThumbWidth
+                            Spacer(modifier = Modifier.width(8.dp))
 
-                    val scrollFraction by remember {
-                        derivedStateOf {
-                            val layoutInfo = lazyListState.layoutInfo
-                            val totalItemsCount = layoutInfo.totalItemsCount
-                            if (totalItemsCount == 0) return@derivedStateOf 0f
+                            Text(
+                                text = "Przewiń, aby zobaczyć więcej",
+                                fontSize = if (windowSize.isMobile) 10.sp else 11.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = KaszowskaColors.TextLight.copy(alpha = 0.6f),
+                                letterSpacing = 1.sp
+                            )
 
-                            val visibleItemsInfo = layoutInfo.visibleItemsInfo
-                            if (visibleItemsInfo.isEmpty()) return@derivedStateOf 0f
+                            Spacer(modifier = Modifier.width(8.dp))
 
-                            val firstVisibleItem = visibleItemsInfo.first()
+                            // Right arrow icon
+                            Canvas(
+                                modifier = Modifier.size(if (windowSize.isMobile) 12.dp else 14.dp)
+                            ) {
+                                val arrowColor = KaszowskaColors.TextLight.copy(alpha = 0.6f)
+                                val strokeWidth = if (size.width < 40f) 1.5f else 2f
+                                val path = Path().apply {
+                                    // Draw right-pointing chevron
+                                    moveTo(size.width * 0.3f, size.height * 0.2f)
+                                    lineTo(size.width * 0.7f, size.height * 0.5f)
+                                    lineTo(size.width * 0.3f, size.height * 0.8f)
+                                }
+                                drawPath(
+                                    path = path,
+                                    color = arrowColor,
+                                    style = Stroke(
+                                        width = strokeWidth,
+                                        cap = StrokeCap.Round,
+                                        join = StrokeJoin.Round
+                                    )
+                                )
+                            }
+                        }
 
-                            val viewportSize =
-                                layoutInfo.viewportEndOffset - layoutInfo.viewportStartOffset
-                            val totalContentSize =
-                                (totalItemsCount * (firstVisibleItem.size + cardSpacing.value)).toInt()
-                            val maxScrollOffset = (totalContentSize - viewportSize).coerceAtLeast(0)
+                        Spacer(modifier = Modifier.height(if (windowSize.isMobile) 12.dp else 16.dp))
 
-                            if (maxScrollOffset == 0) return@derivedStateOf 0f
+                        BoxWithConstraints(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = horizontalPadding)
+                        ) {
+                            val trackWidth = maxWidth
+                            val baseThumbWidth = if (windowSize.isMobile) 60.dp else 100.dp
+                            val thumbWidth =
+                                if (trackWidth < baseThumbWidth) trackWidth else baseThumbWidth
 
-                            val currentOffset =
-                                firstVisibleItem.index * (firstVisibleItem.size + cardSpacing.value.toInt()) - firstVisibleItem.offset
+                            val scrollFraction by remember {
+                                derivedStateOf {
+                                    if (scrollState.maxValue == 0) 0f
+                                    else scrollState.value.toFloat() / scrollState.maxValue.toFloat()
+                                }
+                            }
 
-                            (currentOffset / maxScrollOffset.toFloat()).coerceIn(0f, 1f)
+                            val maxOffset = (trackWidth - thumbWidth).coerceAtLeast(0.dp)
+                            val thumbOffset = maxOffset * scrollFraction
+
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(2.dp)
+                                    .clip(RoundedCornerShape(1.dp))
+                                    .background(KaszowskaColors.TextLight.copy(alpha = 0.15f))
+                            )
+
+                            Box(
+                                modifier = Modifier
+                                    .offset(x = thumbOffset)
+                                    .width(thumbWidth)
+                                    .height(2.dp)
+                                    .clip(RoundedCornerShape(1.dp))
+                                    .background(
+                                        Brush.horizontalGradient(
+                                            colors = listOf(
+                                                KaszowskaColors.Gold.copy(alpha = 0.7f),
+                                                KaszowskaColors.Gold,
+                                                KaszowskaColors.Gold.copy(alpha = 0.7f)
+                                            )
+                                        )
+                                    )
+                            )
                         }
                     }
-
-                    val maxOffset = (trackWidth - thumbWidth).coerceAtLeast(0.dp)
-                    val thumbOffset = maxOffset * scrollFraction
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(3.dp)
-                            .background(KaszowskaColors.SoftGray.copy(alpha = 0.6f))
-                    )
-
-                    Box(
-                        modifier = Modifier
-                            .offset(x = thumbOffset)
-                            .width(thumbWidth)
-                            .height(3.dp)
-                            .background(KaszowskaColors.Gold)
-                    )
                 }
             }
         }
@@ -245,9 +385,18 @@ private fun OfficeOfferCard(
     modifier: Modifier = Modifier,
     isVisible: Boolean = false,
     delay: Int = 0,
-    isMobile: Boolean = false
+    isMobile: Boolean = false,
+    cardIndex: Int = 0
 ) {
     var isHovered by remember { mutableStateOf(false) }
+    var isExpanded by remember { mutableStateOf(false) }
+
+    // Show first 2 services by default, rest are collapsible
+    val visibleServicesCount = 2
+    val hasMoreServices = section.services.size > visibleServicesCount
+    val visibleServices =
+        if (isExpanded) section.services else section.services.take(visibleServicesCount)
+    val hiddenServicesCount = section.services.size - visibleServicesCount
 
     val cardAlpha by animateFloatAsState(
         targetValue = if (isVisible) 1f else 0f,
@@ -255,12 +404,12 @@ private fun OfficeOfferCard(
     )
 
     val cardOffset by animateFloatAsState(
-        targetValue = if (isVisible) 0f else 80f,
+        targetValue = if (isVisible) 0f else 60f,
         animationSpec = tween(800, delayMillis = delay, easing = FastOutSlowInEasing)
     )
 
     val elevation by animateFloatAsState(
-        targetValue = if (isHovered) 16f else 2f,
+        targetValue = if (isHovered) 20f else 4f,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioMediumBouncy,
             stiffness = Spring.StiffnessMedium
@@ -268,19 +417,24 @@ private fun OfficeOfferCard(
     )
 
     val scale by animateFloatAsState(
-        targetValue = if (isHovered) 1.02f else 1f,
+        targetValue = if (isHovered) 1.015f else 1f,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioMediumBouncy,
             stiffness = Spring.StiffnessLow
         )
     )
 
-    val pulseAlpha by animateFloatAsState(
-        targetValue = if (isHovered) 0.8f else 0.3f,
+    val borderAlpha by animateFloatAsState(
+        targetValue = if (isHovered) 1f else 0f,
         animationSpec = tween(300, easing = FastOutSlowInEasing)
     )
 
-    val cardPadding = if (isMobile) 20.dp else 32.dp
+    val expandIconRotation by animateFloatAsState(
+        targetValue = if (isExpanded) 180f else 0f,
+        animationSpec = tween(300, easing = FastOutSlowInEasing)
+    )
+
+    val cardPadding = if (isMobile) 24.dp else 36.dp
 
     Column(
         modifier = modifier
@@ -291,82 +445,138 @@ private fun OfficeOfferCard(
                 scaleY = scale
                 shadowElevation = elevation
             }
-            .background(KaszowskaColors.SoftGray)
+            .clip(RoundedCornerShape(if (isMobile) 4.dp else 8.dp))
+            .background(KaszowskaColors.White)
             .border(
                 width = 1.dp,
-                color = if (isHovered) KaszowskaColors.Gold.copy(alpha = pulseAlpha) else KaszowskaColors.SoftGray.copy(
-                    alpha = 0.3f
-                )
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        KaszowskaColors.Gold.copy(alpha = borderAlpha * 0.8f),
+                        KaszowskaColors.Gold.copy(alpha = borderAlpha * 0.4f),
+                        KaszowskaColors.Gold.copy(alpha = borderAlpha * 0.8f)
+                    )
+                ),
+                shape = RoundedCornerShape(if (isMobile) 4.dp else 8.dp)
             )
             .onPointerEvent(PointerEventType.Enter) { isHovered = true }
             .onPointerEvent(PointerEventType.Exit) { isHovered = false }
             .padding(cardPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Golden dot
+        // Card number badge
         Box(
             modifier = Modifier
-                .size(if (isMobile) 6.dp else 8.dp)
-                .background(KaszowskaColors.Gold)
-        )
+                .size(if (isMobile) 28.dp else 36.dp)
+                .clip(CircleShape)
+                .background(
+                    if (isHovered) KaszowskaColors.Gold
+                    else KaszowskaColors.Gold.copy(alpha = 0.1f)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "${cardIndex + 1}",
+                fontSize = if (isMobile) 12.sp else 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = if (isHovered) KaszowskaColors.White else KaszowskaColors.Gold
+            )
+        }
 
-        Spacer(modifier = Modifier.height(if (isMobile) 12.dp else 16.dp))
+        Spacer(modifier = Modifier.height(if (isMobile) 16.dp else 20.dp))
 
         // Section title
         Text(
             text = section.title,
-            fontSize = if (isMobile) 18.sp else 22.sp,
-            fontWeight = FontWeight.Medium,
+            fontSize = if (isMobile) 18.sp else 24.sp,
+            fontWeight = FontWeight.SemiBold,
             color = KaszowskaColors.TextDark,
-            letterSpacing = 1.sp,
+            letterSpacing = 0.5.sp,
             textAlign = TextAlign.Center
         )
 
         Spacer(modifier = Modifier.height(if (isMobile) 12.dp else 16.dp))
 
-        // Intro text
+        // Intro text with line clamp when collapsed
         Text(
             text = section.introText,
-            fontSize = if (isMobile) 12.sp else 13.sp,
+            fontSize = if (isMobile) 12.sp else 14.sp,
             fontWeight = FontWeight.Normal,
             color = KaszowskaColors.TextLight,
-            lineHeight = if (isMobile) 18.sp else 20.sp,
-            textAlign = TextAlign.Center
+            lineHeight = if (isMobile) 18.sp else 22.sp,
+            textAlign = TextAlign.Center,
+            maxLines = if (isExpanded) Int.MAX_VALUE else 3,
+            overflow = TextOverflow.Ellipsis
         )
 
-        Spacer(modifier = Modifier.height(if (isMobile) 16.dp else 24.dp))
+        Spacer(modifier = Modifier.height(if (isMobile) 20.dp else 28.dp))
 
-        // Divider
-        Box(
-            modifier = Modifier
-                .height(1.dp)
-                .fillMaxWidth(0.5f)
-                .background(
-                    if (isHovered)
+        // Elegant divider
+        Row(
+            modifier = Modifier.fillMaxWidth(0.6f),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(1.dp)
+                    .background(
                         Brush.horizontalGradient(
                             colors = listOf(
                                 KaszowskaColors.Gold.copy(alpha = 0f),
-                                KaszowskaColors.Gold,
+                                KaszowskaColors.Gold.copy(alpha = if (isHovered) 0.6f else 0.3f)
+                            )
+                        )
+                    )
+            )
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .size(4.dp)
+                    .clip(CircleShape)
+                    .background(KaszowskaColors.Gold.copy(alpha = if (isHovered) 0.8f else 0.4f))
+            )
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(1.dp)
+                    .background(
+                        Brush.horizontalGradient(
+                            colors = listOf(
+                                KaszowskaColors.Gold.copy(alpha = if (isHovered) 0.6f else 0.3f),
                                 KaszowskaColors.Gold.copy(alpha = 0f)
                             )
                         )
-                    else Brush.horizontalGradient(
-                        colors = listOf(
-                            KaszowskaColors.TextLight.copy(alpha = 0.2f),
-                            KaszowskaColors.TextLight.copy(alpha = 0.2f)
-                        )
                     )
-                )
+            )
+        }
+
+        Spacer(modifier = Modifier.height(if (isMobile) 20.dp else 28.dp))
+
+        // Services header
+        Text(
+            text = "ZABIEGI",
+            fontSize = if (isMobile) 9.sp else 10.sp,
+            fontWeight = FontWeight.Medium,
+            color = KaszowskaColors.Gold,
+            letterSpacing = 3.sp
         )
 
-        Spacer(modifier = Modifier.height(if (isMobile) 16.dp else 24.dp))
+        Spacer(modifier = Modifier.height(if (isMobile) 12.dp else 16.dp))
 
-        // Services list
+        // Services list - always visible services
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .animateContentSize(
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioLowBouncy,
+                        stiffness = Spring.StiffnessLow
+                    )
+                ),
             verticalArrangement = Arrangement.spacedBy(if (isMobile) 12.dp else 16.dp)
         ) {
-            section.services.forEach { service ->
+            visibleServices.forEach { service ->
                 ServiceItem(
                     service = service,
                     isMobile = isMobile,
@@ -374,42 +584,139 @@ private fun OfficeOfferCard(
                 )
             }
         }
+
+        // Expand/Collapse button
+        if (hasMoreServices) {
+            Spacer(modifier = Modifier.height(if (isMobile) 16.dp else 24.dp))
+
+            Row(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(24.dp))
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) { isExpanded = !isExpanded }
+                    .background(
+                        if (isExpanded) KaszowskaColors.Gold.copy(alpha = 0.1f)
+                        else KaszowskaColors.SoftGray
+                    )
+                    .padding(
+                        horizontal = if (isMobile) 18.dp else 24.dp,
+                        vertical = if (isMobile) 10.dp else 12.dp
+                    ),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = if (isExpanded) "Zwiń" else "Pokaż więcej (+$hiddenServicesCount)",
+                    fontSize = if (isMobile) 11.sp else 12.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = if (isExpanded) KaszowskaColors.Gold else KaszowskaColors.TextDark,
+                    letterSpacing = 0.5.sp
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "▼",
+                    fontSize = if (isMobile) 8.sp else 9.sp,
+                    color = if (isExpanded) KaszowskaColors.Gold else KaszowskaColors.TextDark,
+                    modifier = Modifier.rotate(expandIconRotation)
+                )
+            }
+        }
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun ServiceItem(
     service: OfficeOfferService,
     isMobile: Boolean,
     isHovered: Boolean
 ) {
+    var isItemHovered by remember { mutableStateOf(false) }
+
+    val itemBackgroundAlpha by animateFloatAsState(
+        targetValue = if (isItemHovered) 0.08f else 0f,
+        animationSpec = tween(200)
+    )
+
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(
+                Brush.horizontalGradient(
+                    colors = listOf(
+                        KaszowskaColors.Gold.copy(alpha = itemBackgroundAlpha * 0.5f),
+                        KaszowskaColors.Gold.copy(alpha = itemBackgroundAlpha),
+                        KaszowskaColors.Gold.copy(alpha = itemBackgroundAlpha * 0.5f)
+                    )
+                )
+            )
+            .border(
+                width = 1.dp,
+                brush = Brush.horizontalGradient(
+                    colors = listOf(
+                        KaszowskaColors.Gold.copy(alpha = if (isItemHovered) 0.2f else 0f),
+                        KaszowskaColors.Gold.copy(alpha = if (isItemHovered) 0.1f else 0f),
+                        KaszowskaColors.Gold.copy(alpha = if (isItemHovered) 0.2f else 0f)
+                    )
+                ),
+                shape = RoundedCornerShape(12.dp)
+            )
+            .onPointerEvent(PointerEventType.Enter) { isItemHovered = true }
+            .onPointerEvent(PointerEventType.Exit) { isItemHovered = false }
+            .padding(if (isMobile) 14.dp else 18.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        // Service name with optional target area
-        Text(
-            text = buildString {
-                append(service.name)
-                service.targetArea?.let { area ->
-                    append(" • $area")
-                }
-            },
-            fontSize = if (isMobile) 13.sp else 14.sp,
-            fontWeight = FontWeight.Medium,
-            color = if (isHovered) KaszowskaColors.Gold else KaszowskaColors.TextDark,
-            letterSpacing = 0.5.sp
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Service indicator dot
+            Box(
+                modifier = Modifier
+                    .size(if (isMobile) 6.dp else 7.dp)
+                    .clip(CircleShape)
+                    .background(
+                        if (isItemHovered || isHovered) KaszowskaColors.Gold
+                        else KaszowskaColors.TextLight.copy(alpha = 0.4f)
+                    )
+            )
+            Spacer(modifier = Modifier.width(if (isMobile) 12.dp else 14.dp))
 
-        Spacer(modifier = Modifier.height(4.dp))
+            // Service name with optional target area
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = service.name,
+                    fontSize = if (isMobile) 14.sp else 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = if (isItemHovered) KaszowskaColors.Gold else KaszowskaColors.TextDark,
+                    letterSpacing = 0.3.sp
+                )
+                service.targetArea?.let { area ->
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = area,
+                        fontSize = if (isMobile) 10.sp else 11.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = KaszowskaColors.Gold.copy(alpha = 0.9f),
+                        letterSpacing = 0.5.sp
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(if (isMobile) 8.dp else 10.dp))
 
         // Service description
         Text(
             text = service.description,
-            fontSize = if (isMobile) 11.sp else 12.sp,
+            fontSize = if (isMobile) 12.sp else 13.sp,
             fontWeight = FontWeight.Normal,
             color = KaszowskaColors.TextLight,
-            lineHeight = if (isMobile) 16.sp else 18.sp
+            lineHeight = if (isMobile) 18.sp else 21.sp,
+            modifier = Modifier.padding(start = if (isMobile) 18.dp else 21.dp)
         )
     }
 }
