@@ -29,7 +29,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,7 +49,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.model.PackageItem
 import com.machmudow.kaszowska.model.PricingVariant
-import com.machmudow.kaszowska.model.TrainingOffer
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.utils.LocalWindowSize
 import com.machmudow.kaszowska.utils.horizontalPadding
@@ -58,48 +56,7 @@ import com.machmudow.kaszowska.utils.isMobile
 import com.machmudow.kaszowska.utils.verticalSectionPadding
 import kaszowska.composeapp.generated.resources.Res
 import kaszowska.composeapp.generated.resources.ic_check
-import kotlinx.browser.window
-import kotlinx.coroutines.await
-import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.painterResource
-import org.w3c.fetch.Response
-
-// Shared state holder for training offer data
-class TrainingOfferState {
-    var trainingOffer by mutableStateOf<TrainingOffer?>(null)
-    var isVisible by mutableStateOf(false)
-    var isLoaded by mutableStateOf(false)
-}
-
-@Composable
-fun rememberTrainingOfferState(): TrainingOfferState {
-    val state = remember { TrainingOfferState() }
-
-    val json = remember {
-        Json {
-            ignoreUnknownKeys = true
-            isLenient = true
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        if (!state.isLoaded) {
-            try {
-                val response =
-                    window.fetch("composeResources/kaszowska.composeapp.generated.resources/files/training_offer.json")
-                        .await<Response>()
-                val jsonString = response.text().await<String>()
-                state.trainingOffer = json.decodeFromString<TrainingOffer>(jsonString)
-            } catch (e: Exception) {
-                console.log("Error loading training_offer.json: ${e.message}")
-            }
-            state.isVisible = true
-            state.isLoaded = true
-        }
-    }
-
-    return state
-}
 
 // Part 1: Header with title and hero subsection
 @Composable
@@ -343,21 +300,6 @@ fun TrainingOfferPricingSection(state: TrainingOfferState) {
                 horizontalPadding = horizontalPadding
             )
         }
-    }
-}
-
-// Keep the original for backwards compatibility but mark as deprecated
-@Deprecated("Use split sections instead: TrainingOfferHeaderSection, TrainingOfferTrainerSection, TrainingOfferCurriculumSection, TrainingOfferPackageSection, TrainingOfferPricingSection")
-@Composable
-fun TrainingOfferSection() {
-    val state = rememberTrainingOfferState()
-
-    Column(modifier = Modifier.fillMaxWidth()) {
-        TrainingOfferHeaderSection(state)
-        TrainingOfferTrainerSection(state)
-        TrainingOfferCurriculumSection(state)
-        TrainingOfferPackageSection(state)
-        TrainingOfferPricingSection(state)
     }
 }
 

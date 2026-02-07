@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.machmudow.kaszowska.components.imagesmodal.ImagesModal
 import com.machmudow.kaszowska.sections.AboutSection
 import com.machmudow.kaszowska.sections.ContactSection
@@ -51,9 +52,9 @@ import com.machmudow.kaszowska.sections.TrainingOfferHeaderSection
 import com.machmudow.kaszowska.sections.TrainingOfferPackageSection
 import com.machmudow.kaszowska.sections.TrainingOfferPricingSection
 import com.machmudow.kaszowska.sections.TrainingOfferTrainerSection
-import com.machmudow.kaszowska.sections.rememberOfficeOfferState
-import com.machmudow.kaszowska.sections.rememberTrainingOfferState
 import com.machmudow.kaszowska.sections.model.Section
+import com.machmudow.kaszowska.sections.rememberOfficeOfferState
+import com.machmudow.kaszowska.sections.rememberTrainingOfferStateHolder
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.theme.KaszowskaTheme
 import com.machmudow.kaszowska.utils.LocalWindowSize
@@ -103,7 +104,8 @@ fun App() {
 
             // Shared state holders
             val officeOfferState = rememberOfficeOfferState()
-            val trainingOfferState = rememberTrainingOfferState()
+            val trainingOfferStateHolder = rememberTrainingOfferStateHolder()
+            val trainingOfferState by trainingOfferStateHolder.state.collectAsStateWithLifecycle()
 
             Box(
                 modifier = Modifier
