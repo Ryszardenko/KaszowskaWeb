@@ -2,16 +2,12 @@ package com.machmudow.kaszowska.sections
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import com.machmudow.kaszowska.model.TrainingOffer
-import kotlinx.browser.window
-import kotlinx.coroutines.await
+import com.machmudow.kaszowska.utils.loadJsonFromResources
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.serialization.json.Json
-import org.w3c.fetch.Response
 
 // Immutable state holder for training offer data
 data class TrainingOfferState(
@@ -32,21 +28,10 @@ object TrainingOfferStateHolder {
 
 @Composable
 fun rememberTrainingOfferStateHolder(): TrainingOfferStateHolder {
-    val json = remember {
-        Json {
-            ignoreUnknownKeys = true
-            isLenient = true
-        }
-    }
-
     LaunchedEffect(Unit) {
         if (!TrainingOfferStateHolder.state.value.isLoaded) {
             try {
-                val response =
-                    window.fetch("composeResources/kaszowska.composeapp.generated.resources/files/training_offer.json")
-                        .await<Response>()
-                val jsonString = response.text().await<String>()
-                val trainingOffer = json.decodeFromString<TrainingOffer>(jsonString)
+                val trainingOffer = loadJsonFromResources<TrainingOffer>("training_offer.json")
                 TrainingOfferStateHolder.updateState {
                     it.copy(
                         trainingOffer = trainingOffer,

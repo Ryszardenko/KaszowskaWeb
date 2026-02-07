@@ -61,11 +61,8 @@ import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.utils.LocalWindowSize
 import com.machmudow.kaszowska.utils.horizontalPadding
 import com.machmudow.kaszowska.utils.isMobile
+import com.machmudow.kaszowska.utils.loadJsonFromResources
 import com.machmudow.kaszowska.utils.verticalSectionPadding
-import kotlinx.browser.window
-import kotlinx.coroutines.await
-import kotlinx.serialization.json.Json
-import org.w3c.fetch.Response
 
 // Shared state holder for office offer data
 class OfficeOfferState {
@@ -78,21 +75,10 @@ class OfficeOfferState {
 fun rememberOfficeOfferState(): OfficeOfferState {
     val state = remember { OfficeOfferState() }
 
-    val json = remember {
-        Json {
-            ignoreUnknownKeys = true
-            isLenient = true
-        }
-    }
-
     LaunchedEffect(Unit) {
         if (!state.isLoaded) {
             try {
-                val response =
-                    window.fetch("composeResources/kaszowska.composeapp.generated.resources/files/office_offer.json")
-                        .await<Response>()
-                val jsonString = response.text().await<String>()
-                state.officeOffer = json.decodeFromString<OfficeOffer>(jsonString)
+                state.officeOffer = loadJsonFromResources<OfficeOffer>("office_offer.json")
             } catch (e: Exception) {
                 console.log("Error loading office_offer.json: ${e.message}")
             }

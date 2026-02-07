@@ -41,8 +41,15 @@ in your IDE's toolbar or run it directly from the terminal:
     ```
     
 **Publish production**
-JS: ./gradlew :composeApp:jsBrowserDistribution → composeApp/build/dist/js/productionExecutable/
-WasmJS: ./gradlew :composeApp:wasmJsBrowserDistribution → composeApp/build/dist/wasmJs/productionExecutable/
+   - JS:
+     ```shell
+     ./gradlew :composeApp:jsBrowserDistribution → composeApp/build/dist/js/productionExecutable/
+     ```
+
+   - WasmJS:
+     ```shell
+     ./gradlew :composeApp:wasmJsBrowserDistribution → composeApp/build/dist/wasmJs/productionExecutable/
+     ```
 
 **Performance Tips:**
 - See [BUILD_OPTIMIZATIONS.md](./BUILD_OPTIMIZATIONS.md) for build performance improvements
