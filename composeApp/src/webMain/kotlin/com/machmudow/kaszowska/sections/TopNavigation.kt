@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -23,7 +24,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,7 +34,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.components.IlluminatedText
@@ -45,6 +49,9 @@ import com.machmudow.kaszowska.utils.LocalWindowSize
 import com.machmudow.kaszowska.utils.email.openWindow
 import com.machmudow.kaszowska.utils.isMobile
 import com.machmudow.kaszowska.utils.navHorizontalPadding
+import kaszowska.composeapp.generated.resources.Res
+import kaszowska.composeapp.generated.resources.ic_instagram
+import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -162,50 +169,119 @@ private fun DesktopNavigation(
     isScrolled: Boolean,
     onNavigate: (Section) -> Unit
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(32.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IlluminatedText(
-            text = Constants.FULL_NAME.uppercase(),
-            isScrolled = isScrolled,
+    val windowSize = LocalWindowSize.current
+    val useTwoLines = windowSize.width < 1200.dp
+
+    if (useTwoLines) {
+        // Two-line layout for smaller screens
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            onNavigate(Section.HERO)
+            FirstNameItem(
+                isScrolled = isScrolled,
+                onNavigate = onNavigate,
+            )
+
+            // Second row: Navigation items
+            NavigationItems(
+                isScrolled = isScrolled,
+                onNavigate = onNavigate,
+                spacing = 24.dp
+            )
         }
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        IlluminatedText(
-            text = "O MNIE",
-            isScrolled = isScrolled,
+    } else {
+        // Single-line layout for larger screens
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(32.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            onNavigate(Section.ABOUT)
-        }
+            FirstNameItem(
+                isScrolled = isScrolled,
+                onNavigate = onNavigate,
+            )
 
-        IlluminatedText(
-            text = "USŁUGI",
-            isScrolled = isScrolled,
-        ) {
-            onNavigate(Section.SERVICES)
-        }
+            Spacer(modifier = Modifier.weight(1f))
 
-        IlluminatedText(
-            text = "KONTAKT",
-            isScrolled = isScrolled,
-        ) {
-            onNavigate(Section.CONTACT)
-        }
-
-        IlluminatedText(
-            text = "INSTAGRAM",
-            isScrolled = isScrolled,
-        ) {
-            openWindow(
-                url = Constants.INSTAGRAM_URL,
+            NavigationItems(
+                isScrolled = isScrolled,
+                onNavigate = onNavigate,
+                spacing = 32.dp
             )
         }
     }
+}
+
+@Composable
+private fun FirstNameItem(
+    isScrolled: Boolean,
+    onNavigate: (Section) -> Unit,
+) {
+    IlluminatedText(
+        text = Constants.FULL_NAME.uppercase(),
+        isScrolled = isScrolled,
+    ) {
+        onNavigate(Section.HERO)
+    }
+}
+
+@Composable
+private fun NavigationItems(
+    isScrolled: Boolean,
+    onNavigate: (Section) -> Unit,
+    spacing: Dp
+) {
+    val windowSize = LocalWindowSize.current
+    val wrapLongItems = windowSize.width < 900.dp
+
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(spacing),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Section.entries
+            .drop(1) // drop Hero
+            .forEach { section ->
+                IlluminatedText(
+                    text = section.title.uppercase(),
+                    isScrolled = isScrolled,
+                    wrapWords = wrapLongItems,
+                ) {
+                    onNavigate(section)
+                }
+            }
+
+        InstagramIcon(isScrolled = isScrolled)
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+private fun InstagramIcon(isScrolled: Boolean) {
+    var isHovered by remember { mutableStateOf(false) }
+
+    val color = when {
+        isHovered -> KaszowskaColors.Gold
+        isScrolled -> KaszowskaColors.TextDark
+        else -> KaszowskaColors.White
+    }
+
+    Image(
+        painter = painterResource(Res.drawable.ic_instagram),
+        contentDescription = "Instagram",
+        modifier = Modifier
+            .size(20.dp)
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ) {
+                openWindow(url = Constants.INSTAGRAM_URL)
+            }
+            .onPointerEvent(PointerEventType.Enter) { isHovered = true }
+            .onPointerEvent(PointerEventType.Exit) { isHovered = false },
+        colorFilter = ColorFilter.tint(color)
+    )
 }
 
 @Composable
@@ -276,10 +352,12 @@ private fun NavigationDrawer(
                 Spacer(modifier = Modifier.height(40.dp))
 
                 // Navigation items
-                DrawerNavItem("STRONA GŁÓWNA") { onNavigate(Section.HERO) }
-                DrawerNavItem("O MNIE") { onNavigate(Section.ABOUT) }
-                DrawerNavItem("USŁUGI") { onNavigate(Section.SERVICES) }
-                DrawerNavItem("KONTAKT") { onNavigate(Section.CONTACT) }
+                Section.entries.forEach { section ->
+                    DrawerNavItem(
+                        text = section.title.uppercase(),
+                        onClick = { onNavigate(section) },
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(24.dp))
 

@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,6 +30,7 @@ fun IlluminatedText(
     text: String,
     fontSize: TextUnit = 13.sp,
     isScrolled: Boolean,
+    wrapWords: Boolean = false,
     onClick: () -> Unit
 ) {
     var isHovered by remember { mutableStateOf(false) }
@@ -51,6 +53,13 @@ fun IlluminatedText(
         else -> KaszowskaColors.White
     }
 
+    // If wrapWords is true and text has multiple words, replace spaces with newlines
+    val displayText = if (wrapWords && text.contains(" ")) {
+        text.replace(" ", "\n")
+    } else {
+        text
+    }
+
     Text(
         modifier = Modifier
             .scale(scale)
@@ -61,10 +70,11 @@ fun IlluminatedText(
             .padding(vertical = 8.dp)
             .onPointerEvent(PointerEventType.Enter) { isHovered = true }
             .onPointerEvent(PointerEventType.Exit) { isHovered = false },
-        text = text,
+        text = displayText,
         fontSize = fontSize,
         fontWeight = FontWeight.Normal,
         color = color,
         letterSpacing = 1.5.sp,
+        textAlign = TextAlign.Center,
     )
 }
