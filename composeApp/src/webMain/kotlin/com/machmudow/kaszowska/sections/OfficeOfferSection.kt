@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -64,6 +65,9 @@ import com.machmudow.kaszowska.utils.isMobile
 import com.machmudow.kaszowska.utils.loadJsonFromResources
 import com.machmudow.kaszowska.utils.logMessage
 import com.machmudow.kaszowska.utils.verticalSectionPadding
+import kaszowska.composeapp.generated.resources.Res
+import kaszowska.composeapp.generated.resources.ic_arrow_down
+import org.jetbrains.compose.resources.painterResource
 
 // Shared state holder for office offer data
 class OfficeOfferState {
@@ -657,11 +661,13 @@ private fun OfficeOfferCard(
                     letterSpacing = 0.5.sp
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "▼",
-                    fontSize = if (isMobile) 8.sp else 9.sp,
-                    color = if (isExpanded) KaszowskaColors.Gold else KaszowskaColors.TextDark,
-                    modifier = Modifier.rotate(expandIconRotation)
+                Icon(
+                    modifier = Modifier
+                        .size(if (isMobile) 16.dp else 18.dp)
+                        .rotate(expandIconRotation),
+                    painter = painterResource(Res.drawable.ic_arrow_down),
+                    contentDescription = null,
+                    tint = if (isExpanded) KaszowskaColors.Gold else KaszowskaColors.TextDark
                 )
             }
         }

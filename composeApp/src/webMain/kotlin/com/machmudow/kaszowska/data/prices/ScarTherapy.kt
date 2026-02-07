@@ -72,7 +72,7 @@ private val priceList = listOf(
     PriceItem(
         name = "Stymulator tkankowy na bliznę",
         description = "",
-        price = "WYCENA INDYWIDUALNA"
+        price = "WYCENA\nINDYWIDUALNA"
     )
 )
 

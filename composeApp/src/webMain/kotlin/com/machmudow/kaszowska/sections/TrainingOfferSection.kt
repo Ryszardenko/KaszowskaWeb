@@ -56,6 +56,8 @@ import com.machmudow.kaszowska.utils.isMobile
 import com.machmudow.kaszowska.utils.verticalSectionPadding
 import kaszowska.composeapp.generated.resources.Res
 import kaszowska.composeapp.generated.resources.ic_check
+import kaszowska.composeapp.generated.resources.ic_group
+import kaszowska.composeapp.generated.resources.ic_location
 import org.jetbrains.compose.resources.painterResource
 
 // Part 1: Header with title and hero subsection
@@ -146,11 +148,7 @@ fun TrainingOfferHeaderSection(state: TrainingOfferState) {
                         fontWeight = FontWeight.Normal,
                         color = KaszowskaColors.TextLight
                     )
-                    Text(
-                        text = " • ",
-                        fontSize = if (windowSize.isMobile) 12.sp else 14.sp,
-                        color = KaszowskaColors.Gold
-                    )
+                    DotSeparator(isMobile = windowSize.isMobile)
                     Text(
                         text = meta.method,
                         fontSize = if (windowSize.isMobile) 12.sp else 14.sp,
@@ -1021,18 +1019,28 @@ private fun PricingSection(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Icon(
+                modifier = Modifier.size(if (isMobile) 14.dp else 16.dp),
+                painter = painterResource(Res.drawable.ic_location),
+                contentDescription = null,
+                tint = KaszowskaColors.TextLight
+            )
+            Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = "📍 $location",
+                text = location,
                 fontSize = if (isMobile) 12.sp else 14.sp,
                 color = KaszowskaColors.TextLight
             )
-            Text(
-                text = " • ",
-                fontSize = if (isMobile) 12.sp else 14.sp,
-                color = KaszowskaColors.Gold
+            DotSeparator(isMobile = isMobile)
+            Icon(
+                modifier = Modifier.size(if (isMobile) 14.dp else 16.dp),
+                painter = painterResource(Res.drawable.ic_group),
+                contentDescription = null,
+                tint = KaszowskaColors.TextLight
             )
+            Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = "👥 $groupSize",
+                text = groupSize,
                 fontSize = if (isMobile) 12.sp else 14.sp,
                 color = KaszowskaColors.TextLight
             )
@@ -1245,4 +1253,18 @@ private fun PricingCard(
             }
         }
     }
+}
+
+@Composable
+private fun DotSeparator(
+    modifier: Modifier = Modifier,
+    isMobile: Boolean
+) {
+    Box(
+        modifier = modifier
+            .padding(horizontal = 8.dp)
+            .size(if (isMobile) 3.dp else 4.dp)
+            .clip(CircleShape)
+            .background(KaszowskaColors.Gold)
+    )
 }

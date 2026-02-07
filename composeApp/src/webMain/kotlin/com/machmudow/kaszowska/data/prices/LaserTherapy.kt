@@ -37,7 +37,7 @@ private val priceList = listOf(
     PriceItem(
         name = "Laser frakcyjny CO2 blizny pozostałe",
         description = "",
-        price = "WYCENA INDYWIDUALNA"
+        price = "WYCENA\nINDYWIDUALNA"
     ),
     PriceItem(
         name = "Ampułka",

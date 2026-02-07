@@ -32,6 +32,7 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.model.PriceCategory
@@ -95,7 +96,7 @@ fun PriceCategoryCard(
             .border(
                 width = 1.dp,
                 color = if (isHovered) KaszowskaColors.Gold.copy(alpha = pulseAlpha)
-                       else KaszowskaColors.SoftGray.copy(alpha = 0.3f)
+                else KaszowskaColors.SoftGray.copy(alpha = 0.3f)
             )
             .onPointerEvent(PointerEventType.Enter) { isHovered = true }
             .onPointerEvent(PointerEventType.Exit) { isHovered = false }
@@ -201,41 +202,40 @@ private fun PriceItemRow(
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            // Service name with dot indicator
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(1f, fill = false)
-            ) {
-                // Small dot
-                Box(
-                    modifier = Modifier
-                        .size(if (isMobile) 4.dp else 5.dp)
-                        .background(
-                            if (isHovered) KaszowskaColors.Gold
-                            else KaszowskaColors.Gold.copy(alpha = 0.5f)
-                        )
-                )
+            // Small dot
+            Box(
+                modifier = Modifier
+                    .size(if (isMobile) 4.dp else 5.dp)
+                    .background(
+                        if (isHovered) KaszowskaColors.Gold
+                        else KaszowskaColors.Gold.copy(alpha = 0.5f)
+                    )
+            )
 
-                Spacer(modifier = Modifier.width(if (isMobile) 10.dp else 12.dp))
+            Spacer(modifier = Modifier.width(if (isMobile) 10.dp else 12.dp))
 
-                // Name (bold and bigger)
-                Text(
-                    text = item.name,
-                    fontSize = if (isMobile) 14.sp else 15.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = KaszowskaColors.TextDark,
-                    lineHeight = if (isMobile) 18.sp else 20.sp
-                )
-            }
+            // Name (bold and bigger) - constrained width
+            Text(
+                modifier = Modifier.weight(
+                    weight = 0.6f,
+                    fill = false,
+                ),
+                text = item.name,
+                fontSize = if (isMobile) 14.sp else 15.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = KaszowskaColors.TextDark,
+                lineHeight = if (isMobile) 18.sp else 20.sp,
+                softWrap = false,
+                overflow = TextOverflow.Ellipsis,
+            )
 
-            // Dotted line separator
+            // Dotted line separator - fills remaining space
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(horizontal = if (isMobile) 8.dp else 12.dp)
+                    .padding(horizontal = if (isMobile) 4.dp else 8.dp)
                     .height(1.dp)
                     .background(
                         Brush.horizontalGradient(
