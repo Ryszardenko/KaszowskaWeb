@@ -41,6 +41,7 @@ import com.machmudow.kaszowska.sections.ContactSection
 import com.machmudow.kaszowska.sections.Footer
 import com.machmudow.kaszowska.sections.HeroSection
 import com.machmudow.kaszowska.sections.ImageCarousel
+import com.machmudow.kaszowska.sections.OfficeOfferSection
 import com.machmudow.kaszowska.sections.PricesSection
 import com.machmudow.kaszowska.sections.ServicesSection
 import com.machmudow.kaszowska.sections.TopNavigation
@@ -108,6 +109,7 @@ fun App() {
                             showModalImages = { modalImages.addAll(it) },
                         )
                     }
+                    item { OfficeOfferSection() }
                     item { PricesSection() }
                     item {
                         ImageCarousel(

@@ -1,12 +1,21 @@
 package com.machmudow.kaszowska.sections
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -15,20 +24,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.utils.LocalWindowSize
 import com.machmudow.kaszowska.utils.isMobile
 import kaszowska.composeapp.generated.resources.Res
 import kaszowska.composeapp.generated.resources.logo_main
 import kaszowska.composeapp.generated.resources.magda_side
 import org.jetbrains.compose.resources.painterResource
-import kotlin.math.sin
-import kotlin.math.cos
 import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
 
 @Composable
 fun HeroSection() {
@@ -149,65 +155,6 @@ private fun AnimatedBackgroundParticles(animationProgress: Float) {
                 color = Color.White.copy(alpha = 0.03f),
                 radius = 8f,
                 center = Offset(x, y)
-            )
-        }
-    }
-}
-
-@Composable
-private fun ScrollIndicator() {
-    val infiniteTransition = rememberInfiniteTransition()
-
-    val bounce by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 15f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1500, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        )
-    )
-
-    val alpha by infiniteTransition.animateFloat(
-        initialValue = 0.3f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1500, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        )
-    )
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.graphicsLayer {
-            translationY = bounce
-        }
-    ) {
-        Text(
-            text = "SCROLL",
-            fontSize = 10.sp,
-            fontWeight = FontWeight.Light,
-            color = KaszowskaColors.White.copy(alpha = alpha),
-            letterSpacing = 2.sp
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Animated arrow
-        Canvas(
-            modifier = Modifier
-                .size(20.dp, 30.dp)
-                .graphicsLayer { this.alpha = alpha }
-        ) {
-            val path = androidx.compose.ui.graphics.Path().apply {
-                moveTo(size.width / 2, size.height)
-                lineTo(0f, size.height * 0.4f)
-                moveTo(size.width / 2, size.height)
-                lineTo(size.width, size.height * 0.4f)
-            }
-            drawPath(
-                path = path,
-                color = Color.White,
-                style = androidx.compose.ui.graphics.drawscope.Stroke(width = 2f)
             )
         }
     }
