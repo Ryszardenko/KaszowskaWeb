@@ -62,6 +62,7 @@ import com.machmudow.kaszowska.utils.LocalWindowSize
 import com.machmudow.kaszowska.utils.horizontalPadding
 import com.machmudow.kaszowska.utils.isMobile
 import com.machmudow.kaszowska.utils.loadJsonFromResources
+import com.machmudow.kaszowska.utils.logMessage
 import com.machmudow.kaszowska.utils.verticalSectionPadding
 
 // Shared state holder for office offer data
@@ -80,7 +81,7 @@ fun rememberOfficeOfferState(): OfficeOfferState {
             try {
                 state.officeOffer = loadJsonFromResources<OfficeOffer>("office_offer.json")
             } catch (e: Exception) {
-                console.log("Error loading office_offer.json: ${e.message}")
+                logMessage("Error loading office_offer.json: ${e.message}")
             }
             state.isVisible = true
             state.isLoaded = true

@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.machmudow.kaszowska.model.TrainingOffer
 import com.machmudow.kaszowska.utils.loadJsonFromResources
+import com.machmudow.kaszowska.utils.logMessage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,7 +41,7 @@ fun rememberTrainingOfferStateHolder(): TrainingOfferStateHolder {
                     )
                 }
             } catch (e: Exception) {
-                console.log("Error loading training_offer.json: ${e.message}")
+                logMessage("Error loading training_offer.json: ${e.message}")
                 TrainingOfferStateHolder.updateState {
                     it.copy(isVisible = true, isLoaded = true)
                 }
