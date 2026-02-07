@@ -16,6 +16,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.machmudow.kaszowska.AnimationStateHolder
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.utils.Constants
 import com.machmudow.kaszowska.utils.LocalWindowSize
@@ -29,29 +30,28 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun AboutSection() {
     val windowSize = LocalWindowSize.current
-    var isVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        isVisible = true
+        AnimationStateHolder.aboutSectionVisible = true
     }
 
     val imageAlpha by animateFloatAsState(
-        targetValue = if (isVisible) 1f else 0f,
+        targetValue = if (AnimationStateHolder.aboutSectionVisible) 1f else 0f,
         animationSpec = tween(1200, easing = FastOutSlowInEasing)
     )
 
     val imageOffset by animateFloatAsState(
-        targetValue = if (isVisible) 0f else -100f,
+        targetValue = if (AnimationStateHolder.aboutSectionVisible) 0f else -100f,
         animationSpec = tween(1200, easing = FastOutSlowInEasing)
     )
 
     val contentAlpha by animateFloatAsState(
-        targetValue = if (isVisible) 1f else 0f,
+        targetValue = if (AnimationStateHolder.aboutSectionVisible) 1f else 0f,
         animationSpec = tween(1200, delayMillis = 300, easing = FastOutSlowInEasing)
     )
 
     val contentOffset by animateFloatAsState(
-        targetValue = if (isVisible) 0f else 100f,
+        targetValue = if (AnimationStateHolder.aboutSectionVisible) 0f else 100f,
         animationSpec = tween(1200, delayMillis = 300, easing = FastOutSlowInEasing)
     )
 

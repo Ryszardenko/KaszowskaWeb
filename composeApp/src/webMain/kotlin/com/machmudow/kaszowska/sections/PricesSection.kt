@@ -23,15 +23,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.machmudow.kaszowska.AnimationStateHolder
 import com.machmudow.kaszowska.components.PriceCategoryCard
 import com.machmudow.kaszowska.data.prices.priceCategories
 import com.machmudow.kaszowska.theme.KaszowskaColors
@@ -44,19 +43,17 @@ import com.machmudow.kaszowska.utils.verticalSectionPadding
 fun PricesSection() {
     val windowSize = LocalWindowSize.current
 
-    var isVisible by remember { mutableStateOf(false) }
-
     LaunchedEffect(Unit) {
-        isVisible = true
+        AnimationStateHolder.pricesSectionVisible = true
     }
 
     val titleAlpha by animateFloatAsState(
-        targetValue = if (isVisible) 1f else 0f,
+        targetValue = if (AnimationStateHolder.pricesSectionVisible) 1f else 0f,
         animationSpec = tween(1000, easing = FastOutSlowInEasing)
     )
 
     val titleOffset by animateFloatAsState(
-        targetValue = if (isVisible) 0f else 50f,
+        targetValue = if (AnimationStateHolder.pricesSectionVisible) 0f else 50f,
         animationSpec = tween(1000, easing = FastOutSlowInEasing)
     )
 
@@ -117,7 +114,7 @@ fun PricesSection() {
                     PriceCategoryCard(
                         category = category,
                         modifier = Modifier.width(offerCardWidth),
-                        isVisible = isVisible,
+                        isVisible = AnimationStateHolder.pricesSectionVisible,
                         delay = 500 + index * 150,
                         isMobile = windowSize.isMobile
                     )

@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.machmudow.kaszowska.AnimationStateHolder
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.utils.Constants
 import com.machmudow.kaszowska.utils.LocalWindowSize
@@ -37,29 +38,27 @@ fun ContactSection() {
     val controller = remember { SendEmailController() }
     val windowSize = LocalWindowSize.current
 
-    var isVisible by remember { mutableStateOf(false) }
-
     LaunchedEffect(Unit) {
-        isVisible = true
+        AnimationStateHolder.contactSectionVisible = true
     }
 
     val leftAlpha by animateFloatAsState(
-        targetValue = if (isVisible) 1f else 0f,
+        targetValue = if (AnimationStateHolder.contactSectionVisible) 1f else 0f,
         animationSpec = tween(1000, easing = FastOutSlowInEasing)
     )
 
     val leftOffset by animateFloatAsState(
-        targetValue = if (isVisible) 0f else -100f,
+        targetValue = if (AnimationStateHolder.contactSectionVisible) 0f else -100f,
         animationSpec = tween(1000, easing = FastOutSlowInEasing)
     )
 
     val rightAlpha by animateFloatAsState(
-        targetValue = if (isVisible) 1f else 0f,
+        targetValue = if (AnimationStateHolder.contactSectionVisible) 1f else 0f,
         animationSpec = tween(1000, delayMillis = 300, easing = FastOutSlowInEasing)
     )
 
     val rightOffset by animateFloatAsState(
-        targetValue = if (isVisible) 0f else 100f,
+        targetValue = if (AnimationStateHolder.contactSectionVisible) 0f else 100f,
         animationSpec = tween(1000, delayMillis = 300, easing = FastOutSlowInEasing)
     )
 
@@ -85,7 +84,7 @@ fun ContactSection() {
                             alpha = leftAlpha
                             translationY = leftOffset
                         },
-                    isVisible = isVisible,
+                    isVisible = AnimationStateHolder.contactSectionVisible,
                     isMobile = true
                 )
 
@@ -116,7 +115,7 @@ fun ContactSection() {
                             alpha = leftAlpha
                             translationX = leftOffset
                         },
-                    isVisible = isVisible,
+                    isVisible = AnimationStateHolder.contactSectionVisible,
                     isMobile = false
                 )
 

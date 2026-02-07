@@ -41,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.machmudow.kaszowska.AnimationStateHolder
 import com.machmudow.kaszowska.data.groupedServices
 import com.machmudow.kaszowska.model.Service
 import com.machmudow.kaszowska.theme.KaszowskaColors
@@ -56,19 +57,17 @@ fun ServicesSection(
 ) {
     val windowSize = LocalWindowSize.current
 
-    var isVisible by remember { mutableStateOf(false) }
-
     LaunchedEffect(Unit) {
-        isVisible = true
+        AnimationStateHolder.servicesSectionVisible = true
     }
 
     val titleAlpha by animateFloatAsState(
-        targetValue = if (isVisible) 1f else 0f,
+        targetValue = if (AnimationStateHolder.servicesSectionVisible) 1f else 0f,
         animationSpec = tween(1000, easing = FastOutSlowInEasing)
     )
 
     val titleOffset by animateFloatAsState(
-        targetValue = if (isVisible) 0f else 50f,
+        targetValue = if (AnimationStateHolder.servicesSectionVisible) 0f else 50f,
         animationSpec = tween(1000, easing = FastOutSlowInEasing)
     )
 
@@ -129,7 +128,7 @@ fun ServicesSection(
                     ServiceCard(
                         service = service,
                         modifier = Modifier.width(cardWidth),
-                        isVisible = isVisible,
+                        isVisible = AnimationStateHolder.servicesSectionVisible,
                         delay = 300 + index * 150,
                         isMobile = windowSize.isMobile
                     )

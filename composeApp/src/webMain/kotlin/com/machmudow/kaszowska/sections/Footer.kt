@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.machmudow.kaszowska.AnimationStateHolder
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.utils.Constants
 import com.machmudow.kaszowska.utils.LocalWindowSize
@@ -27,11 +28,12 @@ import com.machmudow.kaszowska.utils.email.openWindow
 @Composable
 fun Footer() {
     val windowSize = LocalWindowSize.current
-    var isVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        isVisible = true
+        AnimationStateHolder.footerVisible = true
     }
+
+    val isVisible = AnimationStateHolder.footerVisible
 
     val alpha by animateFloatAsState(
         targetValue = if (isVisible) 1f else 0f,
