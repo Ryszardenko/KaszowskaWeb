@@ -67,12 +67,16 @@ import kotlinx.coroutines.await
 import kotlinx.serialization.json.Json
 import org.w3c.fetch.Response
 
-@Composable
-fun OfficeOfferSection() {
-    val windowSize = LocalWindowSize.current
+// Shared state holder for office offer data
+class OfficeOfferState {
+    var officeOffer by mutableStateOf<OfficeOffer?>(null)
+    var isVisible by mutableStateOf(false)
+    var isLoaded by mutableStateOf(false)
+}
 
-    var isVisible by remember { mutableStateOf(false) }
-    var officeOffer by remember { mutableStateOf<OfficeOffer?>(null) }
+@Composable
+fun rememberOfficeOfferState(): OfficeOfferState {
+    val state = remember { OfficeOfferState() }
 
     val json = remember {
         Json {
@@ -82,17 +86,30 @@ fun OfficeOfferSection() {
     }
 
     LaunchedEffect(Unit) {
-        try {
-            val response =
-                window.fetch("composeResources/kaszowska.composeapp.generated.resources/files/office_offer.json")
-                    .await<Response>()
-            val jsonString = response.text().await<String>()
-            officeOffer = json.decodeFromString<OfficeOffer>(jsonString)
-        } catch (e: Exception) {
-            console.log("Error loading office_offer.json: ${e.message}")
+        if (!state.isLoaded) {
+            try {
+                val response =
+                    window.fetch("composeResources/kaszowska.composeapp.generated.resources/files/office_offer.json")
+                        .await<Response>()
+                val jsonString = response.text().await<String>()
+                state.officeOffer = json.decodeFromString<OfficeOffer>(jsonString)
+            } catch (e: Exception) {
+                console.log("Error loading office_offer.json: ${e.message}")
+            }
+            state.isVisible = true
+            state.isLoaded = true
         }
-        isVisible = true
     }
+
+    return state
+}
+
+// Part 1: Header section with title
+@Composable
+fun OfficeOfferHeaderSection(state: OfficeOfferState) {
+    val windowSize = LocalWindowSize.current
+    val officeOffer = state.officeOffer
+    val isVisible = state.isVisible
 
     val titleAlpha by animateFloatAsState(
         targetValue = if (isVisible) 1f else 0f,
@@ -104,13 +121,6 @@ fun OfficeOfferSection() {
         animationSpec = tween(1000, easing = FastOutSlowInEasing)
     )
 
-    val scrollState = rememberScrollState()
-
-    val horizontalPadding = windowSize.horizontalPadding
-    // Wider cards
-    val cardWidth = if (windowSize.isMobile) 340.dp else 480.dp
-    val cardSpacing = if (windowSize.isMobile) 20.dp else 32.dp
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -119,11 +129,14 @@ fun OfficeOfferSection() {
                     colors = listOf(
                         KaszowskaColors.White,
                         KaszowskaColors.SoftGray.copy(alpha = 0.3f),
-                        KaszowskaColors.White
+                        KaszowskaColors.SoftGray.copy(alpha = 0.3f)
                     )
                 )
             )
-            .padding(vertical = windowSize.verticalSectionPadding)
+            .padding(
+                top = windowSize.verticalSectionPadding,
+                bottom = if (windowSize.isMobile) 24.dp else 40.dp
+            )
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -216,9 +229,41 @@ fun OfficeOfferSection() {
                     }
                 )
             }
+        }
+    }
+}
 
-            Spacer(modifier = Modifier.height(if (windowSize.isMobile) 32.dp else 60.dp))
+// Part 2: Cards section with horizontal scroll
+@Composable
+fun OfficeOfferCardsSection(state: OfficeOfferState) {
+    val windowSize = LocalWindowSize.current
+    val officeOffer = state.officeOffer
+    val isVisible = state.isVisible
 
+    val scrollState = rememberScrollState()
+
+    val horizontalPadding = windowSize.horizontalPadding
+    val cardWidth = if (windowSize.isMobile) 340.dp else 480.dp
+    val cardSpacing = if (windowSize.isMobile) 20.dp else 32.dp
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        KaszowskaColors.SoftGray.copy(alpha = 0.3f),
+                        KaszowskaColors.SoftGray.copy(alpha = 0.3f),
+                        KaszowskaColors.White
+                    )
+                )
+            )
+            .padding(bottom = windowSize.verticalSectionPadding)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             // Horizontally scrollable cards
             Row(
                 modifier = Modifier
@@ -272,7 +317,6 @@ fun OfficeOfferSection() {
                                 val arrowColor = KaszowskaColors.TextLight.copy(alpha = 0.6f)
                                 val strokeWidth = if (size.width < 40f) 1.5f else 2f
                                 val path = Path().apply {
-                                    // Draw left-pointing chevron
                                     moveTo(size.width * 0.7f, size.height * 0.2f)
                                     lineTo(size.width * 0.3f, size.height * 0.5f)
                                     lineTo(size.width * 0.7f, size.height * 0.8f)
@@ -307,7 +351,6 @@ fun OfficeOfferSection() {
                                 val arrowColor = KaszowskaColors.TextLight.copy(alpha = 0.6f)
                                 val strokeWidth = if (size.width < 40f) 1.5f else 2f
                                 val path = Path().apply {
-                                    // Draw right-pointing chevron
                                     moveTo(size.width * 0.3f, size.height * 0.2f)
                                     lineTo(size.width * 0.7f, size.height * 0.5f)
                                     lineTo(size.width * 0.3f, size.height * 0.8f)
@@ -375,6 +418,18 @@ fun OfficeOfferSection() {
                 }
             }
         }
+    }
+}
+
+// Keep the original for backwards compatibility
+@Deprecated("Use split sections instead: OfficeOfferHeaderSection, OfficeOfferCardsSection")
+@Composable
+fun OfficeOfferSection() {
+    val state = rememberOfficeOfferState()
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        OfficeOfferHeaderSection(state)
+        OfficeOfferCardsSection(state)
     }
 }
 

@@ -41,11 +41,18 @@ import com.machmudow.kaszowska.sections.ContactSection
 import com.machmudow.kaszowska.sections.Footer
 import com.machmudow.kaszowska.sections.HeroSection
 import com.machmudow.kaszowska.sections.ImageCarousel
-import com.machmudow.kaszowska.sections.OfficeOfferSection
+import com.machmudow.kaszowska.sections.OfficeOfferCardsSection
+import com.machmudow.kaszowska.sections.OfficeOfferHeaderSection
 import com.machmudow.kaszowska.sections.PricesSection
 import com.machmudow.kaszowska.sections.ServicesSection
 import com.machmudow.kaszowska.sections.TopNavigation
-import com.machmudow.kaszowska.sections.TrainingOfferSection
+import com.machmudow.kaszowska.sections.TrainingOfferCurriculumSection
+import com.machmudow.kaszowska.sections.TrainingOfferHeaderSection
+import com.machmudow.kaszowska.sections.TrainingOfferPackageSection
+import com.machmudow.kaszowska.sections.TrainingOfferPricingSection
+import com.machmudow.kaszowska.sections.TrainingOfferTrainerSection
+import com.machmudow.kaszowska.sections.rememberOfficeOfferState
+import com.machmudow.kaszowska.sections.rememberTrainingOfferState
 import com.machmudow.kaszowska.sections.model.Section
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.theme.KaszowskaTheme
@@ -94,6 +101,10 @@ fun App() {
         ResponsiveLayout(modifier = Modifier.fillMaxSize()) {
             val windowSize = LocalWindowSize.current
 
+            // Shared state holders
+            val officeOfferState = rememberOfficeOfferState()
+            val trainingOfferState = rememberTrainingOfferState()
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -103,17 +114,22 @@ fun App() {
                     modifier = Modifier.fillMaxSize(),
                     state = listState
                 ) {
-                    item { HeroSection() }
-                    item { AboutSection() }
-                    item {
+                    item { HeroSection() }                                      // 0
+                    item { AboutSection() }                                     // 1
+                    item {                                                      // 2
                         ServicesSection(
                             showModalImages = { modalImages.addAll(it) },
                         )
                     }
-                    item { OfficeOfferSection() }
-                    item { TrainingOfferSection() }
-                    item { PricesSection() }
-                    item {
+                    item { OfficeOfferHeaderSection(officeOfferState) }         // 3 - OFFICE_OFER
+                    item { OfficeOfferCardsSection(officeOfferState) }          // 4
+                    item { TrainingOfferHeaderSection(trainingOfferState) }     // 5 - TRAINING_OFER
+                    item { TrainingOfferTrainerSection(trainingOfferState) }    // 6
+                    item { TrainingOfferCurriculumSection(trainingOfferState) } // 7
+                    item { TrainingOfferPackageSection(trainingOfferState) }    // 8
+                    item { TrainingOfferPricingSection(trainingOfferState) }    // 9
+                    item { PricesSection() }                                    // 10 - PRICE_LIST
+                    item {                                                      // 11
                         ImageCarousel(
                             modifier = Modifier.padding(top = if (windowSize.isMobile) 20.dp else 40.dp),
                             images = officeImages + workImages,
@@ -123,8 +139,8 @@ fun App() {
                             }
                         )
                     }
-                    item { ContactSection() }
-                    item { Footer() }
+                    item { ContactSection() }                                   // 12 - CONTACT
+                    item { Footer() }                                           // 13
                 }
 
                 // Fixed navigation overlay

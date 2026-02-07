@@ -64,12 +64,16 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.painterResource
 import org.w3c.fetch.Response
 
-@Composable
-fun TrainingOfferSection() {
-    val windowSize = LocalWindowSize.current
+// Shared state holder for training offer data
+class TrainingOfferState {
+    var trainingOffer by mutableStateOf<TrainingOffer?>(null)
+    var isVisible by mutableStateOf(false)
+    var isLoaded by mutableStateOf(false)
+}
 
-    var isVisible by remember { mutableStateOf(false) }
-    var trainingOffer by remember { mutableStateOf<TrainingOffer?>(null) }
+@Composable
+fun rememberTrainingOfferState(): TrainingOfferState {
+    val state = remember { TrainingOfferState() }
 
     val json = remember {
         Json {
@@ -79,17 +83,30 @@ fun TrainingOfferSection() {
     }
 
     LaunchedEffect(Unit) {
-        try {
-            val response =
-                window.fetch("composeResources/kaszowska.composeapp.generated.resources/files/training_offer.json")
-                    .await<Response>()
-            val jsonString = response.text().await<String>()
-            trainingOffer = json.decodeFromString<TrainingOffer>(jsonString)
-        } catch (e: Exception) {
-            console.log("Error loading training_offer.json: ${e.message}")
+        if (!state.isLoaded) {
+            try {
+                val response =
+                    window.fetch("composeResources/kaszowska.composeapp.generated.resources/files/training_offer.json")
+                        .await<Response>()
+                val jsonString = response.text().await<String>()
+                state.trainingOffer = json.decodeFromString<TrainingOffer>(jsonString)
+            } catch (e: Exception) {
+                console.log("Error loading training_offer.json: ${e.message}")
+            }
+            state.isVisible = true
+            state.isLoaded = true
         }
-        isVisible = true
     }
+
+    return state
+}
+
+// Part 1: Header with title and hero subsection
+@Composable
+fun TrainingOfferHeaderSection(state: TrainingOfferState) {
+    val windowSize = LocalWindowSize.current
+    val trainingOffer = state.trainingOffer
+    val isVisible = state.isVisible
 
     val titleAlpha by animateFloatAsState(
         targetValue = if (isVisible) 1f else 0f,
@@ -106,11 +123,14 @@ fun TrainingOfferSection() {
                     colors = listOf(
                         KaszowskaColors.Cream,
                         KaszowskaColors.SoftGray.copy(alpha = 0.5f),
-                        KaszowskaColors.White
+                        KaszowskaColors.Cream
                     )
                 )
             )
-            .padding(vertical = windowSize.verticalSectionPadding)
+            .padding(
+                top = windowSize.verticalSectionPadding,
+                bottom = if (windowSize.isMobile) 24.dp else 40.dp
+            )
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -196,62 +216,148 @@ fun TrainingOfferSection() {
                     horizontalPadding = horizontalPadding
                 )
             }
-
-            Spacer(modifier = Modifier.height(if (windowSize.isMobile) 48.dp else 80.dp))
-
-            // Trainer Bio Section
-            trainingOffer?.trainerBio?.let { bio ->
-                TrainerBioSection(
-                    name = bio.name,
-                    role = bio.role,
-                    description = bio.description,
-                    stats = bio.stats,
-                    isVisible = isVisible,
-                    isMobile = windowSize.isMobile,
-                    horizontalPadding = horizontalPadding
-                )
-            }
-
-            Spacer(modifier = Modifier.height(if (windowSize.isMobile) 48.dp else 80.dp))
-
-            // Curriculum Section
-            trainingOffer?.curriculum?.let { curriculum ->
-                CurriculumSection(
-                    title = curriculum.title,
-                    modules = curriculum.modules,
-                    isVisible = isVisible,
-                    isMobile = windowSize.isMobile,
-                    horizontalPadding = horizontalPadding
-                )
-            }
-
-            Spacer(modifier = Modifier.height(if (windowSize.isMobile) 48.dp else 80.dp))
-
-            // Package Includes Section
-            trainingOffer?.packageIncludes?.let { packageIncludes ->
-                PackageIncludesSection(
-                    title = packageIncludes.title,
-                    items = packageIncludes.items,
-                    isVisible = isVisible,
-                    isMobile = windowSize.isMobile,
-                    horizontalPadding = horizontalPadding
-                )
-            }
-
-            Spacer(modifier = Modifier.height(if (windowSize.isMobile) 48.dp else 80.dp))
-
-            // Pricing Section
-            trainingOffer?.pricingOptions?.let { pricing ->
-                PricingSection(
-                    location = pricing.location,
-                    groupSize = pricing.groupSize,
-                    variants = pricing.variants,
-                    isVisible = isVisible,
-                    isMobile = windowSize.isMobile,
-                    horizontalPadding = horizontalPadding
-                )
-            }
         }
+    }
+}
+
+// Part 2: Trainer Bio Section
+@Composable
+fun TrainingOfferTrainerSection(state: TrainingOfferState) {
+    val windowSize = LocalWindowSize.current
+    val trainingOffer = state.trainingOffer
+    val isVisible = state.isVisible
+    val horizontalPadding = windowSize.horizontalPadding
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(KaszowskaColors.Cream)
+            .padding(vertical = if (windowSize.isMobile) 24.dp else 40.dp)
+    ) {
+        trainingOffer?.trainerBio?.let { bio ->
+            TrainerBioSection(
+                name = bio.name,
+                role = bio.role,
+                description = bio.description,
+                stats = bio.stats,
+                isVisible = isVisible,
+                isMobile = windowSize.isMobile,
+                horizontalPadding = horizontalPadding
+            )
+        }
+    }
+}
+
+// Part 3: Curriculum Section
+@Composable
+fun TrainingOfferCurriculumSection(state: TrainingOfferState) {
+    val windowSize = LocalWindowSize.current
+    val trainingOffer = state.trainingOffer
+    val isVisible = state.isVisible
+    val horizontalPadding = windowSize.horizontalPadding
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        KaszowskaColors.Cream,
+                        KaszowskaColors.SoftGray.copy(alpha = 0.5f),
+                        KaszowskaColors.Cream
+                    )
+                )
+            )
+            .padding(vertical = if (windowSize.isMobile) 24.dp else 40.dp)
+    ) {
+        trainingOffer?.curriculum?.let { curriculum ->
+            CurriculumSection(
+                title = curriculum.title,
+                modules = curriculum.modules,
+                isVisible = isVisible,
+                isMobile = windowSize.isMobile,
+                horizontalPadding = horizontalPadding
+            )
+        }
+    }
+}
+
+// Part 4: Package Includes Section
+@Composable
+fun TrainingOfferPackageSection(state: TrainingOfferState) {
+    val windowSize = LocalWindowSize.current
+    val trainingOffer = state.trainingOffer
+    val isVisible = state.isVisible
+    val horizontalPadding = windowSize.horizontalPadding
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(KaszowskaColors.Cream)
+            .padding(vertical = if (windowSize.isMobile) 24.dp else 40.dp)
+    ) {
+        trainingOffer?.packageIncludes?.let { packageIncludes ->
+            PackageIncludesSection(
+                title = packageIncludes.title,
+                items = packageIncludes.items,
+                isVisible = isVisible,
+                isMobile = windowSize.isMobile,
+                horizontalPadding = horizontalPadding
+            )
+        }
+    }
+}
+
+// Part 5: Pricing Section
+@Composable
+fun TrainingOfferPricingSection(state: TrainingOfferState) {
+    val windowSize = LocalWindowSize.current
+    val trainingOffer = state.trainingOffer
+    val isVisible = state.isVisible
+    val horizontalPadding = windowSize.horizontalPadding
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        KaszowskaColors.Cream,
+                        KaszowskaColors.SoftGray.copy(alpha = 0.5f),
+                        KaszowskaColors.White
+                    )
+                )
+            )
+            .padding(
+                top = if (windowSize.isMobile) 24.dp else 40.dp,
+                bottom = windowSize.verticalSectionPadding
+            )
+    ) {
+        trainingOffer?.pricingOptions?.let { pricing ->
+            PricingSection(
+                location = pricing.location,
+                groupSize = pricing.groupSize,
+                variants = pricing.variants,
+                isVisible = isVisible,
+                isMobile = windowSize.isMobile,
+                horizontalPadding = horizontalPadding
+            )
+        }
+    }
+}
+
+// Keep the original for backwards compatibility but mark as deprecated
+@Deprecated("Use split sections instead: TrainingOfferHeaderSection, TrainingOfferTrainerSection, TrainingOfferCurriculumSection, TrainingOfferPackageSection, TrainingOfferPricingSection")
+@Composable
+fun TrainingOfferSection() {
+    val state = rememberTrainingOfferState()
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        TrainingOfferHeaderSection(state)
+        TrainingOfferTrainerSection(state)
+        TrainingOfferCurriculumSection(state)
+        TrainingOfferPackageSection(state)
+        TrainingOfferPricingSection(state)
     }
 }
 
