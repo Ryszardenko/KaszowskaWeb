@@ -36,24 +36,14 @@ import com.machmudow.kaszowska.utils.LocalWindowSize
 import com.machmudow.kaszowska.utils.horizontalPadding
 import com.machmudow.kaszowska.utils.isMobile
 import com.machmudow.kaszowska.utils.verticalSectionPadding
-import androidx.compose.runtime.mutableStateListOf
 import com.machmudow.kaszowska.model.PriceCategory
-import com.machmudow.kaszowska.utils.Constants
-import com.machmudow.kaszowska.utils.loadRemoteJson
 
 @Composable
-fun PricesSection() {
+fun PricesSection(data: List<PriceCategory>) {
     val windowSize = LocalWindowSize.current
-    val categories = remember { mutableStateListOf<PriceCategory>() }
 
     LaunchedEffect(Unit) {
         AnimationStateHolder.pricesSectionVisible = true
-            val pmuRemote = loadRemoteJson<List<PriceCategory>>(
-                fileName = "all_prices",
-                remoteUrl = Constants.ALL_PRICES_URL,
-            ).getOrNull().orEmpty()
-
-        categories.addAll(pmuRemote)
     }
 
     val titleAlpha by animateFloatAsState(
@@ -119,7 +109,7 @@ fun PricesSection() {
                 contentPadding = PaddingValues(horizontal = horizontalPadding),
                 horizontalArrangement = Arrangement.spacedBy(cardSpacing)
             ) {
-                itemsIndexed(categories) { index, category ->
+                itemsIndexed(data) { index, category ->
                     PriceCategoryCard(
                         category = category,
                         modifier = Modifier.width(offerCardWidth),

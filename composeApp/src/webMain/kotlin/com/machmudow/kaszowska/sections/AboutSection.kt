@@ -23,23 +23,17 @@ import com.machmudow.kaszowska.utils.Constants
 import com.machmudow.kaszowska.utils.LocalWindowSize
 import com.machmudow.kaszowska.utils.horizontalPadding
 import com.machmudow.kaszowska.utils.isMobile
-import com.machmudow.kaszowska.utils.loadRemoteJson
 import com.machmudow.kaszowska.utils.verticalSectionPadding
 import kaszowska.composeapp.generated.resources.Res
 import kaszowska.composeapp.generated.resources.magda
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun AboutSection() {
+fun AboutSection(data: AboutSectionData?) {
     val windowSize = LocalWindowSize.current
-    var aboutData by remember { mutableStateOf<AboutSectionData?>(null) }
 
     LaunchedEffect(Unit) {
         AnimationStateHolder.aboutSectionVisible = true
-        aboutData = loadRemoteJson<AboutSectionData>(
-            fileName = "about_section",
-            remoteUrl = Constants.ABOUT_SECTION_URL,
-        ).getOrNull()
     }
 
     val imageAlpha by animateFloatAsState(
@@ -125,7 +119,7 @@ fun AboutSection() {
                             translationY = contentOffset
                         },
                     isMobile = true,
-                    data = aboutData
+                    data = data,
                 )
             }
         } else {
@@ -174,7 +168,7 @@ fun AboutSection() {
                             translationX = contentOffset
                         },
                     isMobile = false,
-                    data = aboutData
+                    data = data,
                 )
             }
         }
@@ -218,16 +212,6 @@ private fun AboutContent(
                 lineHeight = if (isMobile) 24.sp else 28.sp
             )
             Spacer(modifier = Modifier.height(16.dp))
-        }
-
-        if (data == null) {
-            // Fallback text if data is still loading or failed
-            Text(
-                text = "Ładowanie...",
-                fontSize = if (isMobile) 14.sp else 16.sp,
-                fontWeight = FontWeight.Normal,
-                color = KaszowskaColors.TextLight
-            )
         }
     }
 }

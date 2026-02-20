@@ -56,22 +56,19 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.model.OfficeOffer
-import com.machmudow.kaszowska.model.OfficeOfferSection as OfficeOfferSectionModel
 import com.machmudow.kaszowska.model.OfficeOfferService
 import com.machmudow.kaszowska.theme.KaszowskaColors
-import com.machmudow.kaszowska.utils.Constants
 import com.machmudow.kaszowska.utils.LocalWindowSize
 import com.machmudow.kaszowska.utils.horizontalPadding
 import com.machmudow.kaszowska.utils.isMobile
-import com.machmudow.kaszowska.utils.loadRemoteJson
 import com.machmudow.kaszowska.utils.verticalSectionPadding
 import kaszowska.composeapp.generated.resources.Res
 import kaszowska.composeapp.generated.resources.ic_arrow_down
 import org.jetbrains.compose.resources.painterResource
+import com.machmudow.kaszowska.model.OfficeOfferSection as OfficeOfferSectionModel
 
 // Shared state holder for office offer data
 class OfficeOfferState {
-    var officeOffer by mutableStateOf<OfficeOffer?>(null)
     var isVisible by mutableStateOf(false)
     var isLoaded by mutableStateOf(false)
 }
@@ -82,11 +79,6 @@ fun rememberOfficeOfferState(): OfficeOfferState {
 
     LaunchedEffect(Unit) {
         if (!state.isLoaded) {
-            state.officeOffer = loadRemoteJson<OfficeOffer>(
-                fileName = "office_offer",
-                remoteUrl = Constants.OFFICE_OFFER_URL
-            ).getOrNull()
-
             state.isVisible = true
             state.isLoaded = true
         }
@@ -97,9 +89,11 @@ fun rememberOfficeOfferState(): OfficeOfferState {
 
 // Part 1: Header section with title
 @Composable
-fun OfficeOfferHeaderSection(state: OfficeOfferState) {
+fun OfficeOfferHeaderSection(
+    state: OfficeOfferState,
+    data: OfficeOffer?,
+) {
     val windowSize = LocalWindowSize.current
-    val officeOffer = state.officeOffer
     val isVisible = state.isVisible
 
     val titleAlpha by animateFloatAsState(
@@ -195,40 +189,40 @@ fun OfficeOfferHeaderSection(state: OfficeOfferState) {
             Spacer(modifier = Modifier.height(if (windowSize.isMobile) 12.dp else 16.dp))
 
             Text(
-                text = officeOffer?.meta?.title ?: "Oferta Gabinetowa",
+                modifier = Modifier.graphicsLayer {
+                    alpha = titleAlpha
+                    translationY = titleOffset
+                },
+                text = data?.meta?.title.orEmpty(),
                 fontSize = if (windowSize.isMobile) 26.sp else 40.sp,
                 fontWeight = FontWeight.Light,
                 color = KaszowskaColors.TextDark,
                 letterSpacing = 1.sp,
+            )
+
+            Spacer(modifier = Modifier.height(if (windowSize.isMobile) 8.dp else 12.dp))
+            Text(
                 modifier = Modifier.graphicsLayer {
                     alpha = titleAlpha
                     translationY = titleOffset
-                }
+                },
+                text = data?.meta?.subtitle.orEmpty(),
+                fontSize = if (windowSize.isMobile) 13.sp else 15.sp,
+                fontWeight = FontWeight.Normal,
+                fontStyle = FontStyle.Italic,
+                color = KaszowskaColors.TextLight,
             )
-
-            officeOffer?.meta?.subtitle?.let { subtitle ->
-                Spacer(modifier = Modifier.height(if (windowSize.isMobile) 8.dp else 12.dp))
-                Text(
-                    text = subtitle,
-                    fontSize = if (windowSize.isMobile) 13.sp else 15.sp,
-                    fontWeight = FontWeight.Normal,
-                    fontStyle = FontStyle.Italic,
-                    color = KaszowskaColors.TextLight,
-                    modifier = Modifier.graphicsLayer {
-                        alpha = titleAlpha
-                        translationY = titleOffset
-                    }
-                )
-            }
         }
     }
 }
 
 // Part 2: Cards section with horizontal scroll
 @Composable
-fun OfficeOfferCardsSection(state: OfficeOfferState) {
+fun OfficeOfferCardsSection(
+    state: OfficeOfferState,
+    data: OfficeOffer?,
+) {
     val windowSize = LocalWindowSize.current
-    val officeOffer = state.officeOffer
     val isVisible = state.isVisible
 
     val scrollState = rememberScrollState()
@@ -263,7 +257,7 @@ fun OfficeOfferCardsSection(state: OfficeOfferState) {
                     .padding(horizontal = horizontalPadding),
                 horizontalArrangement = Arrangement.spacedBy(cardSpacing)
             ) {
-                officeOffer?.sections?.forEachIndexed { index, section ->
+                data?.sections?.forEachIndexed { index, section ->
                     OfficeOfferCard(
                         section = section,
                         modifier = Modifier.width(cardWidth),
@@ -409,18 +403,6 @@ fun OfficeOfferCardsSection(state: OfficeOfferState) {
                 }
             }
         }
-    }
-}
-
-// Keep the original for backwards compatibility
-@Deprecated("Use split sections instead: OfficeOfferHeaderSection, OfficeOfferCardsSection")
-@Composable
-fun OfficeOfferSection() {
-    val state = rememberOfficeOfferState()
-
-    Column(modifier = Modifier.fillMaxWidth()) {
-        OfficeOfferHeaderSection(state)
-        OfficeOfferCardsSection(state)
     }
 }
 
