@@ -59,11 +59,11 @@ import com.machmudow.kaszowska.model.OfficeOffer
 import com.machmudow.kaszowska.model.OfficeOfferSection as OfficeOfferSectionModel
 import com.machmudow.kaszowska.model.OfficeOfferService
 import com.machmudow.kaszowska.theme.KaszowskaColors
+import com.machmudow.kaszowska.utils.Constants
 import com.machmudow.kaszowska.utils.LocalWindowSize
 import com.machmudow.kaszowska.utils.horizontalPadding
 import com.machmudow.kaszowska.utils.isMobile
-import com.machmudow.kaszowska.utils.loadJsonFromResources
-import com.machmudow.kaszowska.utils.logMessage
+import com.machmudow.kaszowska.utils.loadRemoteJson
 import com.machmudow.kaszowska.utils.verticalSectionPadding
 import kaszowska.composeapp.generated.resources.Res
 import kaszowska.composeapp.generated.resources.ic_arrow_down
@@ -82,11 +82,11 @@ fun rememberOfficeOfferState(): OfficeOfferState {
 
     LaunchedEffect(Unit) {
         if (!state.isLoaded) {
-            try {
-                state.officeOffer = loadJsonFromResources<OfficeOffer>("office_offer.json")
-            } catch (e: Exception) {
-                logMessage("Error loading office_offer.json: ${e.message}")
-            }
+            state.officeOffer = loadRemoteJson<OfficeOffer>(
+                fileName = "office_offer",
+                remoteUrl = Constants.OFFICE_OFFER_URL
+            ).getOrNull()
+
             state.isVisible = true
             state.isLoaded = true
         }

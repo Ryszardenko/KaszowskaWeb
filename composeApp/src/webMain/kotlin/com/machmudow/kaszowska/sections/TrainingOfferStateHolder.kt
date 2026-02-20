@@ -3,7 +3,8 @@ package com.machmudow.kaszowska.sections
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.machmudow.kaszowska.model.TrainingOffer
-import com.machmudow.kaszowska.utils.loadJsonFromResources
+import com.machmudow.kaszowska.utils.Constants
+import com.machmudow.kaszowska.utils.loadRemoteJson
 import com.machmudow.kaszowska.utils.logMessage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,7 +33,10 @@ fun rememberTrainingOfferStateHolder(): TrainingOfferStateHolder {
     LaunchedEffect(Unit) {
         if (!TrainingOfferStateHolder.state.value.isLoaded) {
             try {
-                val trainingOffer = loadJsonFromResources<TrainingOffer>("training_offer.json")
+                val trainingOffer = loadRemoteJson<TrainingOffer>(
+                    fileName = "training_offer",
+                    remoteUrl = Constants.TRAINING_OFFER_URL,
+                ).getOrNull()
                 TrainingOfferStateHolder.updateState {
                     it.copy(
                         trainingOffer = trainingOffer,
