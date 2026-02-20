@@ -184,7 +184,6 @@ fun ServicesSection(
                     }
 
                     val maxOffset = (trackWidth - thumbWidth).coerceAtLeast(0.dp)
-                    val thumbOffset = maxOffset * scrollFraction
 
                     Box(
                         modifier = Modifier
@@ -195,7 +194,9 @@ fun ServicesSection(
 
                     Box(
                         modifier = Modifier
-                            .offset(x = thumbOffset)
+                            .graphicsLayer {
+                                translationX = (maxOffset * scrollFraction).toPx()
+                            }
                             .width(thumbWidth)
                             .height(3.dp)
                             .background(KaszowskaColors.Gold)

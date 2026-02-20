@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -72,10 +73,18 @@ import org.jetbrains.compose.resources.painterResource
 fun App() {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-    val isScrolled =
-        listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 50
+    
+    val isScrolled by remember {
+        derivedStateOf {
+            listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 50
+        }
+    }
 
-    val showBackToTop = listState.firstVisibleItemIndex > 1
+    val showBackToTop by remember {
+        derivedStateOf {
+            listState.firstVisibleItemIndex > 1
+        }
+    }
 
     // PDF modal state
     val modalImages = remember { mutableStateListOf<DrawableResource>() }
@@ -132,9 +141,10 @@ fun App() {
                     item { TrainingOfferPricingSection(trainingOfferState) }    // 9
                     item { PricesSection() }                                    // 10 - PRICE_LIST
                     item {                                                      // 11
+                        val allImages = remember { officeImages + workImages }
                         ImageCarousel(
                             modifier = Modifier.padding(top = if (windowSize.isMobile) 20.dp else 40.dp),
-                            images = officeImages + workImages,
+                            images = allImages,
                             onImageClick = { image ->
                                 modalImages.clear()
                                 modalImages.add(image)
@@ -152,13 +162,14 @@ fun App() {
                 )
 
                 // Animated Back to Top button
-                if (showBackToTop) {
-                    BackToTopButton {
+                BackToTopButton(
+                    visible = showBackToTop,
+                    onClick = {
                         coroutineScope.launch {
                             listState.animateScrollToItem(0)
                         }
                     }
-                }
+                )
 
                 AnimatedVisibility(
                     visible = modalImages.isNotEmpty(),
@@ -177,22 +188,20 @@ fun App() {
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun BoxScope.BackToTopButton(onClick: () -> Unit) {
+private fun BoxScope.BackToTopButton(
+    visible: Boolean,
+    onClick: () -> Unit
+) {
     var isHovered by remember { mutableStateOf(false) }
-    var isVisible by remember { mutableStateOf(false) }
     val windowSize = LocalWindowSize.current
 
-    LaunchedEffect(Unit) {
-        isVisible = true
-    }
-
     val alpha by animateFloatAsState(
-        targetValue = if (isVisible) 1f else 0f,
+        targetValue = if (visible) 1f else 0f,
         animationSpec = tween(600, easing = FastOutSlowInEasing)
     )
 
     val scale by animateFloatAsState(
-        targetValue = if (isHovered) 1.1f else 1f,
+        targetValue = if (visible) (if (isHovered) 1.1f else 1f) else 0f,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioMediumBouncy,
             stiffness = Spring.StiffnessMedium
@@ -201,7 +210,7 @@ private fun BoxScope.BackToTopButton(onClick: () -> Unit) {
 
     // One-time floating entrance animation (from below)
     val floatingOffset by animateFloatAsState(
-        targetValue = if (isVisible) 0f else 30f,
+        targetValue = if (visible) 0f else 30f,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioMediumBouncy,
             stiffness = Spring.StiffnessLow
@@ -226,7 +235,7 @@ private fun BoxScope.BackToTopButton(onClick: () -> Unit) {
             .background(KaszowskaColors.Gold)
             .onPointerEvent(PointerEventType.Enter) { isHovered = true }
             .onPointerEvent(PointerEventType.Exit) { isHovered = false }
-            .clickable { onClick() },
+            .clickable(enabled = visible) { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Icon(

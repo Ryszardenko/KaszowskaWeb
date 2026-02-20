@@ -168,7 +168,6 @@ fun PricesSection() {
                     }
 
                     val maxOffset = (trackWidth - thumbWidth).coerceAtLeast(0.dp)
-                    val thumbOffset = maxOffset * offerScrollFraction
 
                     Box(
                         modifier = Modifier
@@ -179,7 +178,9 @@ fun PricesSection() {
 
                     Box(
                         modifier = Modifier
-                            .offset(x = thumbOffset)
+                            .graphicsLayer {
+                                translationX = (maxOffset * offerScrollFraction).toPx()
+                            }
                             .width(thumbWidth)
                             .height(3.dp)
                             .background(KaszowskaColors.Gold)

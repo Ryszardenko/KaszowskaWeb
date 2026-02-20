@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -41,11 +42,13 @@ fun ResponsiveLayout(
     content: @Composable BoxWithConstraintsScope.() -> Unit
 ) {
     BoxWithConstraints(modifier = modifier) {
-        val windowSize = WindowSize(
-            width = maxWidth,
-            height = maxHeight,
-            sizeClass = calculateWindowSizeClass(maxWidth)
-        )
+        val windowSize = remember(maxWidth) {
+            WindowSize(
+                width = maxWidth,
+                height = maxHeight, // We still keep the height but don't trigger recomposition if ONLY height changes
+                sizeClass = calculateWindowSizeClass(maxWidth)
+            )
+        }
 
         CompositionLocalProvider(LocalWindowSize provides windowSize) {
             content()
