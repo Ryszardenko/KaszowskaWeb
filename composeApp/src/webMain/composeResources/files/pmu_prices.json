@@ -1,0 +1,69 @@
+{
+  "name": "Makijaż Permanentny",
+  "items": [
+    {
+      "name": "Brwi Ombre",
+      "price": "1200 zł"
+    },
+    {
+      "name": "Brwi Włoskowe",
+      "price": "1400 zł"
+    },
+    {
+      "name": "Brwi Combo",
+      "description": "Włos + Cień",
+      "price": "1400 zł"
+    },
+    {
+      "name": "Usta Efekt Full Lips",
+      "price": "1200 zł"
+    },
+    {
+      "name": "Usta Efekt Aquarelle",
+      "price": "1200 zł"
+    },
+    {
+      "name": "Powieki Kreska Zagęszczająca",
+      "price": "800 zł"
+    },
+    {
+      "name": "Powieki Kreska Dekoracyjna",
+      "price": "1000 zł"
+    },
+    {
+      "name": "Piegi Permanentne",
+      "description": "Full Face",
+      "price": "900 zł"
+    },
+    {
+      "name": "Piegi Permanentne",
+      "description": "Soft",
+      "price": "700 zł"
+    },
+    {
+      "name": "Piegi Permanentne",
+      "description": "Zagęszczenie (kolejny zabieg w serii)",
+      "price": "400 zł"
+    },
+    {
+      "name": "Dopigmentowanie",
+      "description": "do 3 miesięcy",
+      "price": "300 zł"
+    },
+    {
+      "name": "Odświeżenie Efektu",
+      "description": "do 1 roku",
+      "price": "600 zł"
+    },
+    {
+      "name": "Odświeżenie Efektu",
+      "description": "do 1,5 roku",
+      "price": "800 zł"
+    },
+    {
+      "name": "Odświeżenie Efektu",
+      "description": "powyżej 1,5 roku",
+      "price": "1000 zł"
+    }
+  ]
+}

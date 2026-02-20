@@ -3,8 +3,6 @@ package com.machmudow.kaszowska.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Service(
-    val title: String,
-    val description: String,
-    val price: String,
+data class GroupedServices(
+    val services: List<Service>
 )

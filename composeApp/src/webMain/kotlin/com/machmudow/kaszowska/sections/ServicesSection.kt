@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -42,23 +41,27 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.AnimationStateHolder
-import com.machmudow.kaszowska.data.groupedServices
+import com.machmudow.kaszowska.model.GroupedServices
 import com.machmudow.kaszowska.model.Service
 import com.machmudow.kaszowska.theme.KaszowskaColors
+import com.machmudow.kaszowska.utils.Constants
 import com.machmudow.kaszowska.utils.LocalWindowSize
 import com.machmudow.kaszowska.utils.horizontalPadding
 import com.machmudow.kaszowska.utils.isMobile
+import com.machmudow.kaszowska.utils.loadRemoteJson
 import com.machmudow.kaszowska.utils.verticalSectionPadding
-import org.jetbrains.compose.resources.DrawableResource
 
 @Composable
-fun ServicesSection(
-    showModalImages: (List<DrawableResource>) -> Unit,
-) {
+fun ServicesSection() {
     val windowSize = LocalWindowSize.current
+    var servicesData by remember { mutableStateOf<GroupedServices?>(null) }
 
     LaunchedEffect(Unit) {
         AnimationStateHolder.servicesSectionVisible = true
+        servicesData = loadRemoteJson<GroupedServices>(
+            fileName = "grouped_services.json",
+            remoteUrl = Constants.GROUPED_SERVICES_URL,
+        ).getOrNull()
     }
 
     val titleAlpha by animateFloatAsState(
@@ -124,14 +127,16 @@ fun ServicesSection(
                 contentPadding = PaddingValues(horizontal = horizontalPadding),
                 horizontalArrangement = Arrangement.spacedBy(cardSpacing)
             ) {
-                itemsIndexed(groupedServices) { index, service ->
-                    ServiceCard(
-                        service = service,
-                        modifier = Modifier.width(cardWidth),
-                        isVisible = AnimationStateHolder.servicesSectionVisible,
-                        delay = 300 + index * 150,
-                        isMobile = windowSize.isMobile
-                    )
+                servicesData?.services?.let { services ->
+                    itemsIndexed(services) { index, service ->
+                        ServiceCard(
+                            service = service,
+                            modifier = Modifier.width(cardWidth),
+                            isVisible = AnimationStateHolder.servicesSectionVisible,
+                            delay = 300 + index * 150,
+                            isMobile = windowSize.isMobile
+                        )
+                    }
                 }
             }
 

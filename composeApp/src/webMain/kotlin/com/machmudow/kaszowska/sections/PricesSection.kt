@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
@@ -38,13 +37,27 @@ import com.machmudow.kaszowska.utils.LocalWindowSize
 import com.machmudow.kaszowska.utils.horizontalPadding
 import com.machmudow.kaszowska.utils.isMobile
 import com.machmudow.kaszowska.utils.verticalSectionPadding
+import androidx.compose.runtime.mutableStateListOf
+import com.machmudow.kaszowska.model.PriceCategory
+import com.machmudow.kaszowska.utils.Constants
+import com.machmudow.kaszowska.utils.loadRemoteJson
 
 @Composable
 fun PricesSection() {
     val windowSize = LocalWindowSize.current
+    val categories = remember { mutableStateListOf<PriceCategory>().apply { addAll(priceCategories) } }
 
     LaunchedEffect(Unit) {
         AnimationStateHolder.pricesSectionVisible = true
+//            val pmuRemote = loadRemoteJson<PriceCategory>(
+//                fileName = "pmu_prices.json",
+//                remoteUrl = Constants.PMU_PRICES_URL,
+//            ).getOrNull()
+//            // Replace the static PMU category with the dynamic one
+//            val index = categories.indexOfFirst { it.name == "Makijaż Permanentny" }
+//            if (index != -1) {
+//                categories[index] = pmuRemote
+//            }
     }
 
     val titleAlpha by animateFloatAsState(
@@ -110,7 +123,7 @@ fun PricesSection() {
                 contentPadding = PaddingValues(horizontal = horizontalPadding),
                 horizontalArrangement = Arrangement.spacedBy(cardSpacing)
             ) {
-                itemsIndexed(priceCategories) { index, category ->
+                itemsIndexed(categories) { index, category ->
                     PriceCategoryCard(
                         category = category,
                         modifier = Modifier.width(offerCardWidth),

@@ -127,11 +127,7 @@ fun App() {
                 ) {
                     item { HeroSection() }                                      // 0
                     item { AboutSection() }                                     // 1
-                    item {                                                      // 2
-                        ServicesSection(
-                            showModalImages = { modalImages.addAll(it) },
-                        )
-                    }
+                    item { ServicesSection() }                                  // 2
                     item { OfficeOfferHeaderSection(officeOfferState) }         // 3 - OFFICE_OFER
                     item { OfficeOfferCardsSection(officeOfferState) }          // 4
                     item { TrainingOfferHeaderSection(trainingOfferState) }     // 5 - TRAINING_OFER

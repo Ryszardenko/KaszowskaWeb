@@ -13,9 +13,10 @@ object Constants {
     const val STREET = "Karola Libelta 34/1"
     const val CITY = "Poznań"
 
-    const val TRAINING_OFFER_URL = "https://gist.githubusercontent.com/Ryszardenko/fda38e4829b6ce8645cafdafa2a56300/raw/1dcf28f0bfb35cd2489faa6f4344c0dd0fc2c257/training_offer"
-    const val OFFICE_OFFER_URL = "https://gist.githubusercontent.com/Ryszardenko/5c01bb2bc191bb7c4727150bbe7d3554/raw/ab90aae817a34b5a0775ddd397bb9f66a4ba5ebc/office_offer"
-    const val ABOUT_SECTION_URL = "https://gist.githubusercontent.com/Ryszardenko/b0c80f626ae09369998071f844080d96/raw/1184a9f815565ebfe2f6fc06bf1f574991724c07/about_section"
-    const val PMU_PRICES_URL = "" // TODO: Add PMU Prices Gist URL here
-    const val GROUPED_SERVICES_URL = "" // TODO: Add Grouped Services Gist URL here
+    private const val GIST_BASE = "https://gist.githubusercontent.com/Ryszardenko/a04927ee362b66a0d7c349d191746444/raw"
+    const val ABOUT_SECTION_URL = "$GIST_BASE/312c3fc65d5ce22c99bb5060079b13b0beb06315/about_section"
+    const val TRAINING_OFFER_URL = "$GIST_BASE/312c3fc65d5ce22c99bb5060079b13b0beb06315/training_offer"
+    const val OFFICE_OFFER_URL = "$GIST_BASE/312c3fc65d5ce22c99bb5060079b13b0beb06315/office_offer"
+    const val PMU_PRICES_URL = "$GIST_BASE/about_section"
+    const val GROUPED_SERVICES_URL = "$GIST_BASE/0d9748c04ef5a8d8143ffdfc77d0fe61e47e26fb/grouped_services"
 }
