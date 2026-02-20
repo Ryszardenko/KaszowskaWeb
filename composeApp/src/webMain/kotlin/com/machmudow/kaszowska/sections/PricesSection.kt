@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.AnimationStateHolder
 import com.machmudow.kaszowska.components.PriceCategoryCard
-import com.machmudow.kaszowska.data.prices.priceCategories
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.utils.LocalWindowSize
 import com.machmudow.kaszowska.utils.horizontalPadding
@@ -45,19 +44,16 @@ import com.machmudow.kaszowska.utils.loadRemoteJson
 @Composable
 fun PricesSection() {
     val windowSize = LocalWindowSize.current
-    val categories = remember { mutableStateListOf<PriceCategory>().apply { addAll(priceCategories) } }
+    val categories = remember { mutableStateListOf<PriceCategory>() }
 
     LaunchedEffect(Unit) {
         AnimationStateHolder.pricesSectionVisible = true
-//            val pmuRemote = loadRemoteJson<PriceCategory>(
-//                fileName = "pmu_prices.json",
-//                remoteUrl = Constants.PMU_PRICES_URL,
-//            ).getOrNull()
-//            // Replace the static PMU category with the dynamic one
-//            val index = categories.indexOfFirst { it.name == "Makijaż Permanentny" }
-//            if (index != -1) {
-//                categories[index] = pmuRemote
-//            }
+            val pmuRemote = loadRemoteJson<List<PriceCategory>>(
+                fileName = "all_prices",
+                remoteUrl = Constants.ALL_PRICES_URL,
+            ).getOrNull().orEmpty()
+
+        categories.addAll(pmuRemote)
     }
 
     val titleAlpha by animateFloatAsState(
