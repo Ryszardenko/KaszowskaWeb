@@ -17,11 +17,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.machmudow.kaszowska.AnimationStateHolder
+import com.machmudow.kaszowska.model.AboutSectionData
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.utils.Constants
 import com.machmudow.kaszowska.utils.LocalWindowSize
 import com.machmudow.kaszowska.utils.horizontalPadding
 import com.machmudow.kaszowska.utils.isMobile
+import com.machmudow.kaszowska.utils.loadRemoteJson
 import com.machmudow.kaszowska.utils.verticalSectionPadding
 import kaszowska.composeapp.generated.resources.Res
 import kaszowska.composeapp.generated.resources.magda
@@ -30,9 +32,14 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun AboutSection() {
     val windowSize = LocalWindowSize.current
+    var aboutData by remember { mutableStateOf<AboutSectionData?>(null) }
 
     LaunchedEffect(Unit) {
         AnimationStateHolder.aboutSectionVisible = true
+        aboutData = loadRemoteJson<AboutSectionData>(
+            fileName = "about_section",
+            remoteUrl = Constants.ABOUT_SECTION_URL,
+        ).getOrNull()
     }
 
     val imageAlpha by animateFloatAsState(
@@ -117,7 +124,8 @@ fun AboutSection() {
                             alpha = contentAlpha
                             translationY = contentOffset
                         },
-                    isMobile = true
+                    isMobile = true,
+                    data = aboutData
                 )
             }
         } else {
@@ -165,7 +173,8 @@ fun AboutSection() {
                             alpha = contentAlpha
                             translationX = contentOffset
                         },
-                    isMobile = false
+                    isMobile = false,
+                    data = aboutData
                 )
             }
         }
@@ -175,11 +184,12 @@ fun AboutSection() {
 @Composable
 private fun AboutContent(
     modifier: Modifier = Modifier,
-    isMobile: Boolean
+    isMobile: Boolean,
+    data: AboutSectionData?
 ) {
     Column(modifier = modifier) {
         Text(
-            text = "O MNIE",
+            text = data?.title ?: "O MNIE",
             fontSize = if (isMobile) 11.sp else 12.sp,
             fontWeight = FontWeight.Normal,
             color = KaszowskaColors.Gold,
@@ -189,7 +199,7 @@ private fun AboutContent(
         Spacer(modifier = Modifier.height(if (isMobile) 16.dp else 24.dp))
 
         Text(
-            text = Constants.FULL_NAME,
+            text = data?.name ?: Constants.FULL_NAME,
             fontSize = if (isMobile) 28.sp else 42.sp,
             fontWeight = FontWeight.Light,
             color = KaszowskaColors.TextDark,
@@ -199,22 +209,25 @@ private fun AboutContent(
 
         Spacer(modifier = Modifier.height(if (isMobile) 20.dp else 32.dp))
 
-        Text(
-            text = """
-                Nazywam się Magdalena Kaszowska - jestem linergistką, specjalistką terapii blizn i szkoleniowcem.
+        data?.paragraphs?.forEach { paragraph ->
+            Text(
+                text = paragraph,
+                fontSize = if (isMobile) 14.sp else 16.sp,
+                fontWeight = FontWeight.Normal,
+                color = KaszowskaColors.TextLight,
+                lineHeight = if (isMobile) 24.sp else 28.sp
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
 
-                Tworzę naturalny, dopasowany makijaż permanentny oraz naprawiam i odwracam stare pigmentacje, przywracając moim Klientkom pewność siebie.
-
-                To co wyróżnia mój gabinet, to zaawansowana praca z bliznami. Zajmuję się bliznami po operacjach, cięciu cesarskim, zabiegach plastycznych, urazach, oparzeniach, trądziku i innych, prowadząc je ku większej elastyczności i estetyce.
-
-                Jako szkoleniowiec z wiedzą medyczną, tworzę nowe pokolenie specjalistów - ucząc terapii blizn, usuwania pigmentacji i wykonywania makijażu permanentnego, opierając pracę na zrozumieniu tkanek i realnych efektach. 
-
-                Najczęściej słyszę od Klientek jedno zdanie: „żałuję, że trafiłam do Pani tak późno". To dlatego w samym 2025 roku zaufało mi blisko 1000 Klientek, z czego połowie pomogłam w usuwaniu niechcianej pigmentacji i terapii blizn.
-            """.trimIndent(),
-            fontSize = if (isMobile) 14.sp else 16.sp,
-            fontWeight = FontWeight.Normal,
-            color = KaszowskaColors.TextLight,
-            lineHeight = if (isMobile) 24.sp else 28.sp
-        )
+        if (data == null) {
+            // Fallback text if data is still loading or failed
+            Text(
+                text = "Ładowanie...",
+                fontSize = if (isMobile) 14.sp else 16.sp,
+                fontWeight = FontWeight.Normal,
+                color = KaszowskaColors.TextLight
+            )
+        }
     }
 }

@@ -15,4 +15,7 @@ object Constants {
 
     const val TRAINING_OFFER_URL = "https://gist.githubusercontent.com/Ryszardenko/fda38e4829b6ce8645cafdafa2a56300/raw/1dcf28f0bfb35cd2489faa6f4344c0dd0fc2c257/training_offer"
     const val OFFICE_OFFER_URL = "https://gist.githubusercontent.com/Ryszardenko/5c01bb2bc191bb7c4727150bbe7d3554/raw/ab90aae817a34b5a0775ddd397bb9f66a4ba5ebc/office_offer"
+    const val ABOUT_SECTION_URL = "https://gist.githubusercontent.com/Ryszardenko/b0c80f626ae09369998071f844080d96/raw/1184a9f815565ebfe2f6fc06bf1f574991724c07/about_section"
+    const val PMU_PRICES_URL = "" // TODO: Add PMU Prices Gist URL here
+    const val GROUPED_SERVICES_URL = "" // TODO: Add Grouped Services Gist URL here
 }
