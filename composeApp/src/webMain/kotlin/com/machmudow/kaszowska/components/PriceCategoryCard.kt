@@ -197,84 +197,78 @@ private fun PriceItemRow(
     isHovered: Boolean,
     isMobile: Boolean
 ) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
+        // Small dot
+        Box(
+            modifier = Modifier
+                .padding(
+                    horizontal = if (isMobile) 10.dp else 12.dp
+                )
+                .size(if (isMobile) 4.dp else 5.dp)
+                .background(
+                    if (isHovered) KaszowskaColors.Gold
+                    else KaszowskaColors.Gold.copy(alpha = 0.5f)
+                )
+        )
+
+        Column(
+            modifier = Modifier.fillMaxWidth(0.6f),
         ) {
-            // Small dot
-            Box(
-                modifier = Modifier
-                    .size(if (isMobile) 4.dp else 5.dp)
-                    .background(
-                        if (isHovered) KaszowskaColors.Gold
-                        else KaszowskaColors.Gold.copy(alpha = 0.5f)
-                    )
-            )
-
-            Spacer(modifier = Modifier.width(if (isMobile) 10.dp else 12.dp))
-
             // Name (bold and bigger) - constrained width
             Text(
-                modifier = Modifier.weight(
-                    weight = 0.6f,
-                    fill = false,
-                ),
                 text = item.name,
                 fontSize = if (isMobile) 14.sp else 15.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = KaszowskaColors.TextDark,
                 lineHeight = if (isMobile) 18.sp else 20.sp,
-                softWrap = false,
-                overflow = TextOverflow.Ellipsis,
             )
 
-            // Dotted line separator - fills remaining space
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = if (isMobile) 4.dp else 8.dp)
-                    .height(1.dp)
-                    .background(
-                        Brush.horizontalGradient(
-                            colors = listOf(
-                                KaszowskaColors.Gold.copy(alpha = 0f),
-                                KaszowskaColors.Gold.copy(alpha = if (isHovered) 0.5f else 0.3f),
-                                KaszowskaColors.Gold.copy(alpha = if (isHovered) 0.5f else 0.3f),
-                                KaszowskaColors.Gold.copy(alpha = 0f)
-                            )
-                        )
+            // Description (smaller, below name) - if exists
+            if (item.description.isNotEmpty()) {
+                Row(
+                    modifier = Modifier.padding(top = 4.dp)
+                ) {
+                    Text(
+                        text = item.description,
+                        fontSize = if (isMobile) 11.sp else 12.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = KaszowskaColors.TextLight,
+                        lineHeight = if (isMobile) 15.sp else 16.sp
                     )
-            )
-
-            // Price
-            Text(
-                text = item.price,
-                fontSize = if (isMobile) 13.sp else 14.sp,
-                fontWeight = FontWeight.Medium,
-                color = if (isHovered) KaszowskaColors.Gold else KaszowskaColors.TextDark,
-                letterSpacing = 0.5.sp
-            )
-        }
-
-        // Description (smaller, below name) - if exists
-        if (item.description.isNotEmpty()) {
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 4.dp)
-            ) {
-                // Spacer to align with name (dot + space)
-                Spacer(modifier = Modifier.width(if (isMobile) 14.dp else 17.dp))
-
-                Text(
-                    text = item.description,
-                    fontSize = if (isMobile) 11.sp else 12.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = KaszowskaColors.TextLight,
-                    lineHeight = if (isMobile) 15.sp else 16.sp
-                )
+                }
             }
         }
+
+        // Dotted line separator - fills remaining space
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = if (isMobile) 4.dp else 8.dp)
+                .height(1.dp)
+                .background(
+                    Brush.horizontalGradient(
+                        colors = listOf(
+                            KaszowskaColors.Gold.copy(alpha = 0f),
+                            KaszowskaColors.Gold.copy(alpha = if (isHovered) 0.5f else 0.3f),
+                            KaszowskaColors.Gold.copy(alpha = if (isHovered) 0.5f else 0.3f),
+                            KaszowskaColors.Gold.copy(alpha = 0f)
+                        )
+                    )
+                )
+        )
+
+        // Price
+        Text(
+            text = item.price,
+            fontSize = if (isMobile) 13.sp else 14.sp,
+            fontWeight = FontWeight.Medium,
+            color = if (isHovered) KaszowskaColors.Gold else KaszowskaColors.TextDark,
+            letterSpacing = 0.5.sp
+        )
     }
 }
+
