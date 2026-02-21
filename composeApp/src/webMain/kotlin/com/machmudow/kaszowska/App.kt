@@ -21,7 +21,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -61,7 +60,7 @@ import com.machmudow.kaszowska.sections.TrainingOfferPackageSection
 import com.machmudow.kaszowska.sections.TrainingOfferPricingSection
 import com.machmudow.kaszowska.sections.TrainingOfferTrainerSection
 import com.machmudow.kaszowska.sections.model.Section
-import com.machmudow.kaszowska.sections.rememberOfficeOfferState
+import com.machmudow.kaszowska.sections.rememberOfficeOfferStateHolder
 import com.machmudow.kaszowska.sections.rememberTrainingOfferStateHolder
 import com.machmudow.kaszowska.theme.KaszowskaColors
 import com.machmudow.kaszowska.theme.KaszowskaTheme
@@ -130,7 +129,11 @@ fun App() {
             val windowSize = LocalWindowSize.current
 
             // Shared state holders
-            val officeOfferState = rememberOfficeOfferState()
+            val officeOfferStateHolder = rememberOfficeOfferStateHolder(
+                appDataContent?.officeOffer
+            )
+            val officeOfferState by officeOfferStateHolder.state.collectAsStateWithLifecycle()
+
             val trainingOfferStateHolder = rememberTrainingOfferStateHolder(
                 appDataContent?.trainingOffer
             )
@@ -145,38 +148,42 @@ fun App() {
                     modifier = Modifier.fillMaxSize(),
                     state = listState
                 ) {
-                    item { HeroSection() } // 0
-                    item {
-                        AboutSection(data = appDataContent?.aboutSection)
-                    }  // 1
-                    item {
-                        ServicesSection(
-                            data = appDataContent?.groupedServices,
-                        )
-                    } // 2
+                    // 0
+                    item { HeroSection() }
+                    // 1
+                    item { AboutSection(data = appDataContent?.aboutSection) }
+                    // 2
+                    item { ServicesSection(data = appDataContent?.groupedServices) }
+                    // 3
                     item {
                         OfficeOfferHeaderSection(
                             state = officeOfferState,
-                            data = appDataContent?.officeOffer,
                         )
-                    }         // 3 - OFFICE_OFER
+                    }
+                    // 4
                     item {
                         OfficeOfferCardsSection(
                             state = officeOfferState,
-                            data = appDataContent?.officeOffer,
                         )
-                    }          // 4
-                    item { TrainingOfferHeaderSection(trainingOfferState) }     // 5 - TRAINING_OFER
-                    item { TrainingOfferTrainerSection(trainingOfferState) }    // 6
-                    item { TrainingOfferCurriculumSection(trainingOfferState) } // 7
-                    item { TrainingOfferPackageSection(trainingOfferState) }    // 8
-                    item { TrainingOfferPricingSection(trainingOfferState) }    // 9
+                    }
+                    // 5 - TRAINING_OFER
+                    item { TrainingOfferHeaderSection(trainingOfferState) }
+                    // 6
+                    item { TrainingOfferTrainerSection(trainingOfferState) }
+                    // 7
+                    item { TrainingOfferCurriculumSection(trainingOfferState) }
+                    // 8
+                    item { TrainingOfferPackageSection(trainingOfferState) }
+                    // 9
+                    item { TrainingOfferPricingSection(trainingOfferState) }
+                    // 10 - PRICE_LIST
                     item {
                         PricesSection(
                             data = appDataContent?.allPrices.orEmpty(),
                         )
-                    }                                    // 10 - PRICE_LIST
-                    item {                                                      // 11
+                    }
+                    // 11
+                    item {
                         val allImages = remember { officeImages + workImages }
                         ImageCarousel(
                             modifier = Modifier.padding(top = if (windowSize.isMobile) 20.dp else 40.dp),
@@ -187,8 +194,10 @@ fun App() {
                             }
                         )
                     }
-                    item { ContactSection() }                                   // 12 - CONTACT
-                    item { Footer() }                                           // 13
+                    // 12 - CONTACT
+                    item { ContactSection() }
+                    // 13
+                    item { Footer() }
                 }
 
                 // Fixed navigation overlay

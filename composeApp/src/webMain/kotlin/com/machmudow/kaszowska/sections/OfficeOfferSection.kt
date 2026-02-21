@@ -67,33 +67,13 @@ import kaszowska.composeapp.generated.resources.ic_arrow_down
 import org.jetbrains.compose.resources.painterResource
 import com.machmudow.kaszowska.model.OfficeOfferSection as OfficeOfferSectionModel
 
-// Shared state holder for office offer data
-class OfficeOfferState {
-    var isVisible by mutableStateOf(false)
-    var isLoaded by mutableStateOf(false)
-}
-
-@Composable
-fun rememberOfficeOfferState(): OfficeOfferState {
-    val state = remember { OfficeOfferState() }
-
-    LaunchedEffect(Unit) {
-        if (!state.isLoaded) {
-            state.isVisible = true
-            state.isLoaded = true
-        }
-    }
-
-    return state
-}
-
 // Part 1: Header section with title
 @Composable
 fun OfficeOfferHeaderSection(
     state: OfficeOfferState,
-    data: OfficeOffer?,
 ) {
     val windowSize = LocalWindowSize.current
+    val data = state.officeOffer
     val isVisible = state.isVisible
 
     val titleAlpha by animateFloatAsState(
@@ -220,9 +200,9 @@ fun OfficeOfferHeaderSection(
 @Composable
 fun OfficeOfferCardsSection(
     state: OfficeOfferState,
-    data: OfficeOffer?,
 ) {
     val windowSize = LocalWindowSize.current
+    val data = state.officeOffer
     val isVisible = state.isVisible
 
     val scrollState = rememberScrollState()

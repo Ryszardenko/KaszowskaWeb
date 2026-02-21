@@ -8,14 +8,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-// Immutable state holder for training offer data
 data class TrainingOfferState(
     val trainingOffer: TrainingOffer? = null,
     val isVisible: Boolean = false,
     val isLoaded: Boolean = false
 )
 
-// Singleton StateFlow holder for training offer state
 object TrainingOfferStateHolder {
     private val _state = MutableStateFlow(TrainingOfferState())
     val state: StateFlow<TrainingOfferState> = _state.asStateFlow()
