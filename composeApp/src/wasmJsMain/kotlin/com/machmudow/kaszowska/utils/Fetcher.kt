@@ -6,7 +6,7 @@ import kotlin.js.JsString
 import kotlin.js.Promise
 
 @OptIn(ExperimentalWasmJsInterop::class)
-@JsFun("(url) => window.fetch(url).then(response => response.text())")
+@JsFun("(url) => { const cacheBusterUrl = url.indexOf('?') === -1 ? url + '?t=' + Date.now() : url + '&t=' + Date.now(); return window.fetch(cacheBusterUrl).then(response => response.text()); }")
 private external fun fetchText(url: String): Promise<JsString>
 
 actual suspend fun fetchJsonString(url: String): String {

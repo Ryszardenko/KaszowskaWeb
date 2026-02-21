@@ -14,9 +14,9 @@ object Constants {
     const val CITY = "Poznań"
 
     private const val GIST_BASE = "https://gist.githubusercontent.com/Ryszardenko/a04927ee362b66a0d7c349d191746444/raw"
-    const val ABOUT_SECTION_URL = "$GIST_BASE/312c3fc65d5ce22c99bb5060079b13b0beb06315/about_section"
-    const val TRAINING_OFFER_URL = "$GIST_BASE/312c3fc65d5ce22c99bb5060079b13b0beb06315/training_offer"
-    const val OFFICE_OFFER_URL = "$GIST_BASE/312c3fc65d5ce22c99bb5060079b13b0beb06315/office_offer"
-    const val ALL_PRICES_URL = "$GIST_BASE/6f7882b85ba4e6a328a83f216093c86915ec7511/all_prices"
-    const val GROUPED_SERVICES_URL = "$GIST_BASE/0d9748c04ef5a8d8143ffdfc77d0fe61e47e26fb/grouped_services"
+    const val ABOUT_SECTION_URL = "$GIST_BASE/about_section"
+    const val TRAINING_OFFER_URL = "$GIST_BASE/training_offer"
+    const val OFFICE_OFFER_URL = "$GIST_BASE/office_offer"
+    const val ALL_PRICES_URL = "$GIST_BASE/all_prices"
+    const val GROUPED_SERVICES_URL = "$GIST_BASE/grouped_services"
 }
